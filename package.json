@@ -1,0 +1,39 @@
+{
+  "name": "small-mono-app",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "b": "pnpm --filter @small-mono-app/backend",
+    "f": "pnpm --filter @small-mono-app/front",
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r test",
+    "types": "concurrently 'pnpm b types' 'pnpm f types'",
+    "lint": "concurrently 'pnpm b lint' 'pnpm f lint'",
+    "lint-fix": "eslint ./src --ext .ts,.vue --fix",
+    "stylelint": "stylelint \"./src/**/*.{css,vue}\"",
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{js,ts,tsx,json,yml,css,scss}' '!**/{node_modules,dist}/**/*'"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.1",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.1",
+    "eslint-config-love": "^136.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jest": "^29.2.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-vue": "^10.6.2",
+    "globals": "^16.5.0",
+    "jest": "^30.2.0",
+    "prettier": "^3.7.4",
+    "rimraf": "^6.1.2",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}

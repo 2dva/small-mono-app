@@ -1,0 +1,33 @@
+{
+  "name": "@small-mono-app/backend",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "ts-node-dev --watch ./.env --rs ./src/index.ts",
+    "build": "rimraf ./dist && tsc --build ./tsconfig.json",
+    "test": "jest --runInBand",
+    "start": "node ./dist/index.js",
+    "pmd": "prisma migrate dev",
+    "pgc": "prisma generate",
+    "types": "tsc --noEmit --project ./tsconfig.json",
+    "lint": "eslint --ext .ts ./src",
+    "lint-fix": "eslint ./src --ext .ts --fix",
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
+  },
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "@trpc/server": "^11.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.2",
+    "prisma": "^7.2.0"
+  }
+}
