@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { validateTree } from '@small-mono-app/backend/src/lib/tree.ts'
 import { computed, ref, onMounted } from 'vue'
-import { useTRPC } from './lib/useTrpc.ts'
+import { useTRPC } from '../lib/useTrpc.ts'
 
 // const DEFAULT_TREES = ['(1 (2 (4 5 6 (7) 108 (9)) 3))', '(1 2 3)', '(1 (2 (3)))']
 const treeValue = ref('')

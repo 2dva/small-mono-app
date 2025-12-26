@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import type { LogInst } from 'naive-ui'
 import { nextTick, onMounted, ref, watchEffect } from 'vue'
-import { useTRPC } from './lib/useTrpc.ts'
+import { useTRPC } from '../lib/useTrpc.ts'
 
 // function onAddLogsClick() {
 //   logRef.value = logRef.value + log()

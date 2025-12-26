@@ -1,65 +1,53 @@
 <script setup lang="ts">
-import LogPanel from './LogPanel.vue';
-import TreeRender from './TreeRender.vue'
-// import Panels from './Panels.vue'
+import { useRouter } from 'vue-router';
+import LogPanel from './components/LogPanel.vue'
+
+const router = useRouter()
+
+function onTabClick(value: string) {
+  if (!router.hasRoute(value)) {
+    router.push({ path: value })
+    return
+  }
+  router.push({ name: value })
+}
+
 </script>
 
 <template>
-<n-loading-bar-provider>
-  <n-message-provider>
-    <n-notification-provider>
-            <!-- <div class="pane-left">
-            </div> -->
-            <!-- <div class="pane-logs"> -->
-    <n-layout has-sider sider-placement="right"
-    position="absolute">
-      <n-layout-content content-style="padding: 0;">
-                <TreeRender />
-
-      </n-layout-content>
-      <n-layout-sider
-        collapse-mode="transform"
-        :native-scrollbar="false"
-        :collapsed-width="200"
-        :width="440"
-        show-trigger="bar"
-        content-style="padding: 0; height: 100%;"
-        bordered
-        default-collapsed        
-      >
-        <LogPanel />
-      </n-layout-sider>
-    </n-layout>
-            <!-- </div> -->
-    </n-notification-provider>
-  </n-message-provider>
-</n-loading-bar-provider>
+  <n-loading-bar-provider>
+    <n-message-provider>
+      <n-notification-provider>
+        <n-layout has-sider sider-placement="right" position="absolute">
+          <n-layout-content content-style="padding: 0;">
+            <nav>
+            <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
+              <n-tabs type="card" animated @update:value="onTabClick">
+                <n-tab name="home" tab="Home" />
+                <n-tab name="tree" tab="Tree render" />
+                <n-tab name="posts" tab="Posts" />
+                <n-tab name="todo" tab="Another tab" />
+              </n-tabs>
+            </n-card>
+            </nav>
+            <main>
+              <RouterView />
+            </main>
+          </n-layout-content>
+          <n-layout-sider
+            collapse-mode="transform"
+            :native-scrollbar="false"
+            :collapsed-width="200"
+            :width="440"
+            show-trigger="bar"
+            content-style="padding: 0; height: 100%;"
+            bordered
+            default-collapsed
+          >
+            <LogPanel />
+          </n-layout-sider>
+        </n-layout>
+      </n-notification-provider>
+    </n-message-provider>
+  </n-loading-bar-provider>
 </template>
-
-<style>
- .pane-root {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex: 1 600px;
- }
-
- .pane-left {
-    /* width: 100%; */
-    /* margin: 0 auto; */
-    background-color: lightgray;
- }
-
- .pane-right {
-    width: 600px;
-    position: relative;
- }
-
-.pane-logs {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 500px;
-}
-</style>
