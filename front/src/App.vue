@@ -24,13 +24,13 @@ function onTabClick(value: string) {
             <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
               <n-tabs type="card" animated @update:value="onTabClick">
                 <n-tab name="home" tab="Home" />
-                <n-tab name="tree" tab="Tree render" />
                 <n-tab name="posts" tab="Posts" />
+                <n-tab name="tree" tab="Tree render" />
                 <n-tab name="todo" tab="Another tab" />
               </n-tabs>
             </n-card>
             </nav>
-            <main>
+            <main style="">
               <RouterView />
             </main>
           </n-layout-content>
