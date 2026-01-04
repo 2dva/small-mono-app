@@ -1,7 +1,7 @@
 <template>
   <div>
       <h1>Home</h1>
-      <p>Starting page</p>
+      <p :class="$style['info']">Starting page</p>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 </script>
 
 <style module>
-p {
+.info {
   text-align: center;
 }
 </style>

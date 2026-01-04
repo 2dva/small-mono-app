@@ -16,7 +16,7 @@ const props = defineProps({
     <h2 v-else  :class="$style['title']"><slot name="header"></slot></h2>
     <p v-if="description != ''" :class="$style['description']">{{description}}</p>
     <div :class="$style['content']">
-      <slot>default</slot>
+      <slot></slot>
     </div>
   </div>
 </template>

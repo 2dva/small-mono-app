@@ -1,14 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import TreeRender from '../pages/TreeRender.vue'
-import HomeView from '../pages/HomeView.vue'
-import NotFound from '../pages/NotFound.vue'
-import PostsPage from '../pages/PostsPage.vue'
+import TreeRender from '../views/TreeRender.vue'
+import HomeView from '../views/HomeView.vue'
+import NotFound from '../views/NotFound.vue'
+import Post from '../views/Post.vue'
+import PostList from '../views/PostList.vue'
+import PostView from '../views/PostView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
-  { path: '/posts/:nick', name: 'postview', component: PostsPage },
-  { path: '/posts', name: 'posts', component: PostsPage },
+  {
+    path: '/posts',
+    name: 'posts',
+    component: Post,
+    children: [
+      { path: '/posts', name: 'post-list', component: PostList },
+      { path: '/posts/:nick', name: 'post-view', component: PostView },
+    ],
+  },
   { path: '/tree', name: 'tree', component: TreeRender },
   {
     path: '/:pathMatch(.*)', // Matches all paths

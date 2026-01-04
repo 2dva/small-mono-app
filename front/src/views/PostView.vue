@@ -20,20 +20,20 @@
 import { useRoute } from 'vue-router';
 import Segment from '../components/Segment.vue'
 import { usePosts } from '../store/post';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-const props = defineProps({
-  postId: String
-})
 const store = usePosts()
 const post = ref()
-const id = props.postId //String(route.params.nick)
+const route = useRoute()
+const id = String(route.params.nick)
 
-console.log(`ViewPost: props: postId=${props.postId} id=${id}`);
+onMounted(() => {
+  console.log(`PostView:OnMounted`);
+  if (typeof id !== 'undefined') {
+    post.value = store.getPost(id)
+  }
+});
 
-if (typeof id !== 'undefined') {
-  post.value = store.getPost(id)
-}
 </script>
 
 <style module>
