@@ -45,6 +45,7 @@ watch(
                 <n-tab name="post-list" tab="Posts" />
                 <n-tab name="tree" tab="Tree render" />
                 <n-tab name="signup" tab="Sign up" />
+                <n-tab name="signin" tab="Sign in" />
               </n-tabs>
             </n-card>
             </nav>

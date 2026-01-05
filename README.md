@@ -1,4 +1,4 @@
-# Демо программа Tree Render
+# Vue Back + Front Playground
 
 ## Запуск приложения
 
@@ -19,16 +19,16 @@ pnpm dev
 pnpm run test
 ```
 
-# Stack
+## Stack
 
-## Server
+### Server
 
 NodeJS + Express + tRPC
 
-## Client
+### Client
 
 Vite + Vue + Vue-query
 
-## Common
+### Common
 
 jest, eslint, prettier
