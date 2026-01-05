@@ -1,5 +1,6 @@
 <template>
-  <n-button size="tiny" focusable @click="handleClick">Add logs</n-button>
+  <n-button size="tiny" focusable @click="addLogsClick">Add logs</n-button>
+  <n-button size="tiny" focusable @click="clearClick">Clear</n-button>
   <n-log
     :log="logRef"
     ref="logInstRef"
@@ -33,7 +34,11 @@ const logInstRef = ref<LogInst | null>(null)
 const startRef = ref(false)
 const timerRef = ref<number | null>(null)
 
-function handleClick() {
+function clearClick() {
+  logRef.value = ''
+}
+
+function addLogsClick() {
   startRef.value = !startRef.value
   if (startRef.value) {
     timerRef.value = window.setInterval(() => {

@@ -5,10 +5,6 @@ const EMIT_DUMMY_EVENTS = false
 export const ee = new EventEmitter()
 
 export const captureLogs = () => {
-  // console.log = function(params) {
-  //     ee.emit('log', params)
-  //     process.stdout.write(JSON.stringify(params) + '\n');
-  // };
   type LogFunction = (m: string) => boolean
   let old_write: LogFunction
   let hook_stream = function(_stream: typeof process.stdout, fn: LogFunction) {
@@ -22,7 +18,7 @@ export const captureLogs = () => {
   // hook up standard output
   let unhook_stdout = hook_stream(process.stdout, function(params) {
       ee.emit('log', params)
-      old_write(JSON.stringify(params) + '\n');
+      old_write(JSON.stringify(params));
       return true
   });
 
@@ -31,7 +27,6 @@ export const captureLogs = () => {
 if (EMIT_DUMMY_EVENTS) {
   const intervalId = setInterval(() => {
     const data = { timestamp: new Date().toISOString() };
-    // res.write(`data: ${JSON.stringify(data)}\n\n`);
-    console.log(data) // ee.emit('log', { data })
+    console.log(data)
   }, 30000);
 }
