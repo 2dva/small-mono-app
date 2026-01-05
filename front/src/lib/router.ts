@@ -5,6 +5,7 @@ import NotFound from '../views/NotFound.vue'
 import Post from '../views/Post.vue'
 import PostList from '../views/PostList.vue'
 import PostView from '../views/PostView.vue'
+import SignUp from '../views/SignUp.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -18,6 +19,7 @@ const routes = [
     ],
   },
   { path: '/tree', name: 'tree', component: TreeRender },
+  { path: '/signup', name: 'signup', component: SignUp },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',
