@@ -7,21 +7,22 @@ import PostList from '../views/PostList.vue'
 import PostView from '../views/PostView.vue'
 import SignUp from '../views/SignUp.vue'
 import SignIn from '../views/SignIn.vue'
+import SignOut from '../views/SignOut.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   {
     path: '/posts',
-    name: 'posts',
     component: Post,
     children: [
-      { path: '/posts', name: 'post-list', component: PostList },
+      { path: '/posts', name: 'posts', component: PostList },
       { path: '/posts/:nick', name: 'post-view', component: PostView },
     ],
   },
   { path: '/tree', name: 'tree', component: TreeRender },
   { path: '/signup', name: 'signup', component: SignUp },
   { path: '/signin', name: 'signin', component: SignIn },
+  { path: '/signout', name: 'signout', component: SignOut },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',

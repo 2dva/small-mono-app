@@ -42,6 +42,8 @@ import type { FormInst, FormItemInst, FormItemRule, FormRules, FormValidationErr
 import { useMessage } from 'naive-ui'
 import { ref } from 'vue'
 import { useTRPC } from '../lib/useTrpc'
+import Cookies from 'js-cookie'
+import router from '../lib/router'
 
 interface ModelType {
   nickname: string | null
@@ -59,6 +61,7 @@ const modelRef = ref<ModelType>({
 })
 const trpc = useTRPC()
 const signUp = trpc.signUp.useMutation()
+// const trpcUtils = trpc.useContext().invalidate()
 
 function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
   return (
@@ -123,16 +126,16 @@ function handleValidateButtonClick(e: MouseEvent) {
   formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       try {
-        await signUp.mutateAsync({
+        const { token } = await signUp.mutateAsync({
           nick: modelRef.value.nickname as string,
           password: modelRef.value.password as string,
         })
+        Cookies.set('token', token, { expires: 99999 })
         message.success('Successful!')
-        formRef.value?.restoreValidation()
-      } catch(err: any) {
+        router.push({ name: 'posts' })
+      } catch (err: any) {
         message.error('Something went wrong')
       }
-
     } else {
       console.log(errors)
       message.error('Invalid')

@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import { trpc } from '../../lib/trpc'
 import { zSignUpTrpcInput } from './input'
+import { signJWT } from '../../utils/signJWT'
 
 export const signUpTrpcRoute = trpc.procedure.input(zSignUpTrpcInput).mutation(async ({ctx, input}) => {
   console.log(`SignUp:signUpTrpcRoute:start: nick=${input.nick}`)
@@ -15,12 +16,13 @@ export const signUpTrpcRoute = trpc.procedure.input(zSignUpTrpcInput).mutation(a
     console.log(`SignUp:signUpTrpcRoute:Error: ${err}`)
   }
 
-  await ctx.prisma.user.create({
+  const user = await ctx.prisma.user.create({
     data: {
       nick: input.nick,
       password: crypto.createHash('sha256').update(input.password).digest('hex')
     }
   })
+  const token = signJWT(user.id)
   console.log(`SignUp:signUpTrpcRoute:end`)
-  return true
+  return { token }
 })

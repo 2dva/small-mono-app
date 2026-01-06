@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import { trpc } from '../../lib/trpc'
 import { zSignInTrpcInput } from './input'
+import { signJWT } from '../../utils/signJWT'
 
 export const signInTrpcRoute = trpc.procedure.input(zSignInTrpcInput).mutation(async ({ctx, input}) => {
   const user = await ctx.prisma.user.findFirst({
@@ -11,5 +12,7 @@ export const signInTrpcRoute = trpc.procedure.input(zSignInTrpcInput).mutation(a
   })
   if (!user) throw Error('Wrong nick or pswd')
 
-  return true
+  const token = signJWT(user.id)
+    
+  return { token }
 })
