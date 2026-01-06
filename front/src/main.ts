@@ -3,17 +3,18 @@ import { createTRPCVueQueryClient } from '@falcondev-oss/trpc-vue-query'
 import type { TrpcRouter } from '@small-mono-app/backend/src/router'
 import { VueQueryPlugin, useQueryClient } from '@tanstack/vue-query'
 import { httpBatchLink, httpSubscriptionLink, splitLink } from '@trpc/client'
-import naive from "naive-ui";
+import naive from 'naive-ui'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './lib/router'
 import { createPinia } from 'pinia'
+import Cookies from 'js-cookie'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(naive);
+app.use(naive)
 app.use(VueQueryPlugin)
 app.use({
   install(app) {
@@ -30,11 +31,14 @@ app.use({
             }),
             false: httpBatchLink({
               url: `http://localhost:3000/trpc`,
+              headers: () => {
+                const token = Cookies.get('token')
+                return {
+                  ...(token && { authorization: `Bearer ${token}` }),
+                }
+              },
             }),
           }),
-          // httpBatchLink({
-          //   url: 'http://localhost:3000/trpc',
-          // }),
         ],
       },
     })
@@ -42,6 +46,5 @@ app.use({
     app.provide('trpc', trpc)
   },
 })
-
 
 app.mount('#app')

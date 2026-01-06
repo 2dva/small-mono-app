@@ -88,6 +88,7 @@ function handleValidateButtonClick(e: MouseEvent) {
           password: modelRef.value.password as string,
         })
         Cookies.set('token', token, { expires: 99999 })
+        trpc.getMe.invalidate()
         message.success('Successful!')
         router.push({ name: 'posts' })
       } catch (err: any) {
