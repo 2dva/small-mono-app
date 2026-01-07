@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-Открыть в браузере ссылку http://localhost:5173/
+Открыть в браузере ссылку http://localhost:8000/
 
 ## Запуск тестов
 

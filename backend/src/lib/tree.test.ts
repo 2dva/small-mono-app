@@ -24,9 +24,11 @@ describe('parseTree', () => {
   it('should check that invalid tree will throw error', async () => {
     const invalidTree1 = '((((1 2)'
     const invalidTree2 = '(1 (2 ((7)(9)) 3))'
+    const invalidTree3 = '(7 (9 8) (16))'
 
     expect(() => parseTree(invalidTree1)).toThrow(Error)
     expect(() => parseTree(invalidTree2)).toThrow(Error)
+    expect(() => parseTree(invalidTree3)).toThrow(Error)
   })
 
   it('should check that valid tree is parsed correctly', async () => {

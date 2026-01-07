@@ -4,6 +4,7 @@ import type { TrpcRouter } from '@small-mono-app/backend/src/router'
 import { useQueryClient } from '@tanstack/vue-query'
 import { httpBatchLink, httpSubscriptionLink, splitLink } from '@trpc/client'
 import Cookies from 'js-cookie'
+import { env } from './env'
 
 export const createTrpcClient = (app: App) => {
   const queryClient = app.runWithContext(useQueryClient)
@@ -16,10 +17,10 @@ export const createTrpcClient = (app: App) => {
           // uses the httpSubscriptionLink for subscriptions
           condition: (op) => op.type === 'subscription',
           true: httpSubscriptionLink({
-            url: `http://localhost:3000/trpc`,
+            url: env.VITE_BACKEND_TRPC_URL,
           }),
           false: httpBatchLink({
-            url: `http://localhost:3000/trpc`,
+            url: env.VITE_BACKEND_TRPC_URL,
             headers: () => {
               const token = Cookies.get('token')
               return {
