@@ -1,11 +1,12 @@
 import { trpc } from '../lib/trpc'
-import { getTreeTrpcRoute } from './getTree'
-import { getSudggestsTrpcRoute } from './getSuggests'
-import { getNotesTrpcRoute } from './getNotes'
 import { logSubscriptionTrpcRoute } from './logSubscription'
-import { signUpTrpcRoute } from './signUp'
-import { signInTrpcRoute } from './signIn'
-import { getMeTrpcRoute } from './getMe'
+import { signUpTrpcRoute } from './auth/signUp'
+import { signInTrpcRoute } from './auth/signIn'
+import { getMeTrpcRoute } from './auth/getMe'
+import { getTreeTrpcRoute } from './tree/getTree'
+import { getSudggestsTrpcRoute } from './tree/getSuggests'
+import { getNotesTrpcRoute } from './posts/getNotes'
+import { generatePostsTrpcRoute } from './posts/generate'
 
 console.log(`Initializing TRPC`)
 
@@ -17,6 +18,7 @@ export const trpcRouter = trpc.router({
   signIn: signInTrpcRoute,
   getTree: getTreeTrpcRoute,
   getSudggests: getSudggestsTrpcRoute,
+  generatePosts: generatePostsTrpcRoute,
   onLogAdd: logSubscriptionTrpcRoute,
 })
 

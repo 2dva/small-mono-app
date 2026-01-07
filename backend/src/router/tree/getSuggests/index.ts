@@ -1,5 +1,5 @@
-import { generatePredefinedTreeStrings } from "../../lib/tree"
-import { trpc } from "../../lib/trpc"
+import { generatePredefinedTreeStrings } from "../../../lib/tree"
+import { trpc } from "../../../lib/trpc"
 
 
 export const getSudggestsTrpcRoute = trpc.procedure.query(() => {

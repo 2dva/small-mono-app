@@ -1,6 +1,6 @@
 import z from "zod"
-import { processTree } from "../../lib/tree"
-import { trpc } from "../../lib/trpc"
+import { processTree } from "../../../lib/tree"
+import { trpc } from "../../../lib/trpc"
 
 
 export const getTreeTrpcRoute = trpc.procedure

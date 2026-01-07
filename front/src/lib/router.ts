@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import TreeRender from '../views/TreeRender.vue'
 import HomeView from '../views/HomeView.vue'
 import NotFound from '../views/NotFound.vue'
-import Post from '../views/Post.vue'
-import PostList from '../views/PostList.vue'
-import PostView from '../views/PostView.vue'
-import SignUp from '../views/SignUp.vue'
-import SignIn from '../views/SignIn.vue'
-import SignOut from '../views/SignOut.vue'
+import Post from '../views/post/Post.vue'
+import PostList from '../views/post/PostList.vue'
+import PostView from '../views/post/PostView.vue'
+import SignUp from '../views/auth/SignUp.vue'
+import SignIn from '../views/auth/SignIn.vue'
+import SignOut from '../views/auth/SignOut.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },

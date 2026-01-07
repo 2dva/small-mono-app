@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import { usePosts } from '../store/post'
+import { usePosts } from '../../store/post'
 import { onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { MenuOption } from 'naive-ui'

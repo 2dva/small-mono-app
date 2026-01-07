@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
-import Segment from '../components/Segment.vue'
-import { usePosts } from '../store/post'
+import Segment from '../../components/Segment.vue'
+import { usePosts } from '../../store/post'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 

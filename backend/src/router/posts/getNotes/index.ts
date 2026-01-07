@@ -1,4 +1,4 @@
-import { trpc } from '../../lib/trpc'
+import { trpc } from '../../../lib/trpc'
 
 const defaultNotes = [
   { nick: '123', name: 'name5675757', description: 'descr_565756765' },

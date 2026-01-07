@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import Segment from '../components/Segment.vue'
-import { usePosts } from '../store/post';
+import Segment from '../../components/Segment.vue'
+import { usePosts } from '../../store/post';
 import { onMounted, ref } from 'vue';
 
 const store = usePosts()
