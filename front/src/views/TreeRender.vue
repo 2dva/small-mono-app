@@ -42,7 +42,9 @@ const { data, mutateAsync } = mutation
 // const { data, error, isLoading, isFetching, isError, refetch } = queryData
 // treeGraphicFromBackend.value = String(data.value?.tree)
 
-const queryData = trpc.getSudggests.useQuery()
+const queryData = trpc.getSudggests.useQuery(() => {}, {
+  enabled: false,
+})
 const { data: suggestData, error, isLoading, refetch } = queryData
 
 const options = computed(() => {

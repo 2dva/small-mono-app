@@ -63,7 +63,7 @@ const trpc = useTRPC()
 const signUp = trpc.signUp.useMutation()
 // const trpcUtils = trpc.useContext().invalidate()
 
-function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
+function validatePasswordStartWith(_rule: FormItemRule, value: string): boolean {
   return (
     !!modelRef.value.password &&
     modelRef.value.password.startsWith(value) &&
@@ -71,7 +71,7 @@ function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
   )
 }
 
-function validatePasswordSame(rule: FormItemRule, value: string): boolean {
+function validatePasswordSame(_rule: FormItemRule, value: string): boolean {
   return value === modelRef.value.password
 }
 
@@ -79,7 +79,7 @@ const rules: FormRules = {
   nickname: [
     {
       required: true,
-      validator(rule: FormItemRule, value: string) {
+      validator(_rule: FormItemRule, value: string) {
         if (!value) {
           return new Error('Nickname is required')
         } else if (!/^[a-z0-9-]+$/.test(value)) {

@@ -12,7 +12,10 @@ const valueRef = ref('home')
 const isAuthorized = ref<boolean | null>(null)
 
 const trpc = useTRPC()
-const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery()
+const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+})
 
 let signOutLabel = ''
 

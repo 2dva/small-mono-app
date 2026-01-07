@@ -55,7 +55,7 @@ const rules: FormRules = {
   nickname: [
     {
       required: true,
-      validator(rule: FormItemRule, value: string) {
+      validator(_rule: FormItemRule, value: string) {
         if (!value) {
           return new Error('Nickname is required')
         } else if (!/^[a-z0-9-]+$/.test(value)) {
