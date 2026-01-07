@@ -28,7 +28,6 @@ import { validateTree } from '@small-mono-app/backend/src/lib/tree.ts'
 import { computed, ref, onMounted } from 'vue'
 import { useTRPC } from '../lib/useTrpc.ts'
 
-// const DEFAULT_TREES = ['(1 (2 (4 5 6 (7) 108 (9)) 3))', '(1 2 3)', '(1 (2 (3)))']
 const treeValue = ref('')
 const htmlTreeGraphic = ref('')
 const treeError = ref('')
@@ -36,16 +35,8 @@ const treeGraphicFromBackend = ref('')
 const inputSource = ref(null)
 const suggestsSource = ref<string[]>([])
 const trpc = useTRPC()
-const mutation = trpc.getTree.useMutation()
-const { data, mutateAsync } = mutation
-// const queryData = trpc.getTree.useQuery({ stringTree: treeText.value })
-// const { data, error, isLoading, isFetching, isError, refetch } = queryData
-// treeGraphicFromBackend.value = String(data.value?.tree)
-
-const queryData = trpc.getSudggests.useQuery(() => {}, {
-  enabled: false,
-})
-const { data: suggestData, error, isLoading, refetch } = queryData
+const treeMutation = trpc.getTree.useMutation()
+const queryData = trpc.getSudggests.useQuery(() => {}, { enabled: false })
 
 const options = computed(() => {
   const prefix = treeValue.value
@@ -55,17 +46,16 @@ const options = computed(() => {
 })
 
 function applySuggests() {
-  if (typeof suggestData.value !== 'undefined') suggestsSource.value = suggestData.value
-  // console.log(`suggest on MOunted: ${suggestData.value}`);
+  if (typeof queryData.data.value !== 'undefined') suggestsSource.value = queryData.data.value
 
   if (inputSource.value) (inputSource.value as HTMLInputElement).focus()
   treeValue.value = suggestsSource.value[Math.floor(Math.random() * suggestsSource.value.length)]
 }
 
 onMounted(async () => {
-  console.log(`onMounted.... refetch`)
+  console.log(`Tree:onMounted`)
 
-  await refetch()
+  await queryData.refetch()
   applySuggests()
 })
 
@@ -88,18 +78,12 @@ async function onDrawClick() {
     const stringTree = treeValue.value.trim()
     validateTree(stringTree)
 
-    await mutateAsync({ stringTree })
-    treeGraphicFromBackend.value = String(data.value?.tree)
+    await treeMutation.mutateAsync({ stringTree })
+    treeGraphicFromBackend.value = String(treeMutation.data.value?.tree)
   } catch (e) {
     clearOutput()
     treeError.value = String(e) || `Error while parsing tree`
   }
-
-  // try {
-  //   htmlTreeGraphic.value = processTree(stringTree)
-  // } catch (e) {
-  //   treeError.value = String(e) || `Error while parsing tree`
-  // }
   ;(inputSource.value! as HTMLInputElement).focus()
 }
 </script>
@@ -127,11 +111,6 @@ h1 {
   font-size: 3em;
   line-height: 1.1;
   text-align: center;
-}
-
-form {
-  /* text-align: center; */
-  /* max-width: 300px; */
 }
 
 input[type='text'] {

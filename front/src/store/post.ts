@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 const DEFAULT_POSTS_NUMBER = 3
 
+// @ts-ignore
 type PostValues = {
   nick: string
   name: string
