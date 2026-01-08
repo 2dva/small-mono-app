@@ -6,11 +6,16 @@
         </template>
       </Segment>
   </div>
-  <div v-else>
+  <div v-if="postMutation.isIdle.value || postMutation.isPending.value">
+    <n-space justify="center">
+      <n-spin size="medium" />
+    </n-space>
+  </div>
+  <div v-if="post === null || postMutation.isError.value">
     <n-result
       status="404"
       title="404 Not Found"
-      description="You know life is always ridiculous."
+      description="Wa can't find any post here."
     >
     </n-result>
   </div>
@@ -21,16 +26,24 @@ import { useRoute } from 'vue-router';
 import Segment from '../../components/Segment.vue'
 import { usePosts } from '../../store/post';
 import { onMounted, ref } from 'vue';
+import { useTRPC } from '../../lib/useTrpc';
 
 const store = usePosts()
 const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)
 
-onMounted(() => {
+const trpc = useTRPC()
+const postMutation = trpc.getPost.useMutation()
+
+onMounted(async () => {
   console.log(`PostView:OnMounted`);
   if (typeof id !== 'undefined') {
-    post.value = store.getPost(id)
+    await postMutation.mutateAsync({ nick: id })
+    console.log(`Posts:view:getResponse:`, postMutation.data?.value?.post);
+    
+    post.value =  postMutation.data.value?.post
+    // post.value = store.getPost(id)
   }
 });
 

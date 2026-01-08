@@ -47,6 +47,10 @@ onMounted(() => {
 </script>
 
 <style module>
+h1 {
+  text-align: center;
+}
+
 .layout {
   position: relative;
   padding-top: 1px;

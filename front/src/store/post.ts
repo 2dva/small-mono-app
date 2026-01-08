@@ -4,13 +4,13 @@ import { defineStore } from 'pinia'
 const DEFAULT_POSTS_NUMBER = 3
 
 // @ts-ignore
-type PostValues = {
+export type PostValues = {
   nick: string
   name: string
   description: string
   text: string
 }
-type Post = { [k: string]: string }
+export type Post = { [k: string]: string }
 
 export type RootState = {
   allPosts: Post[],

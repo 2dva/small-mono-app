@@ -1,7 +1,7 @@
 <template>
   <div :class="$style['tree-render']">
     <div :class="$style['tree-wrap']">
-      <h1>Tree Render</h1>
+      <h1 :class="$style['header']">Tree Render</h1>
       <form @submit.prevent="">
         <div :class="$style['tree-input-wrap']">
           <n-auto-complete
@@ -107,7 +107,7 @@ async function onDrawClick() {
   margin-right: 4px;
 }
 
-h1 {
+h1.header {
   font-size: 3em;
   line-height: 1.1;
   text-align: center;

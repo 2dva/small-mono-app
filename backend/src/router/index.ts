@@ -5,20 +5,22 @@ import { signInTrpcRoute } from './auth/signIn'
 import { getMeTrpcRoute } from './auth/getMe'
 import { getTreeTrpcRoute } from './tree/getTree'
 import { getSudggestsTrpcRoute } from './tree/getSuggests'
-import { getNotesTrpcRoute } from './posts/getNotes'
+import { getPostsTrpcRoute } from './posts/getPosts'
 import { generatePostsTrpcRoute } from './posts/generate'
+import { getPostTrpcRoute } from './posts/getPost'
 
 console.log(`Initializing TRPC`)
 
 export const trpcRouter = trpc.router({
   ping: trpc.procedure.query(() => 'Pong!'),
-  getNotes: getNotesTrpcRoute,
   getMe: getMeTrpcRoute,
   signUp: signUpTrpcRoute,
   signIn: signInTrpcRoute,
   getTree: getTreeTrpcRoute,
   getSudggests: getSudggestsTrpcRoute,
   generatePosts: generatePostsTrpcRoute,
+  getPosts: getPostsTrpcRoute,
+  getPost: getPostTrpcRoute,
   onLogAdd: logSubscriptionTrpcRoute,
 })
 

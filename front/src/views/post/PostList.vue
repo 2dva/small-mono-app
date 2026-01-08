@@ -17,17 +17,24 @@
 <script setup lang="ts">
 import _ from 'lodash'
 import Segment from '../../components/Segment.vue'
-import { usePosts } from '../../store/post'
-import { onMounted } from 'vue'
+import { Post, usePosts } from '../../store/post'
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useTRPC } from '../../lib/useTrpc'
 
 const store = usePosts()
-const { allPosts: posts } = storeToRefs(store)
-// const posts = generatePosts(8)
-// const posts = ref<Post[]>([]);
-onMounted(() => {
-  // store.init()
-  // posts.value = store.getAllPosts
+// const { allPosts: posts } = storeToRefs(store)
+const posts = ref<Post[]>([])
+
+const trpc = useTRPC()
+const queryData = trpc.getPosts.useQuery(() => {}, { enabled: false })
+
+onMounted(async () => {
+  await queryData.refetch()
+
+  if (typeof queryData.data.value !== 'undefined') {
+    posts.value = queryData.data.value.posts
+  }
 })
 
 function removePost(nick: string) {
