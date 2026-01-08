@@ -3,10 +3,10 @@
     <h1>Posts</h1>
     <div :class="$style['posts']">
       <div v-for="post in posts" :class="$style['post']" :key="post.nick">
-        <button :class="$style['remove-button']" @click="() => removePost(post.nick)">X</button>
-        <Segment :title="post.name" size="2" :description="post.description" children="">
+        <!-- <button :class="$style['remove-button']" @click="() => removePost(post.nick)">X</button> -->
+        <Segment :title="post.title" size="2" :description="post.description" children="">
           <template v-slot:header>
-            <RouterLink :class="$style['postLink']" :to="`/posts/${post.nick}`">{{ post.name }}</RouterLink>
+            <RouterLink :class="$style['postLink']" :to="`/posts/${post.nick}`">{{ post.title }}</RouterLink>
           </template>
         </Segment>
       </div>
@@ -33,6 +33,8 @@ onMounted(async () => {
   await queryData.refetch()
 
   if (typeof queryData.data.value !== 'undefined') {
+    console.log(`Post:list: got values:`, queryData.data.value.posts);
+    
     posts.value = queryData.data.value.posts
   }
 })

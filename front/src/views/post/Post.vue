@@ -18,6 +18,7 @@ import { RouterLink } from 'vue-router'
 import { MenuOption } from 'naive-ui'
 import { h } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
+import router from '../../lib/router'
 
 const menuOptions: MenuOption[] = [
   {
@@ -35,8 +36,9 @@ const generateQuery = trpc.generatePosts.useQuery(() => {}, {
   enabled: false,
 })
 
-function handleGenerateClick() {
-  generateQuery.refetch()
+async function handleGenerateClick() {
+  await generateQuery.refetch()
+  router.push({ name: 'posts' })
 }
 
 usePosts().init()

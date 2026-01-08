@@ -1,17 +1,20 @@
 <template>
   <div v-if="post">
-      <Segment :title="post.name" size="1" :description="post.description" children="">
+      <Segment :title="post.title" size="1" :description="post.description" children="">
         <template v-slot:header>
-          <h1 :class="$style['postHead']">{{post.name}}</h1>
+          <h1 :class="$style['postHead']">{{post.title}}</h1>
+        </template>
+        <template v-slot:default>
+          <div v-html="post.content"></div>
         </template>
       </Segment>
   </div>
-  <div v-if="postMutation.isIdle.value || postMutation.isPending.value">
+  <div v-if="postViewQuery.isPending.value">
     <n-space justify="center">
       <n-spin size="medium" />
     </n-space>
   </div>
-  <div v-if="post === null || postMutation.isError.value">
+  <div v-if="post === null || postViewQuery.isError.value">
     <n-result
       status="404"
       title="404 Not Found"
@@ -34,15 +37,19 @@ const route = useRoute()
 const id = String(route.params.nick)
 
 const trpc = useTRPC()
-const postMutation = trpc.getPost.useMutation()
+
+const postViewQuery = trpc.getPost.useQuery({ nick: id }, {
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+})
 
 onMounted(async () => {
-  console.log(`PostView:OnMounted`);
+  console.log(`Posts:View:OnMounted`);
   if (typeof id !== 'undefined') {
-    await postMutation.mutateAsync({ nick: id })
-    console.log(`Posts:view:getResponse:`, postMutation.data?.value?.post);
-    
-    post.value =  postMutation.data.value?.post
+    await postViewQuery.refetch()
+    console.log(`Posts:View:getResponse:`, postViewQuery.data?.value?.post);
+    post.value =  postViewQuery.data.value?.post
     // post.value = store.getPost(id)
   }
 });

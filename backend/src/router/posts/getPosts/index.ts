@@ -7,7 +7,9 @@ export const defaultPosts = [
   { nick: '126', name: 'name12_6', description: 'descr_565756765_6' },
 ]
 
-export const getPostsTrpcRoute = trpc.procedure.query(({ ctx }) => {
-  // const posts = await ctx.prisma.note.findMany({ select: {id: true, nick:true}})
-  return { posts: defaultPosts }
+export const getPostsTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
+  const posts = await ctx.prisma.post.findMany({
+    select: { id: true, nick: true, title: true, description: true, published: true, author: true },
+  })
+  return { posts }
 })
