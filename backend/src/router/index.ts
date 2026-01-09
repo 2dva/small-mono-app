@@ -9,6 +9,8 @@ import { getPostsTrpcRoute } from './posts/getPosts'
 import { generatePostsTrpcRoute } from './posts/generate'
 import { getPostTrpcRoute } from './posts/getPost'
 import { createPostTrpcRoute } from './posts/createPost'
+import { updatePostTrpcRoute } from './posts/updatePost'
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 
 console.log(`Initializing TRPC`)
 
@@ -23,7 +25,10 @@ export const trpcRouter = trpc.router({
   getPosts: getPostsTrpcRoute,
   getPost: getPostTrpcRoute,
   createPost: createPostTrpcRoute,
+  updatePost: updatePostTrpcRoute,
   onLogAdd: logSubscriptionTrpcRoute,
 })
 
 export type TrpcRouter = typeof trpcRouter
+export type TrpcRouterInput = inferRouterInputs<TrpcRouter>
+export type TrpcRouterOutput = inferRouterOutputs<TrpcRouter>

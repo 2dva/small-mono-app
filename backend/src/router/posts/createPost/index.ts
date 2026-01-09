@@ -6,12 +6,12 @@ export const createPostTrpcRoute = trpc.procedure.input(zCreatePostTrpcInput).mu
     throw Error('UNAUTHORIZED')
   }
   console.log(`BACK:TRPC:createPost:start`)
-  const exIdea = await ctx.prisma.post.findUnique({
+  const exPost = await ctx.prisma.post.findUnique({
     where: {
       nick: input.nick,
     },
   })
-  if (exIdea) {
+  if (exPost) {
     throw new Error('Idea with this nick already exists')
   }
   await ctx.prisma.post.create({

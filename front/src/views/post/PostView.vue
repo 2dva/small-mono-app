@@ -6,6 +6,7 @@
         </template>
         <template v-slot:default>
           <div v-html="post.content"></div>
+          <n-button round color="#18a058" tag="a" :href="getEditPostRoute({ nick : post.nick })"> Edit post </n-button>
         </template>
       </Segment>
   </div>
@@ -30,6 +31,7 @@ import Segment from '../../components/Segment.vue'
 import { usePosts } from '../../store/post';
 import { onMounted, ref } from 'vue';
 import { useTRPC } from '../../lib/useTrpc';
+import { getEditPostRoute } from '../../lib/routes';
 
 // const store = usePosts()
 const post = ref()

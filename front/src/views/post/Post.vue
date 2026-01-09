@@ -19,14 +19,15 @@ import { MenuOption } from 'naive-ui'
 import { h } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
+import { getAllPostsRoute, getNewPostRoute } from '../../lib/routes'
 
 const menuOptions: MenuOption[] = [
   {
-    label: () => h(RouterLink, { to: '/posts' }, () => 'All posts'),
+    label: () => h(RouterLink, { to: getAllPostsRoute() }, () => 'All posts'),
     key: 'post-all',
   },
   {
-    label: () => h(RouterLink, { to: '/posts/add' }, () => 'Add post'),
+    label: () => h(RouterLink, { to: getNewPostRoute() }, () => 'New post'),
     key: 'post-add',
   },
 ]

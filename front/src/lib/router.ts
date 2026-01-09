@@ -9,22 +9,35 @@ import SignUp from '../views/auth/SignUp.vue'
 import SignIn from '../views/auth/SignIn.vue'
 import SignOut from '../views/auth/SignOut.vue'
 import PostAdd from '../views/post/PostAdd.vue'
+import PostEdit from '../views/post/PostEdit.vue'
+import {
+  getAllPostsRoute,
+  getEditPostRoute,
+  getHomeRoute,
+  getNewPostRoute,
+  getSignInRoute,
+  getSignOutRoute,
+  getSignUpRoute,
+  getTreeRoute,
+  getViewPostRoute,
+} from './routes'
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
+  { path: getHomeRoute(), name: 'home', component: HomeView },
   {
-    path: '/posts',
+    path: getAllPostsRoute(),
     component: Post,
     children: [
-      { path: '/posts', name: 'posts', component: PostList },
-      { path: '/posts/add', name: 'post-add', component: PostAdd },
-      { path: '/posts/:nick', name: 'post-view', component: PostView },
+      { path: getAllPostsRoute(), name: 'posts', component: PostList },
+      { path: getNewPostRoute(), name: 'post-new', component: PostAdd },
+      { path: getViewPostRoute({ nick: '' }), name: 'post-view', component: PostView },
+      { path: getEditPostRoute({ nick: '' }), name: 'post-edit', component: PostEdit },
     ],
   },
-  { path: '/tree', name: 'tree', component: TreeRender },
-  { path: '/signup', name: 'signup', component: SignUp },
-  { path: '/signin', name: 'signin', component: SignIn },
-  { path: '/signout', name: 'signout', component: SignOut },
+  { path: getTreeRoute(), name: 'tree', component: TreeRender },
+  { path: getSignUpRoute(), name: 'signup', component: SignUp },
+  { path: getSignInRoute(), name: 'signin', component: SignIn },
+  { path: getSignOutRoute(), name: 'signout', component: SignOut },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',

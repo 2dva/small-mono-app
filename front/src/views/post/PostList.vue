@@ -6,7 +6,7 @@
         <!-- <button :class="$style['remove-button']" @click="() => removePost(post.nick)">X</button> -->
         <Segment :title="post.title" size="2" :description="post.description" children="">
           <template v-slot:header>
-            <RouterLink :class="$style['postLink']" :to="`/posts/${post.nick}`">{{ post.title }}</RouterLink>
+            <RouterLink :class="$style['postLink']" :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
           </template>
         </Segment>
       </div>
@@ -21,6 +21,7 @@ import { Post, usePosts } from '../../store/post'
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTRPC } from '../../lib/useTrpc'
+import { getViewPostRoute } from '../../lib/routes'
 
 const store = usePosts()
 // const { allPosts: posts } = storeToRefs(store)
