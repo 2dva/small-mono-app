@@ -8,6 +8,7 @@ import { getSudggestsTrpcRoute } from './tree/getSuggests'
 import { getPostsTrpcRoute } from './posts/getPosts'
 import { generatePostsTrpcRoute } from './posts/generate'
 import { getPostTrpcRoute } from './posts/getPost'
+import { createPostTrpcRoute } from './posts/createPost'
 
 console.log(`Initializing TRPC`)
 
@@ -21,6 +22,7 @@ export const trpcRouter = trpc.router({
   generatePosts: generatePostsTrpcRoute,
   getPosts: getPostsTrpcRoute,
   getPost: getPostTrpcRoute,
+  createPost: createPostTrpcRoute,
   onLogAdd: logSubscriptionTrpcRoute,
 })
 

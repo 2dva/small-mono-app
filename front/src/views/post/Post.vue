@@ -23,11 +23,11 @@ import router from '../../lib/router'
 const menuOptions: MenuOption[] = [
   {
     label: () => h(RouterLink, { to: '/posts' }, () => 'All posts'),
-    key: 'all-posts',
+    key: 'post-all',
   },
   {
-    label: 'Add post',
-    key: 'add-post',
+    label: () => h(RouterLink, { to: '/posts/add' }, () => 'Add post'),
+    key: 'post-add',
   },
 ]
 

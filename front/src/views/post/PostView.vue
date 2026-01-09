@@ -31,14 +31,15 @@ import { usePosts } from '../../store/post';
 import { onMounted, ref } from 'vue';
 import { useTRPC } from '../../lib/useTrpc';
 
-const store = usePosts()
+// const store = usePosts()
 const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)
 
 const trpc = useTRPC()
 
-const postViewQuery = trpc.getPost.useQuery({ nick: id }, {
+const params = ref({ nick: id })
+const postViewQuery = trpc.getPost.useQuery(params, {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,

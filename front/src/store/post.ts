@@ -2,18 +2,20 @@ import _ from 'lodash'
 import { defineStore } from 'pinia'
 
 const DEFAULT_POSTS_NUMBER = 3
+export const CONTENT_MIN_LENGTH = 50
 
-// @ts-ignore
-export type PostValues = {
+export type User = {
+  id: string
   nick: string
-  name: string
-  description: string
-  text: string
+  name?: string
+  password: string
+  createdAt: string
 }
-export type Post = { [k: string]: string }
+
+export type Post = { [k: string]: any }
 
 export type RootState = {
-  allPosts: Post[],
+  allPosts: Post[]
   counter: number
 }
 
@@ -21,7 +23,7 @@ export const usePosts = defineStore('posts', {
   state: () =>
     ({
       allPosts: [],
-      counter: 0
+      counter: 0,
     }) as RootState,
   getters: {
     getAllPosts(state) {

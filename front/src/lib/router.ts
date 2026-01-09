@@ -8,6 +8,7 @@ import PostView from '../views/post/PostView.vue'
 import SignUp from '../views/auth/SignUp.vue'
 import SignIn from '../views/auth/SignIn.vue'
 import SignOut from '../views/auth/SignOut.vue'
+import PostAdd from '../views/post/PostAdd.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -16,6 +17,7 @@ const routes = [
     component: Post,
     children: [
       { path: '/posts', name: 'posts', component: PostList },
+      { path: '/posts/add', name: 'post-add', component: PostAdd },
       { path: '/posts/:nick', name: 'post-view', component: PostView },
     ],
   },
