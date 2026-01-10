@@ -1,28 +1,38 @@
 <template>
   <div :class="$style['page-outer']">
     <div :class="$style['page-wrap']">
-      <h1>Update post</h1>
-      <n-form ref="formRef" :model="modelRef" :rules="rules">
-        <n-form-item path="title" label="Title">
-          <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="nick" label="Nick">
-          <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="description" label="Description">
-          <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="content" label="Text">
-          <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
-        </n-form-item>
-        <n-row :gutter="[0, 24]">
-          <n-col :span="24">
-            <div style="display: flex; justify-content: flex-end">
-              <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick"> Update post </n-button>
-            </div>
-          </n-col>
-        </n-row>
-      </n-form>
+      <div v-if="pageStatus === 'loading'">
+        <n-space justify="center">
+          <n-spin size="medium" />
+        </n-space>
+      </div>
+      <div v-else-if="pageStatus === 'error'">
+        <span>{{ error }}</span>
+      </div>
+      <div v-else>
+        <h1>Edit post</h1>
+        <n-form ref="formRef" :model="modelRef" :rules="rules">
+          <n-form-item path="title" label="Title">
+            <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="nick" label="Nick">
+            <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="description" label="Description">
+            <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="content" label="Text">
+            <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
+          </n-form-item>
+          <n-row :gutter="[0, 24]">
+            <n-col :span="24">
+              <div style="display: flex; justify-content: flex-end">
+                <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick"> Update post </n-button>
+              </div>
+            </n-col>
+          </n-row>
+        </n-form>
+      </div>
     </div>
   </div>
 </template>
@@ -30,7 +40,7 @@
 <script setup lang="ts">
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
@@ -45,6 +55,8 @@ interface ModelType {
   content: string | null
 }
 
+const pageStatus = ref<string>('loading')
+const error = ref('')
 const post = ref()
 const route = useRoute()
 let id: string | null = null
@@ -59,20 +71,52 @@ const modelRef = ref<ModelType>({
 })
 const trpc = useTRPC()
 const params = ref({ nick })
-const postViewQuery = trpc.getPost.useQuery(params, {
+const getPostResult = trpc.getPost.useQuery(params, {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
 })
 
+const getMeResult = trpc.getMe.useQuery(undefined, {
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+})
+
+function setError(msg: string) {
+  pageStatus.value = 'error'
+  error.value = msg
+}
+
+
+watch(getMeResult.status, () => {
+  console.log(`PostEdit:watch: getMeResult.status=${getMeResult.status.value} data=`, getMeResult.data.value);
+  
+  if (getMeResult.isError.value) {
+    setError('Error: ' + getMeResult.error.value)
+  } else if (!getMeResult.data.value?.me) {
+    setError('Error: NOT_AUTHORIZED')
+  }
+})
+
 onMounted(async () => {
   console.log(`Posts:Edit:OnMounted`);
+
   if (typeof nick !== 'undefined') {
-    await postViewQuery.refetch()
-    console.log(`Posts:Edit:getResponse:`, postViewQuery.data?.value?.post);
-    post.value =  postViewQuery.data.value?.post
-    id = post.value.id
-    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
+    await getPostResult.refetch()
+    if (getPostResult.isError.value) {
+      setError('Error: ' + getPostResult.error.value)
+    } else if (!getPostResult.data.value) {
+      setError('Post not found')
+    }
+    console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post);
+  
+    if (pageStatus.value !== 'error') {
+      pageStatus.value = 'ready'
+      post.value =  getPostResult.data.value?.post
+      id = post.value.id
+      modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
+    }
   }
 });
 
