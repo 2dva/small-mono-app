@@ -58,7 +58,7 @@ interface ModelType {
   content: string | null
 }
 
-const myData = inject(me)!
+const { myData } = inject(me)!
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 const post = ref()

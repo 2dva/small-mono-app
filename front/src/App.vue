@@ -11,8 +11,8 @@ const router = useRouter()
 const route = useRoute()
 const tabsInstRef = ref<TabsInst | null>(null)
 const valueRef = ref('home')
-const isAuthorized = ref<boolean | null>(null)
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
+const setMyData = (data: TrpcRouterOutput['getMe']['me']) => { myData.value = data }
 
 const trpc = useTRPC()
 const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
@@ -20,15 +20,9 @@ const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
   refetchOnWindowFocus: false,
 })
 
-let signOutLabel = ''
-
 watch(data, () => {
   if (data.value?.me !== undefined) {
-    const nickname = data.value.me?.nick
-    signOutLabel = `Sign out (${nickname})`
-    isAuthorized.value = !!data.value.me
     myData.value = data.value.me
-    console.log(`App: data changed`, data.value, nickname, isAuthorized.value)
   }
 })
 
@@ -53,7 +47,7 @@ watch(
   { immediate: true }
 )
 
-provide(me, myData)
+provide(me, { myData, setMyData })
 </script>
 
 <template>
@@ -68,9 +62,10 @@ provide(me, myData)
                   <n-tab name="home" tab="Home" />
                   <n-tab name="posts" tab="Posts" />
                   <n-tab name="tree" tab="Tree render" />
-                  <n-tab v-if="isAuthorized === false" name="signup" tab="Sign up" />
-                  <n-tab v-if="isAuthorized === false" name="signin" tab="Sign in" />
-                  <n-tab v-if="isAuthorized === true" name="signout" :tab="signOutLabel" />
+                  <n-tab v-if="!myData" name="signup" tab="Sign up" />
+                  <n-tab v-if="!myData" name="signin" tab="Sign in" />
+                  <n-tab v-if="myData" name="profile-edit" tab="Edit profile" />
+                  <n-tab v-if="myData" name="signout" :tab="`Sign out (${myData?.nick})`" />
                 </n-tabs>
               </n-card>
             </nav>

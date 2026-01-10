@@ -23,7 +23,7 @@ import { getAllPostsRoute, getNewPostRoute } from '../../lib/routes'
 import { inject } from 'vue'
 import { me } from '../../lib/injectionKeys'
 
-const myData = inject(me)!
+const  { myData } = inject(me)!
 
 const menuOptions: MenuOption[] = [
   {
@@ -67,6 +67,7 @@ h1 {
 
 .left-menu {
   width: 200px;
+  border-right: 1px solid #eeeeee;
 }
 
 .content {

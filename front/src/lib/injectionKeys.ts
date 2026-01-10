@@ -1,4 +1,9 @@
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 import type { InjectionKey, Ref } from 'vue'
 
-export const me: InjectionKey<Ref<TrpcRouterOutput['getMe']['me']>> = Symbol('my-profile')
+type ProfileContext = {
+  myData: Ref<TrpcRouterOutput['getMe']['me']>
+  setMyData: (data: TrpcRouterOutput['getMe']['me']) => void
+}
+
+export const me: InjectionKey<ProfileContext> = Symbol('my-profile')

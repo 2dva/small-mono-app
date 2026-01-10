@@ -37,7 +37,7 @@ import { inject } from 'vue';
 import { me } from '../../lib/injectionKeys';
 
 // const store = usePosts()
-const myData = inject(me)!
+const { myData } = inject(me)!
 const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)

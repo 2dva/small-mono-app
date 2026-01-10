@@ -25,14 +25,13 @@
         <n-row :gutter="[0, 24]">
           <n-col :span="24">
             <div style="display: flex; justify-content: flex-end">
-              <n-button :disabled="modelRef.nickname === null" round type="primary" @click="handleValidateButtonClick">
+              <n-button :disabled="modelRef.nickname === null" round type="primary" @click="handleSignupButtonClick">
                 Sign up
               </n-button>
             </div>
           </n-col>
         </n-row>
       </n-form>
-      <!-- <pre>{{ JSON.stringify(modelRef, null, 2) }}</pre> -->
     </div>
   </div>
 </template>
@@ -122,7 +121,7 @@ function handlePasswordInput() {
   }
 }
 
-function handleValidateButtonClick(e: MouseEvent) {
+function handleSignupButtonClick(e: MouseEvent) {
   e.preventDefault()
   formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
@@ -136,11 +135,8 @@ function handleValidateButtonClick(e: MouseEvent) {
         message.success('Successful!')
         router.push({ path: getAllPostsRoute() })
       } catch (err: any) {
-        message.error('Something went wrong')
+          message.error(String(err))
       }
-    } else {
-      console.log(errors)
-      message.error('Invalid')
     }
   })
 }

@@ -11,6 +11,7 @@ export const getPostTrpcRoute = trpc.procedure.input(z.object({ nick: z.string()
         select: {
           id: true,
           nick: true,
+          name: true,
         }
       }
     }

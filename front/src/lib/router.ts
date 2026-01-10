@@ -13,6 +13,7 @@ import PostEdit from '../views/post/PostEdit.vue'
 import {
   getAllPostsRoute,
   getEditPostRoute,
+  getEditProfileRoute,
   getHomeRoute,
   getNewPostRoute,
   getSignInRoute,
@@ -21,6 +22,7 @@ import {
   getTreeRoute,
   getViewPostRoute,
 } from './routes'
+import EditProfile from '../views/auth/EditProfile.vue'
 
 const routes = [
   { path: getHomeRoute(), name: 'home', component: HomeView },
@@ -38,6 +40,7 @@ const routes = [
   { path: getSignUpRoute(), name: 'signup', component: SignUp },
   { path: getSignInRoute(), name: 'signin', component: SignIn },
   { path: getSignOutRoute(), name: 'signout', component: SignOut },
+  { path: getEditProfileRoute(), name: 'profile-edit', component: EditProfile },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',

@@ -49,7 +49,7 @@ interface ModelType {
   content: string | null
 }
 
-const myData = inject(me)!
+const { myData } = inject(me)!
 const error = ref<string | null>(null)
 const formRef = ref<FormInst | null>(null)
 const isSubmitting = ref(false)
