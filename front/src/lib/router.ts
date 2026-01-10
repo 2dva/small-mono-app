@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TreeRender from '../views/TreeRender.vue'
+import TreeRender from '../views/tree/TreeRender.vue'
 import HomeView from '../views/HomeView.vue'
 import NotFound from '../views/NotFound.vue'
 import Post from '../views/post/Post.vue'

@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { validateTree } from '@small-mono-app/backend/src/lib/tree.ts'
 import { computed, ref, onMounted } from 'vue'
-import { useTRPC } from '../lib/useTrpc.ts'
+import { useTRPC } from '../../lib/useTrpc.ts'
 
 const treeValue = ref('')
 const htmlTreeGraphic = ref('')

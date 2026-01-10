@@ -44,7 +44,7 @@ const generateQuery = trpc.generatePosts.useQuery(() => {}, {
 
 async function handleGenerateClick() {
   await generateQuery.refetch()
-  router.push({ name: 'posts' })
+  router.push({ path: getAllPostsRoute() })
 }
 
 usePosts().init()

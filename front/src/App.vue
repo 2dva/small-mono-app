@@ -33,11 +33,11 @@ watch(data, () => {
 })
 
 function onTabClick(value: string) {
-  if (!router.hasRoute(value)) {
+  if (router.hasRoute(value)) {
+    router.push({ name: value })
+  } else {
     router.push({ path: value })
-    return
   }
-  router.push({ name: value })
 }
 
 function updateTabTo(name: string) {

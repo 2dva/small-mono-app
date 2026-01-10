@@ -40,6 +40,7 @@ import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
 import { me } from '../../lib/injectionKeys'
+import { getAllPostsRoute } from '../../lib/routes'
 
 interface ModelType {
   title: string | null
@@ -115,7 +116,7 @@ function handleCreateButtonClick(e: MouseEvent) {
           content: modelRef.value.content as string,
         })
         message.success('Successful!')
-        router.push({ name: 'posts' })
+        router.push({ path: getAllPostsRoute() })
       } catch (err: any) {
         message.error(String(err))
       } finally {

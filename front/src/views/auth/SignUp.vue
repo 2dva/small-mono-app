@@ -44,6 +44,7 @@ import { ref } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import Cookies from 'js-cookie'
 import router from '../../lib/router'
+import { getAllPostsRoute } from '../../lib/routes'
 
 interface ModelType {
   nickname: string | null
@@ -133,7 +134,7 @@ function handleValidateButtonClick(e: MouseEvent) {
         Cookies.set('token', token, { expires: 99999 })
         trpc.getMe.invalidate()
         message.success('Successful!')
-        router.push({ name: 'posts' })
+        router.push({ path: getAllPostsRoute() })
       } catch (err: any) {
         message.error('Something went wrong')
       }
