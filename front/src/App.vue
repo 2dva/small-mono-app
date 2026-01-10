@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import LogPanel from './components/LogPanel.vue'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, provide, ref, watch } from 'vue'
 import { TabsInst } from 'naive-ui'
 import { useTRPC } from './lib/useTrpc'
+import { me } from './lib/injectionKeys'
+import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 
 const router = useRouter()
 const route = useRoute()
 const tabsInstRef = ref<TabsInst | null>(null)
 const valueRef = ref('home')
 const isAuthorized = ref<boolean | null>(null)
+const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
 
 const trpc = useTRPC()
 const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
@@ -20,11 +23,13 @@ const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
 let signOutLabel = ''
 
 watch(data, () => {
-  const nickname = data.value?.me?.nick
-  signOutLabel = `Sign out (${nickname})`
-  if (isLoading.value || isFetching.value || isError.value) isAuthorized.value = null
-  else isAuthorized.value = !!data.value?.me
-  console.log(`App: data changed`, data.value, nickname, isAuthorized.value)
+  if (data.value?.me !== undefined) {
+    const nickname = data.value.me?.nick
+    signOutLabel = `Sign out (${nickname})`
+    isAuthorized.value = !!data.value.me
+    myData.value = data.value.me
+    console.log(`App: data changed`, data.value, nickname, isAuthorized.value)
+  }
 })
 
 function onTabClick(value: string) {
@@ -45,8 +50,10 @@ watch(
   () => {
     updateTabTo(String(route.name))
   },
-  { immediate: true } // Run the watcher immediately on component mount
+  { immediate: true }
 )
+
+provide(me, myData)
 </script>
 
 <template>
@@ -68,7 +75,9 @@ watch(
               </n-card>
             </nav>
             <main style="">
-              <RouterView />
+              <div v-if="isLoading || isFetching">Loading...</div>
+              <div v-else-if="isError">Error</div>
+              <RouterView v-else />
             </main>
           </n-layout-content>
           <n-layout-sider

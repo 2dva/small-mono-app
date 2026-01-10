@@ -20,6 +20,10 @@ import { h } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { getAllPostsRoute, getNewPostRoute } from '../../lib/routes'
+import { inject } from 'vue'
+import { me } from '../../lib/injectionKeys'
+
+const myData = inject(me)!
 
 const menuOptions: MenuOption[] = [
   {
@@ -29,6 +33,7 @@ const menuOptions: MenuOption[] = [
   {
     label: () => h(RouterLink, { to: getNewPostRoute() }, () => 'New post'),
     key: 'post-add',
+    show: myData.value !== null,
   },
 ]
 

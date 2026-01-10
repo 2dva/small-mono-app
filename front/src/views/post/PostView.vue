@@ -6,7 +6,7 @@
         </template>
         <template v-slot:default>
           <div v-html="post.content"></div>
-          <n-button round color="#18a058" tag="a" :href="getEditPostRoute({ nick : post.nick })"> Edit post </n-button>
+          <n-button v-if="myData !== null" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>
         </template>
       </Segment>
   </div>
@@ -28,12 +28,15 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import Segment from '../../components/Segment.vue'
-import { usePosts } from '../../store/post';
 import { onMounted, ref } from 'vue';
 import { useTRPC } from '../../lib/useTrpc';
 import { getEditPostRoute } from '../../lib/routes';
+import router from '../../lib/router';
+import { inject } from 'vue';
+import { me } from '../../lib/injectionKeys';
 
 // const store = usePosts()
+const myData = inject(me)!
 const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)
@@ -46,6 +49,10 @@ const postViewQuery = trpc.getPost.useQuery(params, {
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
 })
+
+function handleEditButtonClick() {
+  router.push({ path: getEditPostRoute({ nick : post.value.nick })})
+}
 
 onMounted(async () => {
   console.log(`Posts:View:OnMounted`);

@@ -1,12 +1,12 @@
 <template>
   <div :class="$style['page-outer']">
     <div :class="$style['page-wrap']">
-      <div v-if="pageStatus === 'loading'">
+      <div v-if="isLoading">
         <n-space justify="center">
           <n-spin size="medium" />
         </n-space>
       </div>
-      <div v-else-if="pageStatus === 'error'">
+      <div v-else-if="error !== null">
         <span>{{ error }}</span>
       </div>
       <div v-else>
@@ -40,13 +40,14 @@
 <script setup lang="ts">
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { onMounted, ref, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
 import { useRoute } from 'vue-router'
 import { pick } from 'lodash'
 import { getViewPostRoute } from '../../lib/routes'
+import { me } from '../../lib/injectionKeys'
 
 interface ModelType {
   title: string | null
@@ -55,8 +56,9 @@ interface ModelType {
   content: string | null
 }
 
-const pageStatus = ref<string>('loading')
-const error = ref('')
+const myData = inject(me)!
+const isLoading = ref(true)
+const error = ref<string | null>(null)
 const post = ref()
 const route = useRoute()
 let id: string | null = null
@@ -70,55 +72,11 @@ const modelRef = ref<ModelType>({
   content: null,
 })
 const trpc = useTRPC()
-const params = ref({ nick })
-const getPostResult = trpc.getPost.useQuery(params, {
+const getPostResult = trpc.getPost.useQuery(ref({ nick }), {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
 })
-
-const getMeResult = trpc.getMe.useQuery(undefined, {
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-})
-
-function setError(msg: string) {
-  pageStatus.value = 'error'
-  error.value = msg
-}
-
-
-watch(getMeResult.status, () => {
-  console.log(`PostEdit:watch: getMeResult.status=${getMeResult.status.value} data=`, getMeResult.data.value);
-  
-  if (getMeResult.isError.value) {
-    setError('Error: ' + getMeResult.error.value)
-  } else if (!getMeResult.data.value?.me) {
-    setError('Error: NOT_AUTHORIZED')
-  }
-})
-
-onMounted(async () => {
-  console.log(`Posts:Edit:OnMounted`);
-
-  if (typeof nick !== 'undefined') {
-    await getPostResult.refetch()
-    if (getPostResult.isError.value) {
-      setError('Error: ' + getPostResult.error.value)
-    } else if (!getPostResult.data.value) {
-      setError('Post not found')
-    }
-    console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post);
-  
-    if (pageStatus.value !== 'error') {
-      pageStatus.value = 'ready'
-      post.value =  getPostResult.data.value?.post
-      id = post.value.id
-      modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
-    }
-  }
-});
 
 const updatePost = trpc.updatePost.useMutation()
 
@@ -183,6 +141,36 @@ function handleUpdateButtonClick(e: MouseEvent) {
     }
   }).catch(() => {})
 }
+
+function setError(msg: string) {
+  error.value = msg
+}
+
+console.log(`PostEdit:inject:me: `, myData.value);
+if (myData.value === null) {
+  setError('Error: NOT_AUTHORIZED')
+}
+
+onMounted(async () => {
+  console.log(`Posts:Edit:OnMounted`);
+
+  if (typeof nick !== 'undefined') {
+    await getPostResult.refetch()
+    if (getPostResult.isError.value) {
+      setError('Error: ' + getPostResult.error.value)
+      return
+    } else if (!getPostResult.data.value) {
+      setError('Post not found')
+      return
+    }
+    console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post);
+    isLoading.value = false
+    post.value =  getPostResult.data.value?.post
+    id = post.value.id
+    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
+  }
+});
+
 </script>
 
 <style module>

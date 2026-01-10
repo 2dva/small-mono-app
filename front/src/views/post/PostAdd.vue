@@ -1,28 +1,33 @@
 <template>
   <div :class="$style['page-outer']">
     <div :class="$style['page-wrap']">
-      <h1>New post</h1>
-      <n-form ref="formRef" :model="modelRef" :rules="rules">
-        <n-form-item path="title" label="Title">
-          <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="nick" label="Nick">
-          <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="description" label="Description">
-          <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="content" label="Text">
-          <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
-        </n-form-item>
-        <n-row :gutter="[0, 24]">
-          <n-col :span="24">
-            <div style="display: flex; justify-content: flex-end">
-              <n-button :disabled="false" round type="primary" @click="handleCreateButtonClick"> Create post </n-button>
-            </div>
-          </n-col>
-        </n-row>
-      </n-form>
+      <div v-if="error !== null">
+        <span>{{ error }}</span>
+      </div>
+      <div v-else>
+        <h1>New post</h1>
+        <n-form ref="formRef" :model="modelRef" :rules="rules">
+          <n-form-item path="title" label="Title">
+            <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="nick" label="Nick">
+            <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="description" label="Description">
+            <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
+          </n-form-item>
+          <n-form-item path="content" label="Text">
+            <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
+          </n-form-item>
+          <n-row :gutter="[0, 24]">
+            <n-col :span="24">
+              <div style="display: flex; justify-content: flex-end">
+                <n-button :disabled="false" round type="primary" @click="handleCreateButtonClick"> Create post </n-button>
+              </div>
+            </n-col>
+          </n-row>
+        </n-form>
+      </div>
     </div>
   </div>
 </template>
@@ -30,10 +35,11 @@
 <script setup lang="ts">
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
+import { me } from '../../lib/injectionKeys'
 
 interface ModelType {
   title: string | null
@@ -42,6 +48,8 @@ interface ModelType {
   content: string | null
 }
 
+const myData = inject(me)!
+const error = ref<string | null>(null)
 const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const modelRef = ref<ModelType>({
@@ -113,6 +121,11 @@ function handleCreateButtonClick(e: MouseEvent) {
     }
   }).catch(() => {})
 }
+
+if (myData.value === null) {
+  error.value = 'Error: NOT_AUTHORIZED'
+}
+
 </script>
 
 <style module>
