@@ -11,7 +11,7 @@
       </div>
       <div v-else>
         <h1>Edit post</h1>
-        <n-form ref="formRef" :model="modelRef" :rules="rules">
+        <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
           <n-form-item path="title" label="Title">
             <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
           </n-form-item>
@@ -62,6 +62,7 @@ const myData = inject(me)!
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 const post = ref()
+const isSubmitting = ref(false)
 const route = useRoute()
 let id: string | null = null
 const nick = String(route.params.nick)
@@ -128,6 +129,7 @@ function handleUpdateButtonClick(e: MouseEvent) {
     ?.validate(async (errors: Array<FormValidationError> | undefined) => {
       if (!errors) {
         try {
+          isSubmitting.value = true
           await updatePost
             .mutateAsync({
               postId: id as string,
@@ -136,12 +138,12 @@ function handleUpdateButtonClick(e: MouseEvent) {
               description: modelRef.value.description as string,
               content: modelRef.value.content as string,
             })
-            .then(() => {
-              message.success('Successful!')
-              router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
-            })
+          message.success('Successful!')
+          router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
         } catch (err: any) {
-          message.error(`${err}`)
+          message.error(String(err))
+        } finally {
+          isSubmitting.value = false
         }
       }
     })

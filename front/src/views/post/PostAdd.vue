@@ -6,7 +6,7 @@
       </div>
       <div v-else>
         <h1>New post</h1>
-        <n-form ref="formRef" :model="modelRef" :rules="rules">
+        <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
           <n-form-item path="title" label="Title">
             <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
           </n-form-item>
@@ -51,6 +51,7 @@ interface ModelType {
 const myData = inject(me)!
 const error = ref<string | null>(null)
 const formRef = ref<FormInst | null>(null)
+const isSubmitting = ref(false)
 const message = useMessage()
 const modelRef = ref<ModelType>({
   title: null,
@@ -103,20 +104,22 @@ const rules: FormRules = {
 
 function handleCreateButtonClick(e: MouseEvent) {
   e.preventDefault()
-  formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
+  formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       try {
-        createPost.mutateAsync({
+        isSubmitting.value = true
+        await createPost.mutateAsync({
           title: modelRef.value.title as string,
           nick: modelRef.value.nick as string,
           description: modelRef.value.description as string,
           content: modelRef.value.content as string,
-        }).then(() => {
-          message.success('Successful!')
-          router.push({ name: 'posts' })
         })
+        message.success('Successful!')
+        router.push({ name: 'posts' })
       } catch (err: any) {
-        message.error('Something went wrong')
+        message.error(String(err))
+      } finally {
+        isSubmitting.value = false
       }
     }
   }).catch(() => {})
