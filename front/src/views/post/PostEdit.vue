@@ -27,7 +27,9 @@
           <n-row :gutter="[0, 24]">
             <n-col :span="24">
               <div style="display: flex; justify-content: flex-end">
-                <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick"> Update post </n-button>
+                <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick">
+                  Update post
+                </n-button>
               </div>
             </n-col>
           </n-row>
@@ -40,7 +42,7 @@
 <script setup lang="ts">
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { inject, onMounted, ref, watch } from 'vue'
+import { inject, onMounted, ref } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import router from '../../lib/router'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
@@ -122,55 +124,61 @@ const rules: FormRules = {
 
 function handleUpdateButtonClick(e: MouseEvent) {
   e.preventDefault()
-  formRef.value?.validate((errors: Array<FormValidationError> | undefined) => {
-    if (!errors) {
-      try {
-        updatePost.mutateAsync({
-          postId: id as string,
-          title: modelRef.value.title as string,
-          nick: modelRef.value.nick as string,
-          description: modelRef.value.description as string,
-          content: modelRef.value.content as string,
-        }).then(() => {
-          message.success('Successful!')
-          router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string})})
-        })
-      } catch (err: any) {
-        message.error('Something went wrong')
+  formRef.value
+    ?.validate(async (errors: Array<FormValidationError> | undefined) => {
+      if (!errors) {
+        try {
+          await updatePost
+            .mutateAsync({
+              postId: id as string,
+              title: modelRef.value.title as string,
+              nick: modelRef.value.nick as string,
+              description: modelRef.value.description as string,
+              content: modelRef.value.content as string,
+            })
+            .then(() => {
+              message.success('Successful!')
+              router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
+            })
+        } catch (err: any) {
+          message.error(`${err}`)
+        }
       }
-    }
-  }).catch(() => {})
+    })
+    .catch(() => {})
 }
 
 function setError(msg: string) {
   error.value = msg
 }
 
-console.log(`PostEdit:inject:me: `, myData.value);
+console.log(`PostEdit:inject:me: `, myData.value)
 if (myData.value === null) {
   setError('Error: NOT_AUTHORIZED')
 }
 
 onMounted(async () => {
-  console.log(`Posts:Edit:OnMounted`);
+  console.log(`Posts:Edit:OnMounted`)
 
   if (typeof nick !== 'undefined') {
     await getPostResult.refetch()
+    isLoading.value = false
     if (getPostResult.isError.value) {
       setError('Error: ' + getPostResult.error.value)
       return
     } else if (!getPostResult.data.value) {
       setError('Post not found')
       return
+    } else if (myData.value?.id !== getPostResult.data.value.post?.authorId) {
+      setError('Error: not your post')
+      return
     }
-    console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post);
-    isLoading.value = false
-    post.value =  getPostResult.data.value?.post
+    console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post)
+    post.value = getPostResult.data.value?.post
     id = post.value.id
     modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
   }
-});
-
+})
 </script>
 
 <style module>

@@ -12,7 +12,7 @@ export const createPostTrpcRoute = trpc.procedure.input(zCreatePostTrpcInput).mu
     },
   })
   if (exPost) {
-    throw new Error('Idea with this nick already exists')
+    throw new Error('Post with this nick already exists')
   }
   await ctx.prisma.post.create({
     data: { ...input, authorId: ctx.me.id },

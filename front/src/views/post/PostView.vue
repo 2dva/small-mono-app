@@ -5,8 +5,9 @@
           <h1 :class="$style['postHead']">{{post.title}}</h1>
         </template>
         <template v-slot:default>
+          <div :class="$style['author']">Author: {{ post.author.nick }}</div>
           <div v-html="post.content"></div>
-          <n-button v-if="myData !== null" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>
+          <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>
         </template>
       </Segment>
   </div>
@@ -75,6 +76,8 @@ onMounted(async () => {
 .author {
   display: flex;
   flex-flow: row nowrap;
+  font-weight: bold;
+  font-size: 16px;
   margin: 10px 0;
   align-items: center;
 }

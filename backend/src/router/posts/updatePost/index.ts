@@ -18,7 +18,7 @@ export const updatePostTrpcRoute = trpc.procedure.input(zUpdatePostTrpcInput).mu
     throw new Error('NOT_FOUND')
   }
   if (ctx.me.id !== post.authorId) {
-    throw Error('NOT_YOUR_IDEA')
+    throw Error('NOT_YOUR_POST')
   }
   if (post.nick !== input.nick) {
     const exPost = await ctx.prisma.post.findUnique({
