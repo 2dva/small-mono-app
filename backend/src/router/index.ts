@@ -12,6 +12,7 @@ import { createPostTrpcRoute } from './posts/createPost'
 import { updatePostTrpcRoute } from './posts/updatePost'
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { updateProfileTrpcRoute } from './auth/updateProfile'
+import { changePasswordTrpcRoute } from './auth/changePassword'
 
 console.log(`Initializing TRPC`)
 
@@ -21,6 +22,7 @@ export const trpcRouter = trpc.router({
   signUp: signUpTrpcRoute,
   signIn: signInTrpcRoute,
   updateProfile: updateProfileTrpcRoute,
+  changePassword: changePasswordTrpcRoute,
   getTree: getTreeTrpcRoute,
   getSudggests: getSudggestsTrpcRoute,
   generatePosts: generatePostsTrpcRoute,

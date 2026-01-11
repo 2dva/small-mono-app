@@ -65,6 +65,7 @@ provide(me, { myData, setMyData })
                   <n-tab v-if="!myData" name="signup" tab="Sign up" />
                   <n-tab v-if="!myData" name="signin" tab="Sign in" />
                   <n-tab v-if="myData" name="profile-edit" tab="Edit profile" />
+                  <n-tab v-if="myData" name="change-pswd" tab="Change password" />
                   <n-tab v-if="myData" name="signout" :tab="`Sign out (${myData?.nick})`" />
                 </n-tabs>
               </n-card>

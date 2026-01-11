@@ -12,6 +12,7 @@ import PostAdd from '../views/post/PostAdd.vue'
 import PostEdit from '../views/post/PostEdit.vue'
 import {
   getAllPostsRoute,
+  getChangePasswordRoute,
   getEditPostRoute,
   getEditProfileRoute,
   getHomeRoute,
@@ -23,6 +24,7 @@ import {
   getViewPostRoute,
 } from './routes'
 import EditProfile from '../views/auth/EditProfile.vue'
+import ChangePassword from '../views/auth/ChangePassword.vue'
 
 const routes = [
   { path: getHomeRoute(), name: 'home', component: HomeView },
@@ -41,6 +43,7 @@ const routes = [
   { path: getSignInRoute(), name: 'signin', component: SignIn },
   { path: getSignOutRoute(), name: 'signout', component: SignOut },
   { path: getEditProfileRoute(), name: 'profile-edit', component: EditProfile },
+  { path: getChangePasswordRoute(), name: 'change-pswd', component: ChangePassword },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',

@@ -10,6 +10,8 @@ export const getSignOutRoute = () => '/signout'
 
 export const getEditProfileRoute = () => '/edit-profile'
 
+export const getChangePasswordRoute = () => '/change-password'
+
 export const getHomeRoute = () => '/'
 
 export const getTreeRoute = () => '/tree'
