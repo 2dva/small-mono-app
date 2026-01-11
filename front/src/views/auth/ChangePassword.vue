@@ -1,51 +1,44 @@
 <template>
-  <div class="page-outer">
-    <div class="page-wrap">
-      <h1>Change password</h1>
-      <n-form ref="formRef" :model="modelRef" :rules="rules">
-        <n-form-item path="oldPassword" label="Current password">
-          <n-input
-            v-model:value="modelRef.oldPassword"
-            type="password"
-            @input="handlePasswordInput"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-form-item path="password" label="Password">
-          <n-input
-            v-model:value="modelRef.newPassword"
-            type="password"
-            @input="handlePasswordInput"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="Re-enter Password">
-          <n-input
-            v-model:value="modelRef.reenteredPassword"
-            :disabled="!modelRef.newPassword"
-            type="password"
-            @keydown.enter.prevent
-          />
-        </n-form-item>
-        <n-row :gutter="[0, 24]">
-          <n-col :span="24">
-            <div style="display: flex; justify-content: flex-end">
-              <n-button :disabled="false" round type="primary" @click="handleChangeButtonClick">
-                Update password
-              </n-button>
-            </div>
-          </n-col>
-        </n-row>
-      </n-form>
-    </div>
+  <div v-if="error !== null">
+    <span>{{ error }}</span>
   </div>
+  <form-wrapper v-else v-bind="formData" @submit="onSubmit">
+    <template v-slot:default>
+      <n-form-item path="oldPassword" label="Current password">
+        <n-input
+          v-model:value="modelRef.oldPassword"
+          type="password"
+          @input="handlePasswordInput"
+          @keydown.enter.prevent
+        />
+      </n-form-item>
+      <n-form-item path="password" label="Password">
+        <n-input
+          v-model:value="modelRef.newPassword"
+          type="password"
+          @input="handlePasswordInput"
+          @keydown.enter.prevent
+        />
+      </n-form-item>
+      <n-form-item ref="rPasswordFormItemRef" first path="reenteredPassword" label="Re-enter Password">
+        <n-input
+          v-model:value="modelRef.reenteredPassword"
+          :disabled="!modelRef.newPassword"
+          type="password"
+          @keydown.enter.prevent
+        />
+      </n-form-item>
+    </template>
+  </form-wrapper>
 </template>
 
 <script setup lang="ts">
-import type { FormInst, FormItemInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
+import FormWrapper from '../../components/FormWrapper.vue'
+import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
+import { me } from '../../lib/injectionKeys'
 
 interface ModelType {
   oldPassword: string | null
@@ -53,8 +46,10 @@ interface ModelType {
   reenteredPassword: string | null
 }
 
+const { myData } = inject(me)!
 const formRef = ref<FormInst | null>(null)
 const rPasswordFormItemRef = ref<FormItemInst | null>(null)
+const error = ref<string | null>(null)
 const message = useMessage()
 const modelRef = ref<ModelType>({
   oldPassword: null,
@@ -63,6 +58,10 @@ const modelRef = ref<ModelType>({
 })
 const trpc = useTRPC()
 const changePswd = trpc.changePassword.useMutation()
+
+if (myData.value === null) {
+  error.value = 'Error: NOT_AUTHORIZED'
+}
 
 function validatePasswordStartWith(_rule: FormItemRule, value: string): boolean {
   return (
@@ -114,36 +113,26 @@ function handlePasswordInput() {
   }
 }
 
-function handleChangeButtonClick(e: MouseEvent) {
-  e.preventDefault()
-  formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
-    if (!errors) {
-      try {
-        await changePswd.mutateAsync({
-          oldPassword: modelRef.value.oldPassword as string,
-          newPassword: modelRef.value.newPassword as string,
-        })
-        trpc.getMe.invalidate()
-        formRef.value?.restoreValidation()
-        message.success('Successful!')
-      } catch (err: any) {
-          message.error(String(err))
-      }
-    }
-  })
+async function onSubmit() {
+  try {
+    await changePswd.mutateAsync({
+      oldPassword: modelRef.value.oldPassword as string,
+      newPassword: modelRef.value.newPassword as string,
+    })
+    trpc.getMe.invalidate()
+    formRef.value?.restoreValidation()
+    message.success('Successful!')
+  } catch (err: any) {
+    message.error(String(err))
+  }
+}
+
+const formData = {
+  title: 'Change password',
+  modelRef: modelRef.value,
+  rules,
+  submitTitle: 'Update password',
 }
 </script>
 
-<style scoped>
-.page-outer {
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 400px;
-}
-
-.page-wrap {
-  margin: 0 auto;
-}
-</style>
+<style scoped></style>

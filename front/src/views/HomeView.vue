@@ -10,6 +10,10 @@
 </script>
 
 <style scoped>
+h1 {
+  text-align: center;
+}
+
 .info {
   text-align: center;
 }
