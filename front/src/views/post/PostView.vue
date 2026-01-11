@@ -5,8 +5,9 @@
           <h1>{{post.title}}</h1>
         </template>
         <template v-slot:default>
-          <div class="author">Author: {{ post.author.nick }}</div>
-          <div v-html="post.content"></div>
+          <div class="author">Author: {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}</div>
+          <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
+          <div class="text" v-html="post.content"></div>
           <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>&nbsp;
           <n-button v-if="myData?.id === post.authorId" round type="warning" @click="handleRemoveButtonClick"> Delete post </n-button>&nbsp;
         </template>
@@ -72,7 +73,7 @@ onMounted(async () => {
 
 </script>
 
-<style>
+<style scoped>
 .createdAt {
   font-size: 12px;
   margin-bottom: 10px;
