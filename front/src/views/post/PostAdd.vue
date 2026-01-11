@@ -1,34 +1,30 @@
 <template>
-  <div :class="$style['page-outer']">
-    <div :class="$style['page-wrap']">
-      <div v-if="error !== null">
-        <span>{{ error }}</span>
-      </div>
-      <div v-else>
-        <h1>New post</h1>
-        <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
-          <n-form-item path="title" label="Title">
-            <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
-          </n-form-item>
-          <n-form-item path="nick" label="Nick">
-            <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
-          </n-form-item>
-          <n-form-item path="description" label="Description">
-            <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
-          </n-form-item>
-          <n-form-item path="content" label="Text">
-            <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
-          </n-form-item>
-          <n-row :gutter="[0, 24]">
-            <n-col :span="24">
-              <div style="display: flex; justify-content: flex-end">
-                <n-button :disabled="false" round type="primary" @click="handleCreateButtonClick"> Create post </n-button>
-              </div>
-            </n-col>
-          </n-row>
-        </n-form>
-      </div>
-    </div>
+  <div v-if="error !== null">
+    <span>{{ error }}</span>
+  </div>
+  <div v-else>
+    <h1>New post</h1>
+    <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
+      <n-form-item path="title" label="Title">
+        <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
+      </n-form-item>
+      <n-form-item path="nick" label="Nick">
+        <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
+      </n-form-item>
+      <n-form-item path="description" label="Description">
+        <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
+      </n-form-item>
+      <n-form-item path="content" label="Text">
+        <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
+      </n-form-item>
+      <n-row :gutter="[0, 24]">
+        <n-col :span="24">
+          <div style="display: flex; justify-content: flex-end">
+            <n-button :disabled="false" round type="primary" @click="handleCreateButtonClick"> Create post </n-button>
+          </div>
+        </n-col>
+      </n-row>
+    </n-form>
   </div>
 </template>
 
@@ -132,16 +128,5 @@ if (myData.value === null) {
 
 </script>
 
-<style module>
-.page-outer {
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 400px;
-}
-
-.page-wrap {
-  margin: 0 auto;
-}
+<style scoped>
 </style>

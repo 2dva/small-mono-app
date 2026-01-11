@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style['page-outer']">
-    <div :class="$style['page-wrap']">
+  <div class="page-outer">
+    <div class="page-wrap">
       <div v-if="error !== null">
         <span>{{ error }}</span>
       </div>
@@ -106,7 +106,7 @@ function handleUpdateButtonClick(e: MouseEvent) {
 }
 </script>
 
-<style module>
+<style scoped>
 .page-outer {
   margin: 10px;
   display: flex;

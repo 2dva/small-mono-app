@@ -1,6 +1,6 @@
 <template>
-  <div :class="$style['page-outer']">
-    <div :class="$style['page-wrap']">
+  <div class="page-outer">
+    <div class="page-wrap">
       <h1>Sign up</h1>
       <n-form ref="formRef" :model="modelRef" :rules="rules">
         <n-form-item path="nickname" label="Nickname">
@@ -142,7 +142,7 @@ function handleSignupButtonClick(e: MouseEvent) {
 }
 </script>
 
-<style module>
+<style scoped>
 .page-outer {
   margin: 10px;
   display: flex;

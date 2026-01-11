@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style['tree-render']">
-    <div :class="$style['tree-wrap']">
-      <h1 :class="$style['header']">Tree Render</h1>
+  <div class="tree-render">
+    <div class="tree-wrap">
+      <h1 class="header">Tree Render</h1>
       <form @submit.prevent="">
-        <div :class="$style['tree-input-wrap']">
+        <div class="tree-input-wrap">
           <n-auto-complete
             v-model:value="treeValue"
             ref="inputSource"
@@ -17,8 +17,8 @@
         </div>
         <n-button type="primary" native-type="submit" size="large" focusable @click="onDrawClick">Отрисовать</n-button>
       </form>
-      <p v-if="treeError" :class="$style['tree-error']">{{ treeError }}</p>
-      <pre v-else :class="$style['tree-space']">{{ treeGraphicFromBackend }}</pre>
+      <p v-if="treeError" class="tree-error">{{ treeError }}</p>
+      <pre v-else class="tree-space">{{ treeGraphicFromBackend }}</pre>
     </div>
   </div>
 </template>
@@ -88,7 +88,7 @@ async function onDrawClick() {
 }
 </script>
 
-<style module>
+<style scoped>
 .tree-render {
   margin: 10px;
   display: flex;

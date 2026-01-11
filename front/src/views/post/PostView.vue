@@ -2,12 +2,13 @@
   <div v-if="post">
       <Segment :title="post.title" size="1" :description="post.description" children="">
         <template v-slot:header>
-          <h1 :class="$style['postHead']">{{post.title}}</h1>
+          <h1>{{post.title}}</h1>
         </template>
         <template v-slot:default>
-          <div :class="$style['author']">Author: {{ post.author.nick }}</div>
+          <div class="author">Author: {{ post.author.nick }}</div>
           <div v-html="post.content"></div>
-          <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>
+          <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>&nbsp;
+          <n-button v-if="myData?.id === post.authorId" round type="warning" @click="handleRemoveButtonClick"> Delete post </n-button>&nbsp;
         </template>
       </Segment>
   </div>
@@ -55,6 +56,10 @@ function handleEditButtonClick() {
   router.push({ path: getEditPostRoute({ nick : post.value.nick })})
 }
 
+function handleRemoveButtonClick() {
+  // TODO
+}
+
 onMounted(async () => {
   console.log(`Posts:View:OnMounted`);
   if (typeof id !== 'undefined') {
@@ -67,7 +72,7 @@ onMounted(async () => {
 
 </script>
 
-<style module>
+<style>
 .createdAt {
   font-size: 12px;
   margin-bottom: 10px;

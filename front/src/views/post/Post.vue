@@ -1,10 +1,10 @@
 <template>
-  <div :class="$style['layout']">
-    <div :class="$style['left-menu']">
+  <div class="layout">
+    <div class="left-menu">
       <n-menu :options="menuOptions" />
       <n-button type="primary" size="medium" @click="handleGenerateClick"  style="margin: 8px">Generate</n-button>
     </div>
-    <div :class="$style['content']">
+    <div class="content">
       <RouterView />
     </div>
   </div>
@@ -54,23 +54,22 @@ onMounted(() => {
 })
 </script>
 
-<style module>
-h1 {
-  text-align: center;
-}
-
+<style scoped>
 .layout {
   position: relative;
   padding-top: 1px;
   display: flex;
 }
 
+.content {
+  flex-grow: 1;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+}
+
 .left-menu {
   width: 200px;
   border-right: 1px solid #eeeeee;
-}
-
-.content {
-   flex-grow: 1;
 }
 </style>
