@@ -17,14 +17,14 @@
 </template>
 
 <script setup lang="ts">
+import Cookies from 'js-cookie'
 import type { FormItemInst, FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { ref } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
-import Cookies from 'js-cookie'
+import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
 import { getAllPostsRoute } from '../../lib/routes'
-import FormWrapper from '../../components/FormWrapper.vue'
+import { useTRPC } from '../../lib/useTrpc'
 
 interface ModelType {
   nickname: string | null

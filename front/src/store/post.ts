@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 const DEFAULT_POSTS_NUMBER = 3
 export const CONTENT_MIN_LENGTH = 50
 
-export type User = {
+export interface User {
   id: string
   nick: string
   name?: string
@@ -12,9 +12,9 @@ export type User = {
   createdAt: string
 }
 
-export type Post = { [k: string]: any }
+export interface Post { [k: string]: any }
 
-export type RootState = {
+export interface RootState {
   allPosts: Post[]
   counter: number
 }

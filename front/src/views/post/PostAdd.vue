@@ -32,11 +32,11 @@
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { inject, ref } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
-import router from '../../lib/router'
-import { CONTENT_MIN_LENGTH } from '../../store/post'
 import { me } from '../../lib/injectionKeys'
+import router from '../../lib/router'
 import { getAllPostsRoute } from '../../lib/routes'
+import { useTRPC } from '../../lib/useTrpc'
+import { CONTENT_MIN_LENGTH } from '../../store/post'
 
 interface ModelType {
   title: string | null
@@ -101,32 +101,32 @@ const rules: FormRules = {
 
 function handleCreateButtonClick(e: MouseEvent) {
   e.preventDefault()
-  formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
-    if (!errors) {
-      try {
-        isSubmitting.value = true
-        await createPost.mutateAsync({
-          title: modelRef.value.title as string,
-          nick: modelRef.value.nick as string,
-          description: modelRef.value.description as string,
-          content: modelRef.value.content as string,
-        })
-        message.success('Successful!')
-        router.push({ path: getAllPostsRoute() })
-      } catch (err: any) {
-        message.error(String(err))
-      } finally {
-        isSubmitting.value = false
+  formRef.value
+    ?.validate(async (errors: Array<FormValidationError> | undefined) => {
+      if (!errors) {
+        try {
+          isSubmitting.value = true
+          await createPost.mutateAsync({
+            title: modelRef.value.title as string,
+            nick: modelRef.value.nick as string,
+            description: modelRef.value.description as string,
+            content: modelRef.value.content as string,
+          })
+          message.success('Successful!')
+          router.push({ path: getAllPostsRoute() })
+        } catch (err: any) {
+          message.error(String(err))
+        } finally {
+          isSubmitting.value = false
+        }
       }
-    }
-  }).catch(() => {})
+    })
+    .catch(() => {})
 }
 
 if (myData.value === null) {
   error.value = 'Error: NOT_AUTHORIZED'
 }
-
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

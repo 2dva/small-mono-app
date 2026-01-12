@@ -16,7 +16,7 @@ export const captureLogs = () => {
   }
 
   // hook up standard output
-  let unhook_stdout = hook_stream(process.stdout, function(params) {
+  hook_stream(process.stdout, function(params) {
       ee.emit('log', params)
       old_write(JSON.stringify(params));
       return true
@@ -25,7 +25,7 @@ export const captureLogs = () => {
 }
 
 if (EMIT_DUMMY_EVENTS) {
-  const intervalId = setInterval(() => {
+  setInterval(() => {
     const data = { timestamp: new Date().toISOString() };
     console.log(data)
   }, 30000);

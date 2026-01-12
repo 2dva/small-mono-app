@@ -47,7 +47,8 @@ export default defineConfig([globalIgnores(["**/node_modules", "**/dist", "**/*.
 
     rules: {
         "no-new": "off",
-        "no-unused-vars": ["warn"],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error"],
         "import/order": ["error", {
             alphabetize: {
                 order: "asc",
@@ -56,7 +57,7 @@ export default defineConfig([globalIgnores(["**/node_modules", "**/dist", "**/*.
             },
         }],
 
-        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/prefer-nullish-coalescing": "off",
         "@typescript-eslint/explicit-function-return-type": "off",

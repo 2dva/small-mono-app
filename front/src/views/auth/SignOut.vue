@@ -5,8 +5,8 @@
 <script setup lang="ts">
 import Cookies from 'js-cookie'
 import router from '../../lib/router'
-import { useTRPC } from '../../lib/useTrpc'
 import { getSignInRoute } from '../../lib/routes'
+import { useTRPC } from '../../lib/useTrpc'
 
 Cookies.remove('token')
 const trpc = useTRPC()

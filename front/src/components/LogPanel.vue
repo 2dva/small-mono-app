@@ -69,14 +69,12 @@ function handleReachBottom() {
 }
 
 const trpc = useTRPC()
-const result = trpc.onLogAdd.useSubscription(undefined, {
+trpc.onLogAdd.useSubscription(undefined, {
   onData: (data) => {
     console.log(`TRPC SSE: ${data}`)
     logRef.value = logRef.value + String(data) + '\n'
   },
 })
-
-
 
 
 // const eventSource = new EventSource('http://localhost:3000/events'); // Подключаемся к /events

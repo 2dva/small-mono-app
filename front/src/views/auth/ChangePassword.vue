@@ -33,12 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import FormWrapper from '../../components/FormWrapper.vue'
 import type { FormInst, FormItemInst, FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { inject, ref } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
+import FormWrapper from '../../components/FormWrapper.vue'
 import { me } from '../../lib/injectionKeys'
+import { useTRPC } from '../../lib/useTrpc'
 
 interface ModelType {
   oldPassword: string | null

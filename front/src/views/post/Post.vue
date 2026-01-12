@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="left-menu">
       <n-menu :options="menuOptions" />
-      <n-button type="primary" size="medium" @click="handleGenerateClick"  style="margin: 8px">Generate</n-button>
+      <n-button type="primary" size="medium" @click="handleGenerateClick" style="margin: 8px">Generate</n-button>
     </div>
     <div class="content">
       <RouterView />
@@ -11,19 +11,18 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { usePosts } from '../../store/post'
-import { onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
 import { MenuOption } from 'naive-ui'
+import { onMounted } from 'vue'
 import { h } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
+import { inject } from 'vue'
+import { RouterLink } from 'vue-router'
+import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getAllPostsRoute, getNewPostRoute } from '../../lib/routes'
-import { inject } from 'vue'
-import { me } from '../../lib/injectionKeys'
+import { useTRPC } from '../../lib/useTrpc'
+import { usePosts } from '../../store/post'
 
-const  { myData } = inject(me)!
+const { myData } = inject(me)!
 
 const menuOptions: MenuOption[] = [
   {

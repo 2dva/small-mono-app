@@ -1,17 +1,21 @@
 <template>
   <div v-if="post">
-      <Segment :title="post.title" size="1" :description="post.description" children="">
-        <template v-slot:header>
-          <h1>{{post.title}}</h1>
-        </template>
-        <template v-slot:default>
-          <div class="author">Author: {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}</div>
-          <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
-          <div class="text" v-html="post.content"></div>
-          <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick"> Edit post </n-button>&nbsp;
-          <n-button v-if="myData?.id === post.authorId" round type="warning" @click="handleRemoveButtonClick"> Delete post </n-button>&nbsp;
-        </template>
-      </Segment>
+    <Segment :title="post.title" size="1" :description="post.description" children="">
+      <template v-slot:header>
+        {{ post.title }}
+      </template>
+      <template v-slot:default>
+        <div class="author">Author: {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}</div>
+        <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
+        <div class="text">{{ post.content }}</div>
+        <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick">
+          Edit post </n-button
+        >&nbsp;
+        <n-button v-if="myData?.id === post.authorId" round type="warning" @click="handleRemoveButtonClick">
+          Delete post </n-button
+        >&nbsp;
+      </template>
+    </Segment>
   </div>
   <div v-if="postViewQuery.isPending.value">
     <n-space justify="center">
@@ -19,24 +23,19 @@
     </n-space>
   </div>
   <div v-if="post === null || postViewQuery.isError.value">
-    <n-result
-      status="404"
-      title="404 Not Found"
-      description="Wa can't find any post here."
-    >
-    </n-result>
+    <n-result status="404" title="404 Not Found" description="Wa can't find any post here."> </n-result>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue'
+import { inject } from 'vue'
+import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
-import { onMounted, ref } from 'vue';
-import { useTRPC } from '../../lib/useTrpc';
-import { getEditPostRoute } from '../../lib/routes';
-import router from '../../lib/router';
-import { inject } from 'vue';
-import { me } from '../../lib/injectionKeys';
+import { me } from '../../lib/injectionKeys'
+import router from '../../lib/router'
+import { getEditPostRoute } from '../../lib/routes'
+import { useTRPC } from '../../lib/useTrpc'
 
 // const store = usePosts()
 const { myData } = inject(me)!
@@ -54,7 +53,7 @@ const postViewQuery = trpc.getPost.useQuery(params, {
 })
 
 function handleEditButtonClick() {
-  router.push({ path: getEditPostRoute({ nick : post.value.nick })})
+  router.push({ path: getEditPostRoute({ nick: post.value.nick }) })
 }
 
 function handleRemoveButtonClick() {
@@ -62,15 +61,14 @@ function handleRemoveButtonClick() {
 }
 
 onMounted(async () => {
-  console.log(`Posts:View:OnMounted`);
+  console.log(`Posts:View:OnMounted`)
   if (typeof id !== 'undefined') {
     await postViewQuery.refetch()
-    console.log(`Posts:View:getResponse:`, postViewQuery.data?.value?.post);
-    post.value =  postViewQuery.data.value?.post
+    console.log(`Posts:View:getResponse:`, postViewQuery.data?.value?.post)
+    post.value = postViewQuery.data.value?.post
     // post.value = store.getPost(id)
   }
-});
-
+})
 </script>
 
 <style scoped>

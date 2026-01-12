@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
+import { TabsInst } from 'naive-ui'
+import { nextTick, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LogPanel from './components/LogPanel.vue'
-import { nextTick, provide, ref, watch } from 'vue'
-import { TabsInst } from 'naive-ui'
-import { useTRPC } from './lib/useTrpc'
 import { me } from './lib/injectionKeys'
-import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
+import { useTRPC } from './lib/useTrpc'
 
 const router = useRouter()
 const route = useRoute()

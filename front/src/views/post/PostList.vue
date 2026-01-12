@@ -3,7 +3,7 @@
     <h1>Posts</h1>
     <div class="posts">
       <div v-for="post in posts" :class="post.author.id === myData?.id ? 'post post_own' : 'post'" :key="post.nick">
-        <Segment :title="post.title" size="2" :description="post.description" children="">
+        <Segment size="2" :description="post.description">
           <template v-slot:header>
             <RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
           </template>
@@ -14,13 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import Segment from '../../components/Segment.vue'
-import { Post } from '../../store/post'
 import { inject, onMounted, ref } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
-import { getViewPostRoute } from '../../lib/routes'
+import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
+import { getViewPostRoute } from '../../lib/routes'
+import { useTRPC } from '../../lib/useTrpc'
+import { Post } from '../../store/post'
 
 // const store = usePosts()
 // const { allPosts: posts } = storeToRefs(store)
@@ -34,8 +33,8 @@ onMounted(async () => {
   await queryData.refetch()
 
   if (typeof queryData.data.value !== 'undefined') {
-    console.log(`Post:list: got values:`, queryData.data.value.posts);
-    
+    console.log(`Post:list: got values:`, queryData.data.value.posts)
+
     posts.value = queryData.data.value.posts
   }
 })

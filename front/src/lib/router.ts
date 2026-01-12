@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TreeRender from '../views/tree/TreeRender.vue'
 import HomeView from '../views/HomeView.vue'
 import NotFound from '../views/NotFound.vue'
-import Post from '../views/post/Post.vue'
-import PostList from '../views/post/PostList.vue'
-import PostView from '../views/post/PostView.vue'
-import SignUp from '../views/auth/SignUp.vue'
+import ChangePassword from '../views/auth/ChangePassword.vue'
+import EditProfile from '../views/auth/EditProfile.vue'
 import SignIn from '../views/auth/SignIn.vue'
 import SignOut from '../views/auth/SignOut.vue'
+import SignUp from '../views/auth/SignUp.vue'
+import Post from '../views/post/Post.vue'
 import PostAdd from '../views/post/PostAdd.vue'
 import PostEdit from '../views/post/PostEdit.vue'
+import PostList from '../views/post/PostList.vue'
+import PostView from '../views/post/PostView.vue'
+import TreeRender from '../views/tree/TreeRender.vue'
 import {
   getAllPostsRoute,
   getChangePasswordRoute,
@@ -23,8 +25,6 @@ import {
   getTreeRoute,
   getViewPostRoute,
 } from './routes'
-import EditProfile from '../views/auth/EditProfile.vue'
-import ChangePassword from '../views/auth/ChangePassword.vue'
 
 const routes = [
   { path: getHomeRoute(), name: 'home', component: HomeView },

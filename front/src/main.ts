@@ -1,10 +1,10 @@
 import './style.css'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import naive from 'naive-ui'
+import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './lib/router'
-import { createPinia } from 'pinia'
 import { createTrpcClient } from './lib/useTrpc'
 
 const app = createApp(App)

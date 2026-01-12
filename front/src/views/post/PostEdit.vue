@@ -25,9 +25,7 @@
       <n-row :gutter="[0, 24]">
         <n-col :span="24">
           <div style="display: flex; justify-content: flex-end">
-            <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick">
-              Update post
-            </n-button>
+            <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick"> Update post </n-button>
           </div>
         </n-col>
       </n-row>
@@ -36,16 +34,16 @@
 </template>
 
 <script setup lang="ts">
+import { pick } from 'lodash'
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { inject, onMounted, ref } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
-import router from '../../lib/router'
-import { CONTENT_MIN_LENGTH } from '../../store/post'
 import { useRoute } from 'vue-router'
-import { pick } from 'lodash'
-import { getViewPostRoute } from '../../lib/routes'
 import { me } from '../../lib/injectionKeys'
+import router from '../../lib/router'
+import { getViewPostRoute } from '../../lib/routes'
+import { useTRPC } from '../../lib/useTrpc'
+import { CONTENT_MIN_LENGTH } from '../../store/post'
 
 interface ModelType {
   title: string | null
@@ -126,14 +124,13 @@ function handleUpdateButtonClick(e: MouseEvent) {
       if (!errors) {
         try {
           isSubmitting.value = true
-          await updatePost
-            .mutateAsync({
-              postId: id as string,
-              title: modelRef.value.title as string,
-              nick: modelRef.value.nick as string,
-              description: modelRef.value.description as string,
-              content: modelRef.value.content as string,
-            })
+          await updatePost.mutateAsync({
+            postId: id as string,
+            title: modelRef.value.title as string,
+            nick: modelRef.value.nick as string,
+            description: modelRef.value.description as string,
+            content: modelRef.value.content as string,
+          })
           message.success('Successful!')
           router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
         } catch (err: any) {
@@ -179,5 +176,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
