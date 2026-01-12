@@ -142,18 +142,21 @@ export function processTree(s: string) {
 }
 
 function generateTreeString(n: number): string {
-  let output = ''
+  let output = '', lastActionWasTree = false
   for (let i = 0; i < n; i++) {
     let action = Math.floor(Math.random() * 11)
     switch (true) {
-      case action < 2 && i > 0 && n > 1:
+      case action < 2 && i > 0 && n > 1 && !lastActionWasTree:
         output += generateTreeString(n - i)
+        lastActionWasTree = true
         break
       case action < 6:
         output += action * 8
+        lastActionWasTree = false
         break
       default:
         output += action
+        lastActionWasTree = false
     }
     output += ' '
   }
