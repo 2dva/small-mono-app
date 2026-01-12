@@ -2,7 +2,7 @@
   <div v-if="error !== null">
     <span>{{ error }}</span>
   </div>
-  <form-wrapper v-else v-bind="formData" @submit="onSubmit">
+  <form-wrapper v-else v-bind="formData">
     <template v-slot:default>
       <n-form-item path="oldPassword" label="Current password">
         <n-input
@@ -132,6 +132,7 @@ const formData = {
   modelRef: modelRef.value,
   rules,
   submitTitle: 'Update password',
+  submitFunction: onSubmit,
 }
 </script>
 

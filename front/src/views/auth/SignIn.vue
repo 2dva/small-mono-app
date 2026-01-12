@@ -1,5 +1,5 @@
 <template>
-  <form-wrapper v-bind="formData" @submit="onSubmit">
+  <form-wrapper v-bind="formData">
     <template v-slot:default>
       <n-form-item path="nickname" label="Nickname">
         <n-input v-model:value="modelRef.nickname" @keydown.enter.prevent />
@@ -87,6 +87,7 @@ const formData = {
   modelRef: modelRef.value,
   rules,
   submitTitle: 'Sign in',
+  submitFunction: onSubmit,
 }
 </script>
 

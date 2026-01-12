@@ -2,7 +2,7 @@
   <div v-if="error !== null">
     <span>{{ error }}</span>
   </div>
-  <form-wrapper v-else v-bind="formData" @submit="onSubmit">
+  <form-wrapper v-else v-bind="formData">
     <template v-slot:default>
       <n-form-item path="nickname" label="Nickname">
         <n-input v-model:value="modelRef.nickname" @keydown.enter.prevent />
@@ -29,7 +29,6 @@ interface ModelType {
 
 const { myData, setMyData } = inject(me)!
 const error = ref<string | null>(null)
-const isSubmitting = ref(false)
 const message = useMessage()
 
 if (myData.value === null) {
@@ -72,7 +71,6 @@ const rules: FormRules = {
 
 async function onSubmit() {
   try {
-    isSubmitting.value = true
     const updatedMe = await updateProfile.mutateAsync({
       nick: modelRef.value.nickname as string,
       name: modelRef.value.name as string,
@@ -81,8 +79,6 @@ async function onSubmit() {
     setMyData(updatedMe)
   } catch (err: any) {
     message.error(String(err))
-  } finally {
-    isSubmitting.value = false
   }
 }
 
@@ -91,6 +87,7 @@ const formData = {
   modelRef: modelRef.value,
   rules,
   submitTitle: 'Update profile',
+  submitFunction: onSubmit,
 }
 </script>
 

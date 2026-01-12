@@ -2,7 +2,7 @@
   <div class="form-outer">
     <div class="form-wrap">
       <h1>{{ props.title }}</h1>
-      <n-form ref="formRef" :model="props.modelRef" :rules="props.rules">
+      <n-form ref="formRef" :model="props.modelRef" :rules="props.rules" :disabled="isSubmittingForm">
         <!-- Слот для полей формы -->
         <slot></slot>
         <n-row :gutter="[0, 24]">
@@ -30,10 +30,14 @@ interface Props {
   modelRef: object
   rules?: FormRules
   submitTitle: string
+  isSubmitting?: Ref<boolean>
+  submitFunction?: Function
 }
 
 const props = withDefaults(defineProps<Props>(), {
   title: '',
+  isSubmitting: () => ref(false),
+  submitFunction: () => {},
 })
 
 const emit = defineEmits<{
@@ -42,12 +46,16 @@ const emit = defineEmits<{
 }>()
 
 const formRef = ref<FormInst | null>(null)
+const isSubmittingForm = ref(false)
 
-function onSubmit(e: MouseEvent) {
+async function onSubmit(e: MouseEvent) {
   e.preventDefault()
   formRef.value?.validate(async (errors: Array<FormValidationError> | undefined) => {
     if (!errors) {
       emit('submit')
+      isSubmittingForm.value = true
+      await props.submitFunction()
+      isSubmittingForm.value = false
     }
   })
 }
