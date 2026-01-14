@@ -24,10 +24,10 @@
     "resolveJsonModule": true,
     "inlineSources": true,
     "isolatedModules": false,
-    "lib": ["ES2021"],
+    "lib": ["ES2022"],
     "module": "commonjs",
     "moduleResolution": "Node",
-    "target": "ES2021"
+    "target": "es2022"
   },
   "include": ["src", "tree.test.ts"]
 }

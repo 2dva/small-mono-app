@@ -6,13 +6,16 @@ import { useRoute, useRouter } from 'vue-router'
 import LogPanel from './components/LogPanel.vue'
 import { me } from './lib/injectionKeys'
 import { useTRPC } from './lib/useTrpc'
+import { layoutScrollEvent } from './lib/scrollEventEmitter'
 
 const router = useRouter()
 const route = useRoute()
 const tabsInstRef = ref<TabsInst | null>(null)
 const valueRef = ref('home')
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
-const setMyData = (data: TrpcRouterOutput['getMe']['me']) => { myData.value = data }
+const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
+  myData.value = data
+}
 
 const trpc = useTRPC()
 const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
@@ -47,6 +50,10 @@ watch(
   { immediate: true }
 )
 
+function handleLoad() {
+  layoutScrollEvent.emit()
+}
+
 provide(me, { myData, setMyData })
 </script>
 
@@ -55,26 +62,28 @@ provide(me, { myData, setMyData })
     <n-message-provider>
       <n-notification-provider>
         <n-layout has-sider sider-placement="right" position="absolute">
-          <n-layout-content content-style="padding: 0;">
-            <nav>
-              <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
-                <n-tabs ref="tabsInstRef" type="card" v-model:value="valueRef" animated @update:value="onTabClick">
-                  <n-tab name="home" tab="Home" />
-                  <n-tab name="posts" tab="Posts" />
-                  <n-tab name="tree" tab="Tree render" />
-                  <n-tab v-if="!myData" name="signup" tab="Sign up" />
-                  <n-tab v-if="!myData" name="signin" tab="Sign in" />
-                  <n-tab v-if="myData" name="profile-edit" tab="Edit profile" />
-                  <n-tab v-if="myData" name="change-pswd" tab="Change password" />
-                  <n-tab v-if="myData" name="signout" :tab="`Sign out (${myData?.nick})`" />
-                </n-tabs>
-              </n-card>
-            </nav>
-            <main style="">
-              <div v-if="isLoading || isFetching">Loading...</div>
-              <div v-else-if="isError">Error</div>
-              <RouterView v-else />
-            </main>
+          <n-layout-content content-style="padding: 0; position: relative;">
+            <n-infinite-scroll class="scrollable" :distance="150" @load="handleLoad">
+              <nav>
+                <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
+                  <n-tabs ref="tabsInstRef" type="card" v-model:value="valueRef" animated @update:value="onTabClick">
+                    <n-tab name="home" tab="Home" />
+                    <n-tab name="posts" tab="Posts" />
+                    <n-tab name="tree" tab="Tree render" />
+                    <n-tab v-if="!myData" name="signup" tab="Sign up" />
+                    <n-tab v-if="!myData" name="signin" tab="Sign in" />
+                    <n-tab v-if="myData" name="profile-edit" tab="Edit profile" />
+                    <n-tab v-if="myData" name="change-pswd" tab="Change password" />
+                    <n-tab v-if="myData" name="signout" :tab="`Sign out (${myData?.nick})`" />
+                  </n-tabs>
+                </n-card>
+              </nav>
+              <main style="">
+                <div v-if="isLoading || isFetching">Loading...</div>
+                <div v-else-if="isError">Error</div>
+                <RouterView v-else />
+              </main>
+            </n-infinite-scroll>
           </n-layout-content>
           <n-layout-sider
             collapse-mode="transform"
@@ -93,3 +102,13 @@ provide(me, { myData, setMyData })
     </n-message-provider>
   </n-loading-bar-provider>
 </template>
+
+<style scoped>
+.scrollable {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+</style>

@@ -9,34 +9,45 @@
           </template>
         </Segment>
       </div>
+      <div v-if="isFetchingNextPage" class="more"><span>Loading...</span></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref } from 'vue'
+import { inject, ref, watch } from 'vue'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
 import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
+import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 
-// const store = usePosts()
-// const { allPosts: posts } = storeToRefs(store)
 const posts = ref<Post[]>([])
 const { myData } = inject(me)!
-
 const trpc = useTRPC()
-const queryData = trpc.getPosts.useQuery(() => {}, { enabled: false })
-
-onMounted(async () => {
-  await queryData.refetch()
-
-  if (typeof queryData.data.value !== 'undefined') {
-    console.log(`Post:list: got values:`, queryData.data.value.posts)
-
-    posts.value = queryData.data.value.posts
+const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.getPosts.useInfiniteQuery(() => {
+  return {
+    limit: 2
   }
+}, { 
+  getNextPageParam: (lastPage) => {
+    return lastPage.nextCursor
+  },
+  refetchOnWindowFocus: false,
+  refetchOnMount: false,
+ })
+
+watch(data, () => {
+  if (typeof data.value !== 'undefined') {
+    console.log(`Post:list: got pages:`, data.value.pages)
+    posts.value = data.value.pages.flatMap((page) => page.posts)
+  }
+})
+
+layoutScrollEvent.on(() => {
+  if (!hasNextPage.value || isFetchingNextPage.value) return
+  fetchNextPage()
 })
 </script>
 
@@ -65,4 +76,9 @@ h1 {
 .post.post_own {
   background-color: #f3fff3;
 }
+
+.more {
+  margin-top: 15px;
+}
+
 </style>
