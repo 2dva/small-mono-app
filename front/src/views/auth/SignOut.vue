@@ -1,5 +1,7 @@
 <template>
-  <div>Loading...</div>
+  <n-space justify="center">
+    <n-spin size="medium" />
+  </n-space>
 </template>
 
 <script setup lang="ts">

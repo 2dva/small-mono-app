@@ -2,7 +2,7 @@
   <div class="tree-render">
     <div class="tree-wrap">
       <h1 class="header">Tree Render</h1>
-      <form @submit.prevent="">
+      <form class="tree-form" @submit.prevent="">
         <div class="tree-input-wrap">
           <n-auto-complete
             v-model:value="treeValue"
@@ -18,6 +18,9 @@
         <n-button type="primary" native-type="submit" size="large" focusable @click="onDrawClick">Отрисовать</n-button>
       </form>
       <p v-if="treeError" class="tree-error">{{ treeError }}</p>
+      <n-space v-else-if="isLoading" justify="center">
+        <n-spin size="medium" />
+      </n-space>
       <pre v-else class="tree-space">{{ treeGraphicFromBackend }}</pre>
     </div>
   </div>
@@ -37,6 +40,7 @@ const suggestsSource = ref<string[]>([])
 const trpc = useTRPC()
 const treeMutation = trpc.getTree.useMutation()
 const queryData = trpc.getSudggests.useQuery(() => {}, { enabled: false })
+const isLoading = ref(false)
 
 const options = computed(() => {
   const prefix = treeValue.value
@@ -72,7 +76,8 @@ function clearOutput() {
 async function onDrawClick() {
   clearOutput()
 
-  treeGraphicFromBackend.value = 'Loading...'
+  isLoading.value = true
+  // treeGraphicFromBackend.value = 'Loading...'
 
   try {
     const stringTree = treeValue.value.trim()
@@ -83,6 +88,8 @@ async function onDrawClick() {
   } catch (e) {
     clearOutput()
     treeError.value = String(e) || `Error while parsing tree`
+  } finally {
+    isLoading.value = false
   }
   ;(inputSource.value! as HTMLInputElement).focus()
 }
@@ -105,6 +112,10 @@ async function onDrawClick() {
   max-width: 200px;
   display: inline-block;
   margin-right: 4px;
+}
+
+.tree-form {
+  margin-bottom: 10px;
 }
 
 h1.header {

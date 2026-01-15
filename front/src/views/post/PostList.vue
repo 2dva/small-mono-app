@@ -9,7 +9,9 @@
           </template>
         </Segment>
       </div>
-      <div v-if="isFetchingNextPage" class="more"><span>Loading...</span></div>
+      <n-space v-if="isFetchingNextPage" justify="center">
+        <n-spin size="medium" />
+      </n-space>
     </div>
   </div>
 </template>

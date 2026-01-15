@@ -79,7 +79,9 @@ provide(me, { myData, setMyData })
                 </n-card>
               </nav>
               <main style="">
-                <div v-if="isLoading || isFetching">Loading...</div>
+                <n-space v-if="isLoading || isFetching" justify="center">
+                  <n-spin size="medium" />
+                </n-space>
                 <div v-else-if="isError">Error</div>
                 <RouterView v-else />
               </main>
