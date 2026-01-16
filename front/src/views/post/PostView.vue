@@ -1,6 +1,6 @@
 <template>
   <div v-if="post">
-    <Segment :title="post.title" size="1" :description="post.description" children="">
+    <Segment :title="post.title" size="1" :description="post.description">
       <template v-slot:header>
         {{ post.title }}
       </template>

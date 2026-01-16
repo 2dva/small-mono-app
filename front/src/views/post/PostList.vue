@@ -40,6 +40,10 @@ const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.getPosts.u
   refetchOnMount: false,
  })
 
+ if (data.value) {
+  posts.value = data.value?.pages.flatMap((page) => page.posts)
+}
+
 watch(data, () => {
   if (typeof data.value !== 'undefined') {
     console.log(`Post:list: got pages:`, data.value.pages)
