@@ -25,6 +25,18 @@ export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(
         },
       },
     },
+    where: !input.search
+      ? undefined
+      : {
+          OR: [
+            {
+              title: input.search,
+            },
+            {
+              nick: input.search,
+            },
+          ],
+        },
     orderBy: [
       {
         createdAt: 'desc',

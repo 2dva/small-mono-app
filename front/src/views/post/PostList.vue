@@ -2,14 +2,26 @@
   <div>
     <h1>Posts</h1>
     <div class="posts">
+      <div class="search">
+        <n-input
+          name="search_string"
+          v-model:value="searchRef"
+          placeholder="Type title to search"
+          maxlength="99"
+          @keydown.enter.prevent
+          clearable
+        />
+      </div>
+      <n-alert v-if="isError" title="Error" type="error">
+        {{ error }}
+      </n-alert>
+      <n-alert v-else-if="!posts.length" title="No results" type="info"> No results for this request </n-alert>
       <div v-for="post in posts" :class="post.author.id === myData?.id ? 'post post_own' : 'post'" :key="post.nick">
         <Segment size="2" :description="post.description">
           <template v-slot:header>
             <RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
           </template>
-          <template v-slot:default>
-            Likes: {{ post.likesCount }}
-          </template>
+          <template v-slot:default> Likes: {{ post.likesCount }} </template>
         </Segment>
       </div>
       <n-space v-if="isFetching || isLoading" justify="center">
@@ -27,22 +39,31 @@ import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
 import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
+import { refDebounced } from '@vueuse/core'
 
 const MAX_POSTS_PER_PAGE = 4
 const posts = ref<Post[]>([])
 const { myData } = inject(me)!
+const searchRef = ref('')
+const debouncedSearch = refDebounced(searchRef, 400)
 const trpc = useTRPC()
-const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isFetching } = trpc.getPosts.useInfiniteQuery(() => {
-  return {
-    limit: MAX_POSTS_PER_PAGE
-  }
-}, { 
-  getNextPageParam: (lastPage) => {
-    return lastPage.nextCursor
-  },
- })
 
- if (data.value) {
+const { data, hasNextPage, isError, error, fetchNextPage, isFetchingNextPage, isLoading, isFetching } =
+  trpc.getPosts.useInfiniteQuery(
+    () => {
+      return {
+        limit: MAX_POSTS_PER_PAGE,
+        search: debouncedSearch.value,
+      }
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextCursor
+      },
+    }
+  )
+
+if (data.value) {
   posts.value = data.value?.pages.flatMap((page) => page.posts)
 }
 
@@ -85,8 +106,11 @@ h1 {
   background-color: #f3fff3;
 }
 
+.search {
+  margin-bottom: 20px;
+}
+
 .more {
   margin-top: 15px;
 }
-
 </style>
