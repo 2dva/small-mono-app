@@ -43,6 +43,7 @@ export default defineConfig([
                 '@small-mono-app/backend/**',
                 '!@small-mono-app/backend/**',
                 '!@small-mono-app/backend/src/lib/tree.ts',
+                '!@small-mono-app/backend/src/utils/can.ts',
               ],
               allowTypeImports: true,
               message: 'Only types and schemas are allowedd to import from backend',

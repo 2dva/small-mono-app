@@ -2,7 +2,7 @@
   <div>
     <h1>Posts</h1>
     <div class="posts">
-      <div class="search">
+      <div class="filter">
         <n-input
           name="search_string"
           v-model:value="searchRef"
@@ -104,10 +104,6 @@ h1 {
 
 .post.post_own {
   background-color: #f3fff3;
-}
-
-.search {
-  margin-bottom: 20px;
 }
 
 .more {

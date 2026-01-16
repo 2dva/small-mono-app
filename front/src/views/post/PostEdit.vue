@@ -4,9 +4,9 @@
       <n-spin size="medium" />
     </n-space>
   </div>
-  <div v-else-if="error !== null">
-    <span>{{ error }}</span>
-  </div>
+  <n-alert v-else-if="error !== null" title="Error" type="error">
+    {{ error }}
+  </n-alert>
   <div v-else>
     <h1>Edit post</h1>
     <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
@@ -44,6 +44,7 @@ import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
+import { canEditPost } from '@small-mono-app/backend/src/utils/can'
 
 interface ModelType {
   title: string | null
@@ -164,7 +165,7 @@ onMounted(async () => {
     } else if (!getPostResult.data.value) {
       setError('Post not found')
       return
-    } else if (myData.value?.id !== getPostResult.data.value.post?.authorId) {
+    } else if (!canEditPost(myData.value, getPostResult.data.value.post)) {
       setError('Error: not your post')
       return
     }

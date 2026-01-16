@@ -1,5 +1,16 @@
 <template>
-  <div v-if="post">
+  <div v-if="isPending">
+    <n-space justify="center">
+      <n-spin size="medium" />
+    </n-space>
+  </div>
+  <n-alert v-else-if="isError" title="Error" type="error">
+    {{ error }}
+  </n-alert>
+  <div v-else-if="post === null">
+    <n-result status="404" title="404 Not Found" description="Wa can't find any post here."> </n-result>
+  </div>
+  <div v-else-if="post">
     <Segment :title="post.title" size="1" :description="post.description">
       <template v-slot:header>
         {{ post.title }}
@@ -11,26 +22,23 @@
         <div class="likes">
           Likes: {{ post.likesCount }}
           <div v-if="myData">
-            <br />
             <PostLikeButton :post="post"></PostLikeButton>
           </div>
         </div>
-        <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick">
-          Edit post </n-button
-        >&nbsp;
-        <n-button v-if="myData?.id === post.authorId" round type="warning" @click="console.log('Not yet')">
-          Delete post </n-button
-        >&nbsp;
+        <n-button
+          class="bottom-btn"
+          v-if="canEditPost(myData, post)"
+          round
+          type="primary"
+          @click="handleEditButtonClick"
+        >
+          Edit post
+        </n-button>
+        <n-button class="bottom-btn" v-if="canBlockPost(myData)" round type="warning" @click="handleBlockButtonClick">
+          Block post
+        </n-button>
       </template>
     </Segment>
-  </div>
-  <div v-if="isPending">
-    <n-space justify="center">
-      <n-spin size="medium" />
-    </n-space>
-  </div>
-  <div v-if="post === null || isError">
-    <n-result status="404" title="404 Not Found" description="Wa can't find any post here."> </n-result>
   </div>
 </template>
 
@@ -44,17 +52,27 @@ import router from '../../lib/router'
 import { getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
+import { canBlockPost, canEditPost } from '@small-mono-app/backend/src/utils/can'
 
 const { myData } = inject(me)!
 const route = useRoute()
 const id = String(route.params.nick)
 const trpc = useTRPC()
 const params = ref({ nick: id })
-const { data, isPending, isError } = trpc.getPost.useQuery(params)
+const { data, refetch, isPending, isError, error } = trpc.getPost.useQuery(params, {
+  refetchOnWindowFocus: false,
+  retry: 1,
+})
 
 const post = computed(() => {
   return data.value?.post
 })
+const blockPost = trpc.blockPost.useMutation()
+
+async function handleBlockButtonClick() {
+  await blockPost.mutateAsync({ postId: post.value?.id! })
+  refetch()
+}
 
 function handleEditButtonClick() {
   router.push({ path: getEditPostRoute({ nick: post.value!.nick }) })
@@ -95,7 +113,12 @@ function handleEditButtonClick() {
   font-size: 14px;
 }
 
-.editButton {
-  margin-top: 20px;
+.likes {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bottom-btn {
+  margin-right: 10px;
 }
 </style>

@@ -30,6 +30,9 @@ export const getPostTrpcRoute = trpc.procedure.input(z.object({ nick: z.string()
       },
     },
   })
+  if (rawPost?.blockedAt) {
+    throw new Error('Post is blocked by administrator')
+  }
 
   const isLikedByMe = !!rawPost?.postLikes.length
   const likesCount = rawPost?._count.postLikes || 0
