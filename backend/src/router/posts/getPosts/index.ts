@@ -25,9 +25,9 @@ export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(
         },
       },
     },
-    where: !input.search
-      ? undefined
-      : {
+    where: {
+      blockedAt: null,
+      ...(!input.search ? {} : {
           OR: [
             {
               title: input.search,
@@ -36,7 +36,8 @@ export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(
               nick: input.search,
             },
           ],
-        },
+      })
+    },
     orderBy: [
       {
         createdAt: 'desc',

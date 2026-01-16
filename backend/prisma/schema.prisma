@@ -18,6 +18,13 @@ model User {
   createdAt DateTime   @default(now())
   posts     Post[]
   postLikes PostLike[]
+  role      UserRole   @default(DEFAULT)
+}
+
+enum UserRole {
+  DEFAULT
+  CAN_BLOCK_POST
+  CAN_ALL
 }
 
 model Post {
@@ -29,6 +36,7 @@ model Post {
   content      String
   published    Boolean    @default(false)
   createdAt    DateTime   @default(now())
+  blockedAt    DateTime?
   author       User       @relation(fields: [authorId], references: [id])
   authorId     String
   postLikes    PostLike[]

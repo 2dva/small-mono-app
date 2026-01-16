@@ -23,11 +23,11 @@ pnpm run test
 
 ### Server
 
-NodeJS + Express + tRPC
+NodeJS + Express + tRPC + Prisma + SQLite
 
 ### Client
 
-Vite + Vue + Vue-query
+Vite + Vue + tanstack/vue-query + tRPC
 
 ### Common
 

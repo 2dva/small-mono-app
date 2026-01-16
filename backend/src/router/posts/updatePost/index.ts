@@ -1,5 +1,6 @@
-import { zUpdatePostTrpcInput } from "./input";
+import { zUpdatePostTrpcInput } from './input'
 import { trpc } from '../../../lib/trpc'
+import { canEditPost } from '../../../utils/can'
 
 export const updatePostTrpcRoute = trpc.procedure.input(zUpdatePostTrpcInput).mutation(async ({ ctx, input }) => {
   const { postId, ...postINput } = input
@@ -17,7 +18,7 @@ export const updatePostTrpcRoute = trpc.procedure.input(zUpdatePostTrpcInput).mu
   if (!post) {
     throw new Error('NOT_FOUND')
   }
-  if (ctx.me.id !== post.authorId) {
+  if (!canEditPost(ctx.me, post)) {
     throw Error('NOT_YOUR_POST')
   }
   if (post.nick !== input.nick) {
