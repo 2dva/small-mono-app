@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted, ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
 import { getViewPostRoute } from '../../lib/routes'
@@ -28,19 +28,18 @@ import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
 import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 
+const MAX_POSTS_PER_PAGE = 4
 const posts = ref<Post[]>([])
 const { myData } = inject(me)!
 const trpc = useTRPC()
 const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isFetching } = trpc.getPosts.useInfiniteQuery(() => {
   return {
-    limit: 2
+    limit: MAX_POSTS_PER_PAGE
   }
 }, { 
   getNextPageParam: (lastPage) => {
     return lastPage.nextCursor
   },
-  refetchOnWindowFocus: false,
-  refetchOnMount: true,
  })
 
  if (data.value) {
@@ -52,10 +51,6 @@ watch(data, () => {
     console.log(`Post:list: got pages:`, data.value.pages)
     posts.value = data.value.pages.flatMap((page) => page.posts)
   }
-})
-
-onMounted(() => {
-  
 })
 
 layoutScrollEvent.on(() => {

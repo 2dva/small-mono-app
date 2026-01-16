@@ -9,7 +9,7 @@
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
         <div class="likes">
-          Likes: {{ post.likesCount}}
+          Likes: {{ post.likesCount }}
           <div v-if="myData">
             <br />
             <PostLikeButton :post="post"></PostLikeButton>
@@ -18,7 +18,7 @@
         <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick">
           Edit post </n-button
         >&nbsp;
-        <n-button v-if="myData?.id === post.authorId" round type="warning" @click="handleRemoveButtonClick">
+        <n-button v-if="myData?.id === post.authorId" round type="warning" @click="console.log('Not yet')">
           Delete post </n-button
         >&nbsp;
       </template>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { inject } from 'vue'
 import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
@@ -45,40 +45,20 @@ import { getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
 
-// const store = usePosts()
 const { myData } = inject(me)!
-const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)
 const trpc = useTRPC()
-
 const params = ref({ nick: id })
-const { refetch, data, isPending, isError } = trpc.getPost.useQuery(params, {
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
+const { data, isPending, isError } = trpc.getPost.useQuery(params)
+
+const post = computed(() => {
+  return data.value?.post
 })
 
 function handleEditButtonClick() {
-  router.push({ path: getEditPostRoute({ nick: post.value.nick }) })
+  router.push({ path: getEditPostRoute({ nick: post.value!.nick }) })
 }
-
-function handleRemoveButtonClick() {
-  // TODO
-}
-
-watch(data, () => {
-    post.value = data.value?.post
-})
-
-onMounted(async () => {
-  console.log(`Posts:View:OnMounted`)
-  if (typeof id !== 'undefined') {
-    // await refetch()
-    console.log(`Posts:View:getResponse:`, data?.value?.post)
-    // post.value = store.getPost(id)
-  }
-})
 </script>
 
 <style scoped>

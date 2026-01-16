@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router';
 
@@ -15,7 +15,7 @@ const isLikedPost = ref(false)
 const trpc = useTRPC()
 const setPostLike = trpc.setPostLike.useMutation({
     onMutate: ({ isLikedByMe }) => {
-      // Тут нам надо переписать кеш с актуальным значением likesCount и isLIkedByMe
+      // Тут нам надо переписать кеш с актуальным значением likesCount и isLikedByMe
 
       // const oldGetPostData = trpc.getPost.getData({ nick: post.value.nick })
       // if (oldGetPostData?.post) {
@@ -36,12 +36,13 @@ const setPostLike = trpc.setPostLike.useMutation({
 })
 
 function handleLikeButtonClick() {
-  console.log(`LIKE IT!`, props.post.id);
   isLikedPost.value = !isLikedPost.value
   setPostLike.mutateAsync({ postId: props.post.id, isLikedByMe: isLikedPost.value })
 }
 
-onMounted(() => {
+isLikedPost.value = props.post.isLikedByMe
+
+watch(props, () => {
   isLikedPost.value = props.post.isLikedByMe
 })
 </script>
