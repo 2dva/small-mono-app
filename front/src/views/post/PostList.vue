@@ -43,6 +43,10 @@ const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isFetch
   refetchOnMount: true,
  })
 
+ if (data.value) {
+  posts.value = data.value?.pages.flatMap((page) => page.posts)
+}
+
 watch(data, () => {
   if (typeof data.value !== 'undefined') {
     console.log(`Post:list: got pages:`, data.value.pages)
