@@ -1,6 +1,6 @@
 <template>
   <div v-if="post">
-    <Segment :title="post.title" size="1" :description="post.description" children="">
+    <Segment :title="post.title" size="1" :description="post.description">
       <template v-slot:header>
         {{ post.title }}
       </template>
@@ -8,6 +8,13 @@
         <div class="author">Author: {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}</div>
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
+        <div class="likes">
+          Likes: {{ post.likesCount}}
+          <div v-if="myData">
+            <br />
+            <PostLikeButton :post="post"></PostLikeButton>
+          </div>
+        </div>
         <n-button v-if="myData?.id === post.authorId" round type="primary" @click="handleEditButtonClick">
           Edit post </n-button
         >&nbsp;
@@ -17,18 +24,18 @@
       </template>
     </Segment>
   </div>
-  <div v-if="postViewQuery.isPending.value">
+  <div v-if="isPending">
     <n-space justify="center">
       <n-spin size="medium" />
     </n-space>
   </div>
-  <div v-if="post === null || postViewQuery.isError.value">
+  <div v-if="post === null || isError">
     <n-result status="404" title="404 Not Found" description="Wa can't find any post here."> </n-result>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { inject } from 'vue'
 import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
@@ -36,17 +43,17 @@ import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
+import PostLikeButton from './PostLikeButton.vue'
 
 // const store = usePosts()
 const { myData } = inject(me)!
 const post = ref()
 const route = useRoute()
 const id = String(route.params.nick)
-
 const trpc = useTRPC()
 
 const params = ref({ nick: id })
-const postViewQuery = trpc.getPost.useQuery(params, {
+const { refetch, data, isPending, isError } = trpc.getPost.useQuery(params, {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
@@ -60,12 +67,15 @@ function handleRemoveButtonClick() {
   // TODO
 }
 
+watch(data, () => {
+    post.value = data.value?.post
+})
+
 onMounted(async () => {
   console.log(`Posts:View:OnMounted`)
   if (typeof id !== 'undefined') {
-    await postViewQuery.refetch()
-    console.log(`Posts:View:getResponse:`, postViewQuery.data?.value?.post)
-    post.value = postViewQuery.data.value?.post
+    // await refetch()
+    console.log(`Posts:View:getResponse:`, data?.value?.post)
     // post.value = store.getPost(id)
   }
 })

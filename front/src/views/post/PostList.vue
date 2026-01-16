@@ -7,9 +7,12 @@
           <template v-slot:header>
             <RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
           </template>
+          <template v-slot:default>
+            Likes: {{ post.likesCount }}
+          </template>
         </Segment>
       </div>
-      <n-space v-if="isFetchingNextPage" justify="center">
+      <n-space v-if="isFetching || isLoading" justify="center">
         <n-spin size="medium" />
       </n-space>
     </div>
@@ -17,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, watch } from 'vue'
+import { inject, onMounted, ref, watch } from 'vue'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
 import { getViewPostRoute } from '../../lib/routes'
@@ -28,7 +31,7 @@ import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 const posts = ref<Post[]>([])
 const { myData } = inject(me)!
 const trpc = useTRPC()
-const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.getPosts.useInfiniteQuery(() => {
+const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, isFetching } = trpc.getPosts.useInfiniteQuery(() => {
   return {
     limit: 2
   }
@@ -37,7 +40,7 @@ const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = trpc.getPosts.u
     return lastPage.nextCursor
   },
   refetchOnWindowFocus: false,
-  refetchOnMount: false,
+  refetchOnMount: true,
  })
 
 watch(data, () => {
@@ -45,6 +48,10 @@ watch(data, () => {
     console.log(`Post:list: got pages:`, data.value.pages)
     posts.value = data.value.pages.flatMap((page) => page.posts)
   }
+})
+
+onMounted(() => {
+  
 })
 
 layoutScrollEvent.on(() => {

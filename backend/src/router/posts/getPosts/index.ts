@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { trpc } from '../../../lib/trpc'
 import { zGetPostsTrpcInput } from './input'
 
@@ -9,8 +10,21 @@ export const defaultPosts = [
 ]
 
 export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(async ({ ctx, input }) => {
-  const posts = await ctx.prisma.post.findMany({
-    select: { serialNumber: true, id: true, nick: true, title: true, description: true, published: true, author: true },
+  const rawPosts = await ctx.prisma.post.findMany({
+    select: {
+      serialNumber: true,
+      id: true,
+      nick: true,
+      title: true,
+      description: true,
+      published: true,
+      author: true,
+      _count: {
+        select: {
+          postLikes: true,
+        },
+      },
+    },
     orderBy: [
       {
         createdAt: 'desc',
@@ -22,8 +36,12 @@ export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(
     cursor: input.cursor ? { serialNumber: input.cursor } : undefined,
     take: input.limit + 1,
   })
-  const nextPost = posts.at(input.limit)
+  const nextPost = rawPosts.at(input.limit)
   const nextCursor = nextPost?.serialNumber
-  const postsExceptNext = posts.slice(0, input.limit)
+  const rawPostsExceptNext = rawPosts.slice(0, input.limit)
+  const postsExceptNext = rawPostsExceptNext.map((post) => ({
+    ..._.omit(post, ['_count']),
+    likesCount: post._count.postLikes,
+  }))
   return { posts: postsExceptNext, nextCursor }
 })

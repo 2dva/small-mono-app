@@ -1,10 +1,11 @@
 import z from 'zod'
 import { trpc } from '../../../lib/trpc'
+import _ from 'lodash'
 
 export const getPostTrpcRoute = trpc.procedure.input(z.object({ nick: z.string() })).query(async (req) => {
   const { ctx, input } = req
   console.log(`BACK:TRPC:getPost:byId: ${input.nick}`)
-  const post = await ctx.prisma.post.findUnique({
+  const rawPost = await ctx.prisma.post.findUnique({
     where: { nick: input.nick },
     include: {
       author: {
@@ -12,10 +13,27 @@ export const getPostTrpcRoute = trpc.procedure.input(z.object({ nick: z.string()
           id: true,
           nick: true,
           name: true,
-        }
-      }
-    }
+        },
+      },
+      postLikes: {
+        select: {
+          id: true,
+        },
+        where: {
+          userId: ctx.me?.id,
+        },
+      },
+      _count: {
+        select: {
+          postLikes: true,
+        },
+      },
+    },
   })
-  console.log(`BACK:TRPC:getPost:post: ${post}`)
-  return { post: post || null }
+
+  const isLikedByMe = !!rawPost?.postLikes.length
+  const likesCount = rawPost?._count.postLikes || 0
+  const post = rawPost && { ..._.omit(rawPost, ['postLikes', '_count']), isLikedByMe, likesCount }
+  console.log(`BACK:TRPC:getPost:post: ${rawPost}`)
+  return { post }
 })
