@@ -7,6 +7,7 @@ import LogPanel from './components/LogPanel.vue'
 import { me } from './lib/injectionKeys'
 import { useTRPC } from './lib/useTrpc'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
+import LogoBlog from './assets/images/logo-blogger.svg?component'
 
 const router = useRouter()
 const route = useRoute()
@@ -64,7 +65,10 @@ provide(me, { myData, setMyData })
         <n-layout has-sider sider-placement="right" position="absolute">
           <n-layout-content content-style="padding: 0; position: relative;">
             <n-infinite-scroll class="scrollable" :distance="150" @load="handleLoad">
-              <nav>
+              <nav class="nav">
+                <div class="logo">
+                  <LogoBlog />
+                </div>
                 <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
                   <n-tabs ref="tabsInstRef" type="card" v-model:value="valueRef" animated @update:value="onTabClick">
                     <n-tab name="home" tab="Home" />
@@ -106,6 +110,18 @@ provide(me, { myData, setMyData })
 </template>
 
 <style scoped>
+.nav {
+  display: flex;
+}
+.logo {
+  margin: 16px;
+  width: 48px;
+  height: 48px;
+}
+.logo svg { 
+  width: 100%;
+  height: auto;
+}
 .scrollable {
   position: absolute;
   top: 0;
