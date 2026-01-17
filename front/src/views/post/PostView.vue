@@ -8,7 +8,11 @@
     {{ error }}
   </n-alert>
   <div v-else-if="post === null">
-    <n-result status="404" title="404 Not Found" description="Wa can't find any post here."> </n-result>
+    <n-result status="404" title="404 Not Found" description="We can't find any post here.">
+      <template #footer>
+        <n-button @click="router.push({ path: getAllPostsRoute() })">Show all posts</n-button>
+      </template>
+    </n-result>
   </div>
   <div v-else-if="post">
     <Segment :title="post.title" size="1" :description="post.description">
@@ -49,7 +53,7 @@ import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
-import { getEditPostRoute } from '../../lib/routes'
+import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
 import { canBlockPost, canEditPost } from '@small-mono-app/backend/src/utils/can'

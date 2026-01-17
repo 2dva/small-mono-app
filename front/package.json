@@ -18,6 +18,7 @@
     "@small-mono-app/backend": "workspace:*",
     "@tanstack/vue-query": "^5.92.1",
     "@trpc/client": "^11.7.2",
+    "@vicons/ionicons5": "^0.13.0",
     "@vitejs/plugin-vue": "^6.0.2",
     "@vueuse/core": "^14.1.0",
     "js-cookie": "^3.0.5",
