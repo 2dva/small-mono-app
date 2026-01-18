@@ -1,6 +1,6 @@
+import _ from 'lodash'
 import z from 'zod'
 import { trpc } from '../../../lib/trpc'
-import _ from 'lodash'
 
 export const getPostTrpcRoute = trpc.procedure.input(z.object({ nick: z.string() })).query(async (req) => {
   const { ctx, input } = req

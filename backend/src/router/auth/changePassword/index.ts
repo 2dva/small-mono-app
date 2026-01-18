@@ -1,6 +1,6 @@
 import { trpc } from '../../../lib/trpc'
-import { zChangePasswordTrpcInput } from './input'
 import { getPasswordHash } from '../../../utils/getPasswordHash'
+import { zChangePasswordTrpcInput } from './input'
 
 export const changePasswordTrpcRoute = trpc.procedure.input(zChangePasswordTrpcInput).mutation(async ({ ctx, input }) => {
   if (!ctx.me) {

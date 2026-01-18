@@ -1,6 +1,6 @@
-import { zUpdatePostTrpcInput } from './input'
 import { trpc } from '../../../lib/trpc'
 import { canEditPost } from '../../../utils/can'
+import { zUpdatePostTrpcInput } from './input'
 
 export const updatePostTrpcRoute = trpc.procedure.input(zUpdatePostTrpcInput).mutation(async ({ ctx, input }) => {
   const { postId, ...postINput } = input

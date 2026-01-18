@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { canEditPost } from '@small-mono-app/backend/src/utils/can'
 import { pick } from 'lodash'
 import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
 import { useMessage } from 'naive-ui'
@@ -44,7 +45,6 @@ import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
-import { canEditPost } from '@small-mono-app/backend/src/utils/can'
 
 interface ModelType {
   title: string | null

@@ -4,6 +4,9 @@
       <n-form-item path="nickname" label="Nickname">
         <n-input v-model:value="modelRef.nickname" @keydown.enter.prevent />
       </n-form-item>
+      <n-form-item path="emal" label="Email">
+        <n-input v-model:value="modelRef.email" @keydown.enter.prevent />
+      </n-form-item>
       <n-form-item path="password" label="Password">
         <n-input
           v-model:value="modelRef.password"
@@ -36,6 +39,7 @@ import { useTRPC } from '../../lib/useTrpc'
 
 interface ModelType {
   nickname: string | null
+  email: string | null
   password: string | null
   reenteredPassword: string | null
 }
@@ -44,6 +48,7 @@ const rPasswordFormItemRef = ref<FormItemInst | null>(null)
 const message = useMessage()
 const modelRef = ref<ModelType>({
   nickname: null,
+  email: null,
   password: null,
   reenteredPassword: null,
 })
@@ -75,6 +80,12 @@ const rules: FormRules = {
         return true
       },
       trigger: ['input', 'blur'],
+    },
+  ],
+  email: [
+    {
+      required: true,
+      message: 'Email is required',
     },
   ],
   password: [
@@ -112,6 +123,7 @@ async function onSubmit() {
   try {
     const { token } = await signUp.mutateAsync({
       nick: modelRef.value.nickname as string,
+      email: modelRef.value.email as string,
       password: modelRef.value.password as string,
     })
     Cookies.set('token', token, { expires: 99999 })

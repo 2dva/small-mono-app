@@ -47,8 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { inject } from 'vue'
+import { canBlockPost, canEditPost } from '@small-mono-app/backend/src/utils/can'
+import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
@@ -56,7 +56,6 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
-import { canBlockPost, canEditPost } from '@small-mono-app/backend/src/utils/can'
 
 const { myData } = inject(me)!
 const route = useRoute()

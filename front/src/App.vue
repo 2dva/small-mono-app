@@ -3,11 +3,11 @@ import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 import { TabsInst } from 'naive-ui'
 import { nextTick, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import LogoBlog from './assets/images/logo-blogger.svg?component'
 import LogPanel from './components/LogPanel.vue'
 import { me } from './lib/injectionKeys'
-import { useTRPC } from './lib/useTrpc'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
-import LogoBlog from './assets/images/logo-blogger.svg?component'
+import { useTRPC } from './lib/useTrpc'
 
 const router = useRouter()
 const route = useRoute()
@@ -118,7 +118,7 @@ provide(me, { myData, setMyData })
   width: 48px;
   height: 48px;
 }
-.logo svg { 
+.logo svg {
   width: 100%;
   height: auto;
 }

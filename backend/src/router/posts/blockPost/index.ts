@@ -1,5 +1,5 @@
-import { zBlockPostTrpcInput } from './input'
 import { trpc } from '../../../lib/trpc'
+import { zBlockPostTrpcInput } from './input'
 
 export const blockPostTrpcRoute = trpc.procedure.input(zBlockPostTrpcInput).mutation(async ({ ctx, input }) => {
   const { postId } = input
