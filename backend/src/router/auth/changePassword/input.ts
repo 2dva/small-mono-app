@@ -1,6 +1,7 @@
+import { zStringRequired } from '@small-mono-app/shared/src/zod'
 import z from 'zod'
 
 export const zChangePasswordTrpcInput = z.object({
-  oldPassword: z.string().min(1),
-  newPassword: z.string().min(1),
+  oldPassword: zStringRequired,
+  newPassword: zStringRequired,
 })

@@ -18,6 +18,7 @@
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@small-mono-app/front": "workspace:*",
+    "@small-mono-app/shared": "workspace:*",
     "@trpc/server": "^11.7.2",
     "better-sqlite3": "^12.5.0",
     "cors": "^2.8.5",

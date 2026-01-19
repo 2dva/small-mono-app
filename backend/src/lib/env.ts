@@ -1,21 +1,16 @@
 import * as dotenv from 'dotenv'
 import z from 'zod'
+import { zEnvHost, zEnvNonemptyTrimmed } from '@small-mono-app/shared/src/zod'
 
 dotenv.config()
 
-const zNonEmptyTrimmed = z.string().trim().min(1)
-
-const zNonEmptyTrimmedRequiredOnProd = zNonEmptyTrimmed
-  .optional()
-  .refine((val) => process.env.HOST_ENV === 'local' || !!val, 'Required on local host')
-
 const zEnv = z.object({
-  PORT: zNonEmptyTrimmed,
-  HOST_ENV: z.enum(['local', 'production']),
-  DATABASE_URL: zNonEmptyTrimmed,
-  JWT_SECRET: zNonEmptyTrimmed,
-  PASSWORD_SALT: zNonEmptyTrimmed,
-  INITIAL_ADMIN_PASSWORD: zNonEmptyTrimmed,
+  PORT: zEnvNonemptyTrimmed,
+  HOST_ENV: zEnvHost,
+  DATABASE_URL: zEnvNonemptyTrimmed,
+  JWT_SECRET: zEnvNonemptyTrimmed,
+  PASSWORD_SALT: zEnvNonemptyTrimmed,
+  INITIAL_ADMIN_PASSWORD: zEnvNonemptyTrimmed,
 })
 
 export const env = zEnv.parse(process.env)

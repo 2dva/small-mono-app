@@ -83,6 +83,9 @@ importers:
       '@small-mono-app/front':
         specifier: workspace:*
         version: link:../front
+      '@small-mono-app/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@trpc/server':
         specifier: ^11.7.2
         version: 11.7.2(typescript@5.9.3)
@@ -156,6 +159,9 @@ importers:
       '@small-mono-app/backend':
         specifier: workspace:*
         version: link:../backend
+      '@small-mono-app/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@tanstack/vue-query':
         specifier: ^5.92.1
         version: 5.92.1(vue@3.5.25(typescript@5.9.3))
@@ -220,6 +226,22 @@ importers:
       vue-eslint-parser:
         specifier: ^10.2.0
         version: 10.2.0(eslint@9.39.1(jiti@2.6.1))
+
+  shared:
+    dependencies:
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      zod:
+        specifier: ^4.1.13
+        version: 4.1.13
+    devDependencies:
+      '@types/lodash':
+        specifier: ^4.17.21
+        version: 4.17.21
+      '@types/node':
+        specifier: ^24.10.3
+        version: 24.10.3
 
 packages:
 

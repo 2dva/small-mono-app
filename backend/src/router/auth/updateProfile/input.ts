@@ -1,9 +1,7 @@
+import { zNickRequired } from '@small-mono-app/shared/src/zod'
 import z from 'zod'
 
 export const zUpdateProfileTrpcInput = z.object({
-  nick: z
-    .string()
-    .min(1)
-    .regex(/^[a-z0-9-]+$/, 'Nick may contain only letters and numbers'),
+  nick: zNickRequired,
   name: z.string().max(50).default(''),
 })

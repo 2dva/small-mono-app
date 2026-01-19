@@ -5,6 +5,7 @@
   "scripts": {
     "b": "pnpm --filter @small-mono-app/backend",
     "f": "pnpm --filter @small-mono-app/front",
+    "sh": "pnpm --filter @small-mono-app/shared",
     "dev": "pnpm -r --parallel dev",
     "test": "pnpm -r test",
     "types": "concurrently 'pnpm b types' 'pnpm f types'",

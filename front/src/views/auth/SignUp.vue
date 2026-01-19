@@ -4,7 +4,7 @@
       <n-form-item path="nickname" label="Nickname">
         <n-input v-model:value="modelRef.nickname" @keydown.enter.prevent />
       </n-form-item>
-      <n-form-item path="emal" label="Email">
+      <n-form-item path="email" label="Email">
         <n-input v-model:value="modelRef.email" @keydown.enter.prevent />
       </n-form-item>
       <n-form-item path="password" label="Password">
