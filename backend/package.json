@@ -15,12 +15,13 @@
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
   },
   "dependencies": {
-    "@small-mono-app/front": "workspace:*",
     "@prisma/adapter-better-sqlite3": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@small-mono-app/front": "workspace:*",
     "@trpc/server": "^11.7.2",
     "better-sqlite3": "^12.5.0",
     "cors": "^2.8.5",
+    "cron": "^4.4.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
+    "@types/cron": "^2.4.3",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.21",
