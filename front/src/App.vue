@@ -114,7 +114,7 @@ provide(me, { myData, setMyData })
   display: flex;
 }
 .logo {
-  margin: 16px;
+  margin: 16px 8px 16px 20px;
   width: 48px;
   height: 48px;
 }

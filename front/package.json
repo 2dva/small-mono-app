@@ -14,8 +14,8 @@
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{js,ts,tsx,json,yml,css,scss}' '!**/{node_modules,dist}/**/*'"
   },
   "dependencies": {
-    "@falcondev-oss/trpc-vue-query": "^0.5.2",
     "@small-mono-app/backend": "workspace:*",
+    "@falcondev-oss/trpc-vue-query": "^0.5.2",
     "@tanstack/vue-query": "^5.92.1",
     "@trpc/client": "^11.7.2",
     "@vicons/ionicons5": "^0.13.0",

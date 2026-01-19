@@ -19,73 +19,90 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default defineConfig([globalIgnores(["**/node_modules", "**/dist", "**/*.config.js"]), 
-    js.configs.recommended, {
-    extends: compat.extends("prettier"),
+export default defineConfig([
+  globalIgnores(['**/node_modules', '**/dist', '**/*.config.js']),
+  js.configs.recommended,
+  {
+    extends: compat.extends('prettier'),
 
     ...love,
 
     plugins: {
-        '@typescript-eslint': tslint,
-        import: pluginImport,
-        node,
-        jest: pluginJest,
+      '@typescript-eslint': tslint,
+      import: pluginImport,
+      node,
+      jest: pluginJest,
     },
 
     languageOptions: {
-        ecmaVersion: 2022,
-        sourceType: "module",
-        globals: {
-            ...globals.browser,
-            ...globals.jest, // Добавляем глобальные переменные Jest (test, expect, describe)
-        },
-        parserOptions: {
-            parser: tslintParser,
-            project: "./tsconfig.json",
-        },
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.jest, // Добавляем глобальные переменные Jest (test, expect, describe)
+      },
+      parserOptions: {
+        parser: tslintParser,
+        project: './tsconfig.json',
+      },
     },
 
     rules: {
-        "no-new": "off",
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
-        "import/order": ["error", {
-            alphabetize: {
-                order: "asc",
-                caseInsensitive: false,
-                orderImportKind: "asc",
-            },
-        }],
+      'no-new': 'off',
 
-        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-        "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/prefer-nullish-coalescing": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/triple-slash-reference": "off",
-        "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/consistent-type-assertions": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "jsx-a11y/anchor-is-valid": "off",
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': 'error',
 
-        "no-irregular-whitespace": ["error", {
-            skipTemplates: true,
-            skipStrings: true,
-        }],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error'],
+      'import/order': [
+        'error',
+        {
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: false,
+            orderImportKind: 'asc',
+          },
+        },
+      ],
 
-        "node/no-process-env": "error",
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+      '@typescript-eslint/strict-boolean-expressions': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/triple-slash-reference': 'off',
+      '@typescript-eslint/ban-types': 'off',
+      '@typescript-eslint/consistent-type-assertions': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'jsx-a11y/anchor-is-valid': 'off',
 
-        "no-restricted-syntax": ["error", {
-            selector: "[object.type=MetaProperty][property.name=env]",
-            message: "Use instead import { env } from \"lib/env\"",
-        }],
+      'no-irregular-whitespace': [
+        'error',
+        {
+          skipTemplates: true,
+          skipStrings: true,
+        },
+      ],
+
+      'node/no-process-env': 'error',
+
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: '[object.type=MetaProperty][property.name=env]',
+          message: 'Use instead import { env } from "lib/env"',
+        },
+      ],
     },
-}, {
-    files: ["./eslint.config.mjs"],
+  },
+  {
+    files: ['./eslint.config.mjs'],
 
     languageOptions: {
-        parserOptions: {
-            project: "./front/tsconfig.node.json",
-        },
+      parserOptions: {
+        project: './front/tsconfig.node.json',
+      },
     },
-}]);
+  },
+])

@@ -32,14 +32,14 @@
 </template>
 
 <script setup lang="ts">
+import { refDebounced } from '@vueuse/core'
 import { inject, ref, watch } from 'vue'
 import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
 import { getViewPostRoute } from '../../lib/routes'
+import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
-import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
-import { refDebounced } from '@vueuse/core'
 
 const MAX_POSTS_PER_PAGE = 4
 const posts = ref<Post[]>([])

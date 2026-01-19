@@ -1,29 +1,23 @@
-const getRouteParams = <T extends Record<string, boolean>>(obj: T) => {
-  return Object.keys(obj).reduce((acc, key) => ({ ...acc, [key]: `:${key}` }), {}) as Record<keyof T, string>
-}
+import { pgr } from "./pumpGetRoute"
 
-export const getSignUpRoute = () => '/signup'
+export const getSignUpRoute = pgr(() => '/signup')
 
-export const getSignInRoute = () => '/signin'
+export const getSignInRoute = pgr(() => '/signin')
 
-export const getSignOutRoute = () => '/signout'
+export const getSignOutRoute = pgr(() => '/signout')
 
-export const getEditProfileRoute = () => '/edit-profile'
+export const getEditProfileRoute = pgr(() => '/edit-profile')
 
-export const getChangePasswordRoute = () => '/change-password'
+export const getChangePasswordRoute = pgr(() => '/change-password')
 
-export const getHomeRoute = () => '/'
+export const getHomeRoute = pgr(() => '/')
 
-export const getTreeRoute = () => '/tree'
+export const getTreeRoute = pgr(() => '/tree')
 
-export const getAllPostsRoute = () => '/posts'
+export const getAllPostsRoute = pgr(() => '/posts')
 
-export const getNewPostRoute = () => '/posts/new'
+export const getNewPostRoute = pgr(() => '/posts/new')
 
-export const viewPostRouteParams = getRouteParams({ nick: true})
-export type ViewPostRouteParams = typeof viewPostRouteParams
-export const getViewPostRoute = ({ nick }: ViewPostRouteParams) => `/posts/${nick !== '' ? nick : ':nick'}`
+export const getViewPostRoute = pgr({ nick: true}, ({ nick }) => `/posts/${nick}`)
 
-export const editPostRouteParams = getRouteParams({ nick: true })
-export type EditPostRouteParams = typeof editPostRouteParams
-export const getEditPostRoute = ({ nick }: EditPostRouteParams) => `/posts/${nick !== '' ? nick : ':nick'}/edit`
+export const getEditPostRoute = pgr({ nick: true }, ({ nick }) => `/posts/${nick}/edit`)

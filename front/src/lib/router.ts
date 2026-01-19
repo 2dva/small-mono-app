@@ -27,23 +27,23 @@ import {
 } from './routes'
 
 const routes = [
-  { path: getHomeRoute(), name: 'home', component: HomeView },
+  { path: getHomeRoute.definition, name: 'home', component: HomeView },
   {
-    path: getAllPostsRoute(),
+    path: getAllPostsRoute.definition,
     component: Post,
     children: [
-      { path: getAllPostsRoute(), name: 'posts', component: PostList },
-      { path: getNewPostRoute(), name: 'post-new', component: PostAdd },
-      { path: getViewPostRoute({ nick: '' }), name: 'post-view', component: PostView },
-      { path: getEditPostRoute({ nick: '' }), name: 'post-edit', component: PostEdit },
+      { path: getAllPostsRoute.definition, name: 'posts', component: PostList },
+      { path: getNewPostRoute.definition, name: 'post-new', component: PostAdd },
+      { path: getViewPostRoute.definition, name: 'post-view', component: PostView },
+      { path: getEditPostRoute.definition, name: 'post-edit', component: PostEdit },
     ],
   },
-  { path: getTreeRoute(), name: 'tree', component: TreeRender },
-  { path: getSignUpRoute(), name: 'signup', component: SignUp },
-  { path: getSignInRoute(), name: 'signin', component: SignIn },
-  { path: getSignOutRoute(), name: 'signout', component: SignOut },
-  { path: getEditProfileRoute(), name: 'profile-edit', component: EditProfile },
-  { path: getChangePasswordRoute(), name: 'change-pswd', component: ChangePassword },
+  { path: getTreeRoute.definition, name: 'tree', component: TreeRender },
+  { path: getSignUpRoute.definition, name: 'signup', component: SignUp },
+  { path: getSignInRoute.definition, name: 'signin', component: SignIn },
+  { path: getSignOutRoute.definition, name: 'signout', component: SignOut },
+  { path: getEditProfileRoute.definition, name: 'profile-edit', component: EditProfile },
+  { path: getChangePasswordRoute.definition, name: 'change-pswd', component: ChangePassword },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',

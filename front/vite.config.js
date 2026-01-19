@@ -5,6 +5,15 @@ import svgLoader from 'vite-svg-loader'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const publicEnv = Object.entries(env).reduce((acc, [k,v]) => {
+    if (k.startsWith('VITE_')) {
+      return {
+        ...acc,
+        [k]: v,
+      }
+    }
+    return acc
+  }, {})
 
   return {
     root: './',
@@ -28,6 +37,9 @@ export default defineConfig(({ mode }) => {
     },
     preview: {
       port: +env.PORT,
+    },
+    define: {
+      'process.env': publicEnv,
     },
   }
 })

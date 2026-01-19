@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useTRPC } from '../../lib/useTrpc'
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 import { Heart } from '@vicons/ionicons5'
+import { ref, watch } from 'vue'
+import { useTRPC } from '../../lib/useTrpc'
 interface Props {
   post: NonNullable<TrpcRouterOutput['getPost']['post']>
 }
