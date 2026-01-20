@@ -25,6 +25,7 @@ import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
 import { getAllPostsRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
+import { useNotAuthStore } from '../../store/notAuthRouteTracker'
 
 interface ModelType {
   nickname: string | null
@@ -76,7 +77,8 @@ async function onSubmit() {
     Cookies.set('token', token, { expires: 99999 })
     trpc.getMe.invalidate()
     message.success('Successful!')
-    router.push({ path: getAllPostsRoute() })
+    const notAuthStore = useNotAuthStore()
+    router.push({ path: notAuthStore.getLastVisitedRoute })
   } catch (err: any) {
     message.error(err.message)
   }

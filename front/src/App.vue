@@ -8,9 +8,11 @@ import LogPanel from './components/LogPanel.vue'
 import { me } from './lib/injectionKeys'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
 import { useTRPC } from './lib/useTrpc'
+import { useNotAuthStore } from './store/notAuthRouteTracker'
 
 const router = useRouter()
 const route = useRoute()
+const notAuthStore = useNotAuthStore()
 const tabsInstRef = ref<TabsInst | null>(null)
 const valueRef = ref('home')
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
@@ -47,6 +49,7 @@ watch(
   () => route.fullPath,
   () => {
     updateTabTo(String(route.name))
+    notAuthStore.setRoute(route.fullPath)
   },
   { immediate: true }
 )
