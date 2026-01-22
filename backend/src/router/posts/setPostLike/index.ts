@@ -1,12 +1,13 @@
-import { trpc } from '../../../lib/trpc'
+import { logger } from '../../../lib/logger'
+import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zSetPostLikeTrpcInput } from './input'
 
-export const setPostLikeTrpcRoute = trpc.procedure.input(zSetPostLikeTrpcInput).mutation(async ({ input, ctx }) => {
+export const setPostLikeTrpcRoute = trpcLoggedProcedure.input(zSetPostLikeTrpcInput).mutation(async ({ input, ctx }) => {
   if (!ctx.me) {
     throw Error('UNAUTHORIZED')
   }
   const { postId, isLikedByMe } = input
-  console.log(`BACK:TRPC:likePost:start`)
+  logger.info('TRPC', `BACK:TRPC:likePost:start`)
   const post = await ctx.prisma.post.findUnique({
     where: {
       id: postId,

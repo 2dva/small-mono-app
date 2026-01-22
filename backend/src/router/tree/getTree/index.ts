@@ -1,9 +1,9 @@
 import z from "zod"
 import { processTree } from "../../../lib/tree"
-import { trpc } from "../../../lib/trpc"
+import { trpcLoggedProcedure } from "../../../lib/trpc"
 
 
-export const getTreeTrpcRoute = trpc.procedure
+export const getTreeTrpcRoute = trpcLoggedProcedure
   .input(
     z.object({ stringTree: z.string() })
   )

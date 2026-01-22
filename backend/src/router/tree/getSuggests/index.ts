@@ -1,8 +1,8 @@
 import { generatePredefinedTreeStrings } from "../../../lib/tree"
-import { trpc } from "../../../lib/trpc"
+import { trpcLoggedProcedure } from "../../../lib/trpc"
 
 
-export const getSudggestsTrpcRoute = trpc.procedure.query(() => {
+export const getSudggestsTrpcRoute = trpcLoggedProcedure.query(() => {
   console.log(`BACK:TRPC:getSudggests:generating trees`)
   return generatePredefinedTreeStrings()
 })

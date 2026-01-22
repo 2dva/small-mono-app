@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { trpc } from '../../../lib/trpc'
+import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zGetPostsTrpcInput } from './input'
 
 export const defaultPosts = [
@@ -9,7 +9,7 @@ export const defaultPosts = [
   { nick: '126', name: 'name12_6', description: 'descr_565756765_6' },
 ]
 
-export const getPostsTrpcRoute = trpc.procedure.input(zGetPostsTrpcInput).query(async ({ ctx, input }) => {
+export const getPostsTrpcRoute = trpcLoggedProcedure.input(zGetPostsTrpcInput).query(async ({ ctx, input }) => {
   const rawPosts = await ctx.prisma.post.findMany({
     select: {
       serialNumber: true,

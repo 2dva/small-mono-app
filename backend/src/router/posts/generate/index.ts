@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { trpc } from '../../../lib/trpc'
+import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { randomBytes } from 'crypto'
 
 const DEFAULT_POSTS_NUMBER = 3
@@ -21,7 +21,7 @@ async function generatePost(ctx: any) {
   })
 }
 
-export const generatePostsTrpcRoute = trpc.procedure.query(async ({ ctx }) => {
+export const generatePostsTrpcRoute = trpcLoggedProcedure.query(async ({ ctx }) => {
   if (!ctx.me) {
     throw Error('UNAUTHORIZED')
   }

@@ -17,6 +17,7 @@
       </n-alert>
       <n-alert v-else-if="!posts.length" title="No results" type="info"> No results for this request </n-alert>
       <div v-for="post in posts" :class="post.author.id === myData?.id ? 'post post_own' : 'post'" :key="post.nick">
+
         <Segment size="2" :description="post.description">
           <template v-slot:header>
             <RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
@@ -60,7 +61,11 @@ const { data, hasNextPage, isError, error, fetchNextPage, isFetchingNextPage, is
       getNextPageParam: (lastPage) => {
         return lastPage.nextCursor
       },
-    }
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 2,
+    },
   )
 
 if (data.value) {

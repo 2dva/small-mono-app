@@ -1,32 +1,108 @@
-import EventEmitter from 'events'
+import winston from 'winston'
+import pc from 'picocolors'
+import { EOL } from 'os'
+import { MESSAGE } from 'triple-beam'
+import { env } from './env'
+import { serializeError } from 'serialize-error'
+import _ from 'lodash'
+import * as yaml from 'yaml'
 
-const EMIT_DUMMY_EVENTS = false
+const winstonLogger = winston.createLogger({
+  level: 'debug',
+  format: winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'backend', hostEnv: env.HOST_ENV },
+  transports: [
+    new winston.transports.Console({
+      format:
+        env.HOST_ENV !== 'local'
+          ? winston.format.json()
+          : winston.format((logData) => {
+              const setColor = {
+                info: (str: string) => pc.blue(str),
+                error: (str: string) => pc.red(str),
+                debug: (str: string) => pc.cyan(str),
+              }[logData.level as 'info' | 'error' | 'debug']
+              const levelAndType = `${logData.level} ${logData.logType}`
+              const topMessage = `${setColor(levelAndType)} ${pc.green(String(logData.timestamp))}${EOL}${logData.message}`
 
-export const ee = new EventEmitter()
+              const visibleMessageTags = _.omit(logData, [
+                'level',
+                'logType',
+                'timestamp',
+                'message',
+                'service',
+                'hostEnv',
+              ])
 
-export const captureLogs = () => {
-  type LogFunction = (m: string) => boolean
-  let old_write: LogFunction
-  let hook_stream = function(_stream: typeof process.stdout, fn: LogFunction) {
-      old_write = _stream.write; // Reference default write method
-      _stream.write = fn // _stream now write with our shiny function
-      return function() {
-          _stream.write = old_write; // reset to the default write method
-      };
-  }
+              const stringifyedLogData = _.trim(
+                yaml.stringify(visibleMessageTags, (_k, v) => (_.isFunction(v) ? 'Function' : v))
+              )
 
-  // hook up standard output
-  hook_stream(process.stdout, function(params) {
-      ee.emit('log', params)
-      old_write(JSON.stringify(params));
-      return true
-  });
+              const resultLogData = {
+                ...logData,
+                [MESSAGE]:
+                  [topMessage, Object.keys(visibleMessageTags).length > 0 ? `${EOL}${stringifyedLogData}` : '']
+                    .filter(Boolean)
+                    .join('') + EOL,
+              }
 
+              return resultLogData
+            })(),
+    }),
+  ],
+})
+
+export type LoggerMetaData = Record<string, any> | undefined
+const prettifyMeta = (meta: LoggerMetaData): LoggerMetaData => {
+  return meta
+  // return deepMap(meta, ({ key, value }) => {
+  //   if (
+  //     [
+  //       'email',
+  //       'password',
+  //       'newPassword',
+  //       'oldPassword',
+  //       'token',
+  //       'text',
+  //       'description',
+  //       'apiKey',
+  //       'signature',
+  //       'signedUrl',
+  //     ].includes(key)
+  //   ) {
+  //     return '🙈'
+  //   }
+  //   return value
+  // })
 }
 
-if (EMIT_DUMMY_EVENTS) {
-  setInterval(() => {
-    const data = { timestamp: new Date().toISOString() };
-    console.log(data)
-  }, 30000);
+export const logger = {
+  info: (logType: string, message: string, meta?: LoggerMetaData) => {
+    // if (!debug.enabled(`ideanick:${logType}`)) {
+    //   return
+    // }
+    winstonLogger.info(message, { logType, ...prettifyMeta(meta) })
+  },
+  error: (logType: string, error: any, meta?: LoggerMetaData) => {
+    // const isNativeExpectedError = error instanceof ExpectedError
+    // const isTrpcExpectedError = error instanceof TRPCError && error.cause instanceof ExpectedError
+    const prettifiedMetaData = prettifyMeta(meta)
+    // if (!isNativeExpectedError && !isTrpcExpectedError) {
+    //   sentryCaptureException(error, prettifiedMetaData)
+    // }
+    // if (!debug.enabled(`ideanick:${logType}`)) {
+    //   return
+    // }
+    const serializedError = serializeError(error)
+    winstonLogger.error(serializedError.message || 'Unknown error', {
+      logType,
+      error,
+      errorStack: serializedError.stack,
+      ...prettifiedMetaData,
+    })
+  },
 }

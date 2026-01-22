@@ -1,4 +1,4 @@
-import { trpc } from '../lib/trpc'
+import { createTrcpRouter } from '../lib/trpc'
 import { logSubscriptionTrpcRoute } from './logSubscription'
 import { signUpTrpcRoute } from './auth/signUp'
 import { signInTrpcRoute } from './auth/signIn'
@@ -18,8 +18,7 @@ import { blockPostTrpcRoute } from './posts/blockPost'
 
 console.log(`Initializing TRPC`)
 
-export const trpcRouter = trpc.router({
-  ping: trpc.procedure.query(() => 'Pong!'),
+export const trpcRouter = createTrcpRouter({
   getMe: getMeTrpcRoute,
   signUp: signUpTrpcRoute,
   signIn: signInTrpcRoute,

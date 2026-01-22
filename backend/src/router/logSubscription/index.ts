@@ -1,8 +1,8 @@
 import { on } from 'events'
-import { ee } from '../../lib/logger'
-import { trpc } from "../../lib/trpc"
+import { ee } from '../../lib/captureLogs'
+import { trpcLoggedProcedure } from '../../lib/trpc'
 
-export const logSubscriptionTrpcRoute = trpc.procedure.subscription(async function* (opts) {
+export const logSubscriptionTrpcRoute = trpcLoggedProcedure.subscription(async function* (opts) {
   // listen for new events
   for await (const [data] of on(ee, 'log', {
     // Passing the AbortSignal from the request automatically
@@ -10,8 +10,8 @@ export const logSubscriptionTrpcRoute = trpc.procedure.subscription(async functi
     signal: opts.signal,
   })) {
     // console.log(`TRPC Server: `, data)
-    const post = JSON.stringify(data)// as Post;
-    yield post;
+    const post = JSON.stringify(data) // as Post;
+    yield post
   }
 })
 
@@ -25,10 +25,6 @@ export const logSubscriptionTrpcRoute = trpc.procedure.subscription(async functi
 //         await emit({ message: 'World', from: 'Server' });
 //         return; // Завершаем поток
 //     });
-
-
-
-
 
 // ПРИМЕР РАБОТЫ С SSE:
 

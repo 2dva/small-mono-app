@@ -1,7 +1,7 @@
-import { trpc } from '../../../lib/trpc'
+import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zBlockPostTrpcInput } from './input'
 
-export const blockPostTrpcRoute = trpc.procedure.input(zBlockPostTrpcInput).mutation(async ({ ctx, input }) => {
+export const blockPostTrpcRoute = trpcLoggedProcedure.input(zBlockPostTrpcInput).mutation(async ({ ctx, input }) => {
   const { postId } = input
   if (!ctx.me?.role) {
     throw Error('PERMISSION_DENIED')
