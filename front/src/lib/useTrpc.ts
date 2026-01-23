@@ -1,7 +1,7 @@
 import { createTRPCVueQueryClient } from '@falcondev-oss/trpc-vue-query'
 import type { TrpcRouter } from '@small-mono-app/backend/src/router'
 import { useQueryClient } from '@tanstack/vue-query'
-import { httpBatchLink, httpSubscriptionLink, splitLink } from '@trpc/client'
+import { httpBatchLink, httpSubscriptionLink, loggerLink, splitLink } from '@trpc/client'
 import Cookies from 'js-cookie'
 import { App, inject } from 'vue'
 import { env } from './env'
@@ -13,6 +13,9 @@ export const createTrpcClient = (app: App) => {
     queryClient,
     trpc: {
       links: [
+        loggerLink({
+          enabled: () => env.NODE_ENV === 'development',
+        }),
         splitLink({
           // uses the httpSubscriptionLink for subscriptions
           condition: (op) => op.type === 'subscription',

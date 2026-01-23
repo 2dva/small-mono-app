@@ -7,6 +7,7 @@ import { serializeError } from 'serialize-error'
 import _ from 'lodash'
 import * as yaml from 'yaml'
 import debug from 'debug'
+import { deepMap } from '../utils/deepMap'
 
 const winstonLogger = winston.createLogger({
   level: 'debug',
@@ -59,26 +60,25 @@ const winstonLogger = winston.createLogger({
 
 export type LoggerMetaData = Record<string, any> | undefined
 const prettifyMeta = (meta: LoggerMetaData): LoggerMetaData => {
-  return meta
-  // return deepMap(meta, ({ key, value }) => {
-  //   if (
-  //     [
-  //       'email',
-  //       'password',
-  //       'newPassword',
-  //       'oldPassword',
-  //       'token',
-  //       'text',
-  //       'description',
-  //       'apiKey',
-  //       'signature',
-  //       'signedUrl',
-  //     ].includes(key)
-  //   ) {
-  //     return '🙈'
-  //   }
-  //   return value
-  // })
+  return deepMap(meta, ({ key, value }) => {
+    if (
+      [
+        'email',
+        'password',
+        'newPassword',
+        'oldPassword',
+        'token',
+        'text',
+        'description',
+        'apiKey',
+        'signature',
+        'signedUrl',
+      ].includes(key)
+    ) {
+      return '🙈'
+    }
+    return value
+  })
 }
 
 export const logger = {

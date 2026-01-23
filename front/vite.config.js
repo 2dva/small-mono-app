@@ -6,7 +6,7 @@ import svgLoader from 'vite-svg-loader'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const publicEnv = Object.entries(env).reduce((acc, [k,v]) => {
-    if (k.startsWith('VITE_')) {
+    if (k.startsWith('VITE_') || k === 'NODE_ENV') {
       return {
         ...acc,
         [k]: v,
