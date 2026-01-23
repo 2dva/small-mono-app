@@ -1,37 +1,32 @@
 <template>
-  <div v-if="error !== null">
-    <span>{{ error }}</span>
-  </div>
+  <n-alert v-if="error !== null" title="Error" type="error">
+    {{ error }}
+  </n-alert>
   <div v-else>
-    <h1>New post</h1>
-    <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
-      <n-form-item path="title" label="Title">
-        <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="nick" label="Nick">
-        <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="description" label="Description">
-        <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="content" label="Text">
-        <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
-      </n-form-item>
-      <n-row :gutter="[0, 24]">
-        <n-col :span="24">
-          <div style="display: flex; justify-content: flex-end">
-            <n-button :disabled="false" round type="primary" @click="handleCreateButtonClick"> Create post </n-button>
-          </div>
-        </n-col>
-      </n-row>
-    </n-form>
+    <form-wrapper v-bind="formData">
+      <template v-slot:default>
+        <n-form-item path="title" label="Title">
+          <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="nick" label="Nick">
+          <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="description" label="Description">
+          <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="content" label="Text">
+          <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
+        </n-form-item>
+      </template>
+    </form-wrapper>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
+import type { FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { inject, ref } from 'vue'
+import FormWrapper from '../../components/FormWrapper.vue'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getAllPostsRoute } from '../../lib/routes'
@@ -47,8 +42,6 @@ interface ModelType {
 
 const { myData } = inject(me)!
 const error = ref<string | null>(null)
-const formRef = ref<FormInst | null>(null)
-const isSubmitting = ref(false)
 const message = useMessage()
 const modelRef = ref<ModelType>({
   title: null,
@@ -99,33 +92,31 @@ const rules: FormRules = {
   ],
 }
 
-function handleCreateButtonClick(e: MouseEvent) {
-  e.preventDefault()
-  formRef.value
-    ?.validate(async (errors: Array<FormValidationError> | undefined) => {
-      if (!errors) {
-        try {
-          isSubmitting.value = true
-          await createPost.mutateAsync({
-            title: modelRef.value.title as string,
-            nick: modelRef.value.nick as string,
-            description: modelRef.value.description as string,
-            content: modelRef.value.content as string,
-          })
-          message.success('Successful!')
-          router.push({ path: getAllPostsRoute() })
-        } catch (err: any) {
-          message.error(String(err))
-        } finally {
-          isSubmitting.value = false
-        }
-      }
+async function onSubmit() {
+  try {
+    await createPost.mutateAsync({
+      title: modelRef.value.title as string,
+      nick: modelRef.value.nick as string,
+      description: modelRef.value.description as string,
+      content: modelRef.value.content as string,
     })
-    .catch(() => {})
+    message.success('Successful!')
+    router.push({ path: getAllPostsRoute() })
+  } catch (err: any) {
+    message.error(String(err))
+  }
 }
 
 if (myData.value === null) {
   error.value = 'Error: NOT_AUTHORIZED'
+}
+
+const formData = {
+  title: 'New post',
+  modelRef: modelRef.value,
+  rules,
+  submitTitle: 'Create post',
+  submitFunction: onSubmit,
 }
 </script>
 

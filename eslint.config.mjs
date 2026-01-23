@@ -39,6 +39,7 @@ export default defineConfig([
       sourceType: 'module',
       globals: {
         ...globals.browser,
+        ...globals.node,
         ...globals.jest, // Добавляем глобальные переменные Jest (test, expect, describe)
       },
       parserOptions: {

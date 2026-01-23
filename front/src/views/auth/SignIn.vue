@@ -23,7 +23,6 @@ import { useMessage } from 'naive-ui'
 import { ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
-import { getAllPostsRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { useNotAuthStore } from '../../store/notAuthRouteTracker'
 

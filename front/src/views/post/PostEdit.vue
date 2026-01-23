@@ -8,38 +8,33 @@
     {{ error }}
   </n-alert>
   <div v-else>
-    <h1>Edit post</h1>
-    <n-form ref="formRef" :model="modelRef" :rules="rules" :disabled="isSubmitting">
-      <n-form-item path="title" label="Title">
-        <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="nick" label="Nick">
-        <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="description" label="Description">
-        <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
-      </n-form-item>
-      <n-form-item path="content" label="Text">
-        <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
-      </n-form-item>
-      <n-row :gutter="[0, 24]">
-        <n-col :span="24">
-          <div style="display: flex; justify-content: flex-end">
-            <n-button :disabled="false" round type="primary" @click="handleUpdateButtonClick"> Update post </n-button>
-          </div>
-        </n-col>
-      </n-row>
-    </n-form>
+    <form-wrapper v-bind="formData">
+      <template v-slot:default>
+        <n-form-item path="title" label="Title">
+          <n-input v-model:value="modelRef.title" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="nick" label="Nick">
+          <n-input v-model:value="modelRef.nick" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="description" label="Description">
+          <n-input v-model:value="modelRef.description" @keydown.enter.prevent />
+        </n-form-item>
+        <n-form-item path="content" label="Text">
+          <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
+        </n-form-item>
+      </template>
+    </form-wrapper>
   </div>
 </template>
 
 <script setup lang="ts">
 import { canEditPost } from '@small-mono-app/backend/src/utils/can'
 import { pick } from 'lodash'
-import type { FormInst, FormItemRule, FormRules, FormValidationError } from 'naive-ui'
+import type { FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { inject, onMounted, ref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import FormWrapper from '../../components/FormWrapper.vue'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
@@ -57,11 +52,9 @@ const { myData } = inject(me)!
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 const post = ref()
-const isSubmitting = ref(false)
 const route = useRoute()
 let id: string | null = null
 const nick = String(route.params.nick)
-const formRef = ref<FormInst | null>(null)
 const message = useMessage()
 const modelRef = ref<ModelType>({
   title: null,
@@ -118,44 +111,31 @@ const rules: FormRules = {
   ],
 }
 
-function handleUpdateButtonClick(e: MouseEvent) {
-  e.preventDefault()
-  formRef.value
-    ?.validate(async (errors: Array<FormValidationError> | undefined) => {
-      if (!errors) {
-        try {
-          isSubmitting.value = true
-          await updatePost.mutateAsync({
-            postId: id as string,
-            title: modelRef.value.title as string,
-            nick: modelRef.value.nick as string,
-            description: modelRef.value.description as string,
-            content: modelRef.value.content as string,
-          })
-          message.success('Successful!')
-          router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
-        } catch (err: any) {
-          message.error(String(err))
-        } finally {
-          isSubmitting.value = false
-        }
-      }
+async function onSubmit() {
+  try {
+    await updatePost.mutateAsync({
+      postId: id as string,
+      title: modelRef.value.title as string,
+      nick: modelRef.value.nick as string,
+      description: modelRef.value.description as string,
+      content: modelRef.value.content as string,
     })
-    .catch(() => {})
+    message.success('Successful!')
+    router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
+  } catch (err: any) {
+    message.error(String(err))
+  }
 }
 
 function setError(msg: string) {
   error.value = msg
 }
 
-console.log(`PostEdit:inject:me: `, myData.value)
 if (myData.value === null) {
   setError('Error: NOT_AUTHORIZED')
 }
 
 onMounted(async () => {
-  console.log(`Posts:Edit:OnMounted`)
-
   if (typeof nick !== 'undefined') {
     await getPostResult.refetch()
     isLoading.value = false
@@ -175,6 +155,14 @@ onMounted(async () => {
     modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
   }
 })
+
+const formData = computed(() => ({
+  title: 'Edit post',
+  modelRef: modelRef.value,
+  rules,
+  submitTitle: 'Update post',
+  submitFunction: onSubmit,
+}))
 </script>
 
 <style scoped></style>

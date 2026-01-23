@@ -1,7 +1,7 @@
 <template>
-  <div v-if="error !== null">
-    <span>{{ error }}</span>
-  </div>
+  <n-alert v-if="error !== null" title="Error" type="error">
+    {{ error }}
+  </n-alert>
   <form-wrapper v-else v-bind="formData">
     <template v-slot:default>
       <n-form-item path="nickname" label="Nickname">

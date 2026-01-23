@@ -27,11 +27,11 @@
 <script setup lang="ts">
 import { refDebounced } from '@vueuse/core'
 import { inject, ref, watch } from 'vue'
+import PostItem from '../../components/PostItem.vue'
 import { me } from '../../lib/injectionKeys'
 import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
-import PostItem from '../../components/PostItem.vue'
 
 const MAX_POSTS_PER_PAGE = 4
 const posts = ref<Post[]>([])
@@ -52,7 +52,7 @@ const { data, hasNextPage, isError, error, fetchNextPage, isFetchingNextPage, is
       getNextPageParam: (lastPage) => {
         return lastPage.nextCursor
       },
-      refetchOnMount: false,
+      refetchOnMount: true,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: 2,
