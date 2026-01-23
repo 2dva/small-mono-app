@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
-import { TabsInst } from 'naive-ui'
-import { nextTick, provide, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import LogoBlog from './assets/images/logo-blogger.svg?component'
+import { provide, ref, watch } from 'vue'
 import LogPanel from './components/LogPanel.vue'
 import { me } from './lib/injectionKeys'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
 import { useTRPC } from './lib/useTrpc'
-import { useNotAuthStore } from './store/notAuthRouteTracker'
+import TopNavigation from './components/TopNavigation.vue'
 
-const router = useRouter()
-const route = useRoute()
-const notAuthStore = useNotAuthStore()
-const tabsInstRef = ref<TabsInst | null>(null)
-const valueRef = ref('home')
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
 const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
   myData.value = data
@@ -32,28 +24,6 @@ watch(data, () => {
   }
 })
 
-function onTabClick(value: string) {
-  if (router.hasRoute(value)) {
-    router.push({ name: value })
-  } else {
-    router.push({ path: value })
-  }
-}
-
-function updateTabTo(name: string) {
-  valueRef.value = name
-  nextTick(() => tabsInstRef.value?.syncBarPosition())
-}
-
-watch(
-  () => route.fullPath,
-  () => {
-    updateTabTo(String(route.name))
-    notAuthStore.setRoute(route.fullPath)
-  },
-  { immediate: true }
-)
-
 function handleLoad() {
   layoutScrollEvent.emit()
 }
@@ -68,24 +38,8 @@ provide(me, { myData, setMyData })
         <n-layout has-sider sider-placement="right" position="absolute">
           <n-layout-content content-style="padding: 0; position: relative;">
             <n-infinite-scroll class="scrollable" :distance="150" @load="handleLoad">
-              <nav class="nav">
-                <div class="logo">
-                  <LogoBlog />
-                </div>
-                <n-card style="margin-bottom: 6px" :bordered="false" content-style="">
-                  <n-tabs ref="tabsInstRef" type="card" v-model:value="valueRef" animated @update:value="onTabClick">
-                    <n-tab name="home" tab="Home" />
-                    <n-tab name="posts" tab="Posts" />
-                    <n-tab name="tree" tab="Tree render" />
-                    <n-tab v-if="!myData" name="signup" tab="Sign up" />
-                    <n-tab v-if="!myData" name="signin" tab="Sign in" />
-                    <n-tab v-if="myData" name="profile-edit" tab="Edit profile" />
-                    <n-tab v-if="myData" name="change-pswd" tab="Change password" />
-                    <n-tab v-if="myData" name="signout" :tab="`Sign out (${myData?.nick})`" />
-                  </n-tabs>
-                </n-card>
-              </nav>
-              <main style="">
+              <TopNavigation />
+              <main>
                 <n-space v-if="isLoading || isFetching" justify="center">
                   <n-spin size="medium" />
                 </n-space>
@@ -113,18 +67,6 @@ provide(me, { myData, setMyData })
 </template>
 
 <style scoped>
-.nav {
-  display: flex;
-}
-.logo {
-  margin: 16px 8px 16px 20px;
-  width: 48px;
-  height: 48px;
-}
-.logo svg {
-  width: 100%;
-  height: auto;
-}
 .scrollable {
   position: absolute;
   top: 0;
