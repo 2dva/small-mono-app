@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="posts-wrap">
     <h1>Posts</h1>
-    <div class="posts">
       <div class="filter">
         <n-input
           name="search_string"
@@ -16,31 +15,23 @@
         {{ error }}
       </n-alert>
       <n-alert v-else-if="!posts.length" title="No results" type="info"> No results for this request </n-alert>
-      <div v-for="post in posts" :class="post.author.id === myData?.id ? 'post post_own' : 'post'" :key="post.nick">
-
-        <Segment size="2" :description="post.description">
-          <template v-slot:header>
-            <RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink>
-          </template>
-          <template v-slot:default> Likes: {{ post.likesCount }} </template>
-        </Segment>
+      <div class="posts">
+        <PostItem v-for="post in posts" :post="post" :isMinePost="post.author.id === myData?.id" :key="post.nick" />
       </div>
       <n-space v-if="isFetching || isLoading" justify="center">
         <n-spin size="medium" />
       </n-space>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { refDebounced } from '@vueuse/core'
 import { inject, ref, watch } from 'vue'
-import Segment from '../../components/Segment.vue'
 import { me } from '../../lib/injectionKeys'
-import { getViewPostRoute } from '../../lib/routes'
 import { layoutScrollEvent } from '../../lib/scrollEventEmitter'
 import { useTRPC } from '../../lib/useTrpc'
 import { Post } from '../../store/post'
+import PostItem from '../../components/PostItem.vue'
 
 const MAX_POSTS_PER_PAGE = 4
 const posts = ref<Post[]>([])
@@ -54,7 +45,7 @@ const { data, hasNextPage, isError, error, fetchNextPage, isFetchingNextPage, is
     () => {
       return {
         limit: MAX_POSTS_PER_PAGE,
-        search: debouncedSearch.value,
+        search: debouncedSearch.value.trim(),
       }
     },
     {
@@ -65,7 +56,7 @@ const { data, hasNextPage, isError, error, fetchNextPage, isFetchingNextPage, is
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: 2,
-    },
+    }
   )
 
 if (data.value) {
@@ -94,21 +85,18 @@ h1 {
   text-align: center;
 }
 
+.posts-wrap {
+  min-width: 320px;
+  width: 85%;
+}
+
 .posts {
-  max-width: 600px;
   margin: 0 auto;
 }
 
-.post {
-  position: relative;
-  padding: 20px;
-  border: 1px solid #bcbcbc;
-  border-radius: 10px;
+.posts > div {
   margin-bottom: 15px;
-}
-
-.post.post_own {
-  background-color: #f3fff3;
+  /* width: 80%; */
 }
 
 .more {

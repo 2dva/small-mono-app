@@ -20,7 +20,6 @@ export const useNotAuthStore = defineStore('not_auth', {
   actions: {
     setRoute(route: string) {
       const isAuthRoute = authRoutes.includes(route)
-      console.log(`::route=${route} isAuth=${isAuthRoute}`)
       if (!isAuthRoute) {
         this.lastVisitedNotAuthRoute = route
       }

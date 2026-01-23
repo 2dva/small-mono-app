@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import { MenuOption } from 'naive-ui'
-import { onMounted } from 'vue'
 import { h } from 'vue'
 import { inject } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -47,10 +46,6 @@ async function handleGenerateClick() {
 }
 
 usePosts().init()
-
-onMounted(() => {
-  console.log(`Post:OnMounted`)
-})
 </script>
 
 <style scoped>

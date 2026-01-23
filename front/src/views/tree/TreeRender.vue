@@ -57,8 +57,6 @@ function applySuggests() {
 }
 
 onMounted(async () => {
-  console.log(`Tree:onMounted`)
-
   await queryData.refetch()
   applySuggests()
 })
