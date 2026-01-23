@@ -9,12 +9,14 @@ import { env } from './lib/env'
 import { presetDB } from './scripts/presetDB'
 import { applyCron } from './lib/cron'
 import { logger } from './lib/logger'
+import debug from 'debug'
 
 captureLogs()
 
 void (async () => {
   let ctx: AppContext | null = null
   try {
+    debug.enable(env.DEBUG)
     ctx = createAppContext()
     await presetDB(ctx)
     const expressApp = express()

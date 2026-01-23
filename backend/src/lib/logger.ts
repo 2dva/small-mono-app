@@ -6,6 +6,7 @@ import { env } from './env'
 import { serializeError } from 'serialize-error'
 import _ from 'lodash'
 import * as yaml from 'yaml'
+import debug from 'debug'
 
 const winstonLogger = winston.createLogger({
   level: 'debug',
@@ -82,9 +83,11 @@ const prettifyMeta = (meta: LoggerMetaData): LoggerMetaData => {
 
 export const logger = {
   info: (logType: string, message: string, meta?: LoggerMetaData) => {
-    // if (!debug.enabled(`ideanick:${logType}`)) {
-    //   return
-    // }
+    if (!debug.enabled(`sma:${logType}`)) {
+      console.log(`...this type of logs is DISABLED:`, `sma:${logType}`)
+      
+      return
+    }
     winstonLogger.info(message, { logType, ...prettifyMeta(meta) })
   },
   error: (logType: string, error: any, meta?: LoggerMetaData) => {
@@ -94,9 +97,9 @@ export const logger = {
     // if (!isNativeExpectedError && !isTrpcExpectedError) {
     //   sentryCaptureException(error, prettifiedMetaData)
     // }
-    // if (!debug.enabled(`ideanick:${logType}`)) {
-    //   return
-    // }
+    if (!debug.enabled(`sma:${logType}`)) {
+      return
+    }
     const serializedError = serializeError(error)
     winstonLogger.error(serializedError.message || 'Unknown error', {
       logType,

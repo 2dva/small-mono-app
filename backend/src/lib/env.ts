@@ -11,6 +11,7 @@ const zEnv = z.object({
   JWT_SECRET: zEnvNonemptyTrimmed,
   PASSWORD_SALT: zEnvNonemptyTrimmed,
   INITIAL_ADMIN_PASSWORD: zEnvNonemptyTrimmed,
+  DEBUG: zEnvNonemptyTrimmed,
 })
 
 export const env = zEnv.parse(process.env)
