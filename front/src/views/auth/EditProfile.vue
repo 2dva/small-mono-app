@@ -20,6 +20,8 @@ import { useMessage } from 'naive-ui'
 import { inject, ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
 import { me } from '../../lib/injectionKeys'
+import router from '../../lib/router'
+import { getShowProfileRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 
 interface ModelType {
@@ -77,6 +79,7 @@ async function onSubmit() {
     })
     message.success('Successful!')
     setMyData(updatedMe)
+    router.push({ path: getShowProfileRoute() })
   } catch (err: any) {
     message.error(String(err))
   }

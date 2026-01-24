@@ -6,9 +6,11 @@ export const getSignInRoute = pgr(() => '/signin')
 
 export const getSignOutRoute = pgr(() => '/signout')
 
-export const getEditProfileRoute = pgr(() => '/edit-profile')
+export const getShowProfileRoute = pgr(() => '/profile')
 
-export const getChangePasswordRoute = pgr(() => '/change-password')
+export const getEditProfileRoute = pgr(() => '/profile/edit')
+
+export const getChangePasswordRoute = pgr(() => '/profile/change-password')
 
 export const getHomeRoute = pgr(() => '/')
 

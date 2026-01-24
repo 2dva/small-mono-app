@@ -1,5 +1,5 @@
 <template>
-  <div class="posts-wrap">
+  <div class="layout-wrap">
     <h1>Posts</h1>
       <div class="filter">
         <n-input
@@ -85,7 +85,7 @@ h1 {
   text-align: center;
 }
 
-.posts-wrap {
+.layout-wrap {
   min-width: 320px;
   width: 85%;
 }

@@ -19,12 +19,15 @@ import {
   getEditProfileRoute,
   getHomeRoute,
   getNewPostRoute,
+  getShowProfileRoute,
   getSignInRoute,
   getSignOutRoute,
   getSignUpRoute,
   getTreeRoute,
   getViewPostRoute,
 } from './routes'
+import Profile from '../views/auth/Profile.vue'
+import ShowProfile from '../views/auth/ShowProfile.vue'
 
 const routes = [
   { path: getHomeRoute.definition, name: 'home', component: HomeView },
@@ -42,8 +45,15 @@ const routes = [
   { path: getSignUpRoute.definition, name: 'signup', component: SignUp },
   { path: getSignInRoute.definition, name: 'signin', component: SignIn },
   { path: getSignOutRoute.definition, name: 'signout', component: SignOut },
-  { path: getEditProfileRoute.definition, name: 'profile-edit', component: EditProfile },
-  { path: getChangePasswordRoute.definition, name: 'change-pswd', component: ChangePassword },
+  {
+    path: getShowProfileRoute.definition,
+    component: Profile,
+    children: [
+      { path: getShowProfileRoute.definition, name: 'profile', component: ShowProfile },
+      { path: getEditProfileRoute.definition, name: 'profile-edit', component: EditProfile },
+      { path: getChangePasswordRoute.definition, name: 'change-pswd', component: ChangePassword },
+    ],
+  },
   {
     path: '/:pathMatch(.*)', // Matches all paths
     name: 'notfound',
