@@ -14,7 +14,7 @@ export const createTrpcClient = (app: App) => {
     trpc: {
       links: [
         loggerLink({
-          enabled: () => env.NODE_ENV === 'development',
+          enabled: () => env.NODE_ENV === 'development' && false,
         }),
         splitLink({
           // uses the httpSubscriptionLink for subscriptions

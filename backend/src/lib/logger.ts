@@ -84,8 +84,6 @@ const prettifyMeta = (meta: LoggerMetaData): LoggerMetaData => {
 export const logger = {
   info: (logType: string, message: string, meta?: LoggerMetaData) => {
     if (!debug.enabled(`sma:${logType}`)) {
-      console.log(`...this type of logs is DISABLED:`, `sma:${logType}`)
-      
       return
     }
     winstonLogger.info(message, { logType, ...prettifyMeta(meta) })

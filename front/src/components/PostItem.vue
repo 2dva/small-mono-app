@@ -1,5 +1,5 @@
 <template>
- <n-thing content-indented  :class="cssClass">
+ <n-thing content-indented  :class="{ post: true, post_own: isMinePost }">
     <template #header>
       <h2><RouterLink :to="getViewPostRoute({ nick: post.nick })">{{ post.title }}</RouterLink></h2>
     </template>
@@ -20,8 +20,8 @@ interface Props {
   post: NonNullable<Post>
   isMinePost: boolean
 }
-const props = defineProps<Props>()
-const cssClass = props.isMinePost ? 'post post_own' : 'post'
+
+defineProps<Props>()
 </script>
 
 <style scoped>

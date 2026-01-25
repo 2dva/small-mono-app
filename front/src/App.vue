@@ -6,6 +6,7 @@ import { me } from './lib/injectionKeys'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
 import { useTRPC } from './lib/useTrpc'
 import TopNavigation from './components/TopNavigation.vue'
+import { throttle } from 'lodash'
 
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
 const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
@@ -13,7 +14,7 @@ const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
 }
 
 const trpc = useTRPC()
-const { data, isLoading, isFetching, isError } = trpc.getMe.useQuery(() => {}, {
+const { data, isLoading, isFetching, isError, error } = trpc.getMe.useQuery(() => {}, {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 })
@@ -24,9 +25,7 @@ watch(data, () => {
   }
 })
 
-function handleLoad() {
-  layoutScrollEvent.emit()
-}
+const handleLoad = throttle(() => { layoutScrollEvent.emit() }, 200, { trailing: false })
 
 provide(me, { myData, setMyData })
 </script>
@@ -39,11 +38,13 @@ provide(me, { myData, setMyData })
           <n-layout-content content-style="padding: 0; position: relative;">
             <n-infinite-scroll class="scrollable" :distance="150" @load="handleLoad">
               <TopNavigation />
-              <main>
+              <main :style="{ padding: '10px'}">
                 <n-space v-if="isLoading || isFetching" justify="center">
                   <n-spin size="medium" />
                 </n-space>
-                <div v-else-if="isError">Error</div>
+                <n-alert v-else-if="isError" title="Error" type="error">
+                  {{ error }}
+                </n-alert>
                 <RouterView v-else />
               </main>
             </n-infinite-scroll>
