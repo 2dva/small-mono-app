@@ -85,7 +85,15 @@ const rules: FormRules = {
   email: [
     {
       required: true,
-      message: 'Email is required',
+      validator(_rule: FormItemRule, value: string) {
+        if (!value) {
+          return new Error('Email is required')
+        }
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+          return new Error('Email is wrong')
+        }
+        return true
+      },
     },
   ],
   password: [

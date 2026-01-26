@@ -1,22 +1,17 @@
-// import '../lib/brevo.mock'
-// import '../lib/emails/utils.mock'
-// import '../lib/sentry.mock'
-
-// import { env } from '../lib/env'
 // import { omit } from '@small-mono-app/shared/src/omit'
-// import type { Post, User } from '@prisma/client'
-import { UserModel as User, PostModel as Post } from '../prisma/models'
 import _ from 'lodash'
 import { createAppContext } from '../lib/ctx'
+import { env } from '../lib/env'
 import { getTrpcContext } from '../lib/trpc'
+import { PostModel as Post, UserModel as User } from '../prisma/models'
 import { trpcRouter } from '../router'
 import { deepMap } from '../utils/deepMap'
 import { getPasswordHash } from '../utils/getPasswordHash'
 import { type ExpressRequest } from '../utils/types'
 
-// if (env.NODE_ENV !== 'test') {
-//   throw new Error('Run integration tests only with NODE_ENV=test')
-// }
+if (env.NODE_ENV !== 'test') {
+  throw new Error('Run integration tests only with NODE_ENV=test')
+}
 
 export const appContext = createAppContext()
 

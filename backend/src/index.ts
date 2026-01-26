@@ -16,7 +16,8 @@ captureLogs()
 void (async () => {
   let ctx: AppContext | null = null
   try {
-    debug.enable(env.DEBUG)
+    // not quite sure this line is required, commented yet
+    // debug.enable(env.DEBUG)
     ctx = createAppContext()
     await presetDB(ctx)
     const expressApp = express()
