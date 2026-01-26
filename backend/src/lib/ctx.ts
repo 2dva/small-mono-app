@@ -1,12 +1,13 @@
 import { createPrismaClient } from './prisma'
 
 export const createAppContext = () => {
+  const prisma = createPrismaClient()
   return {
     // тут прописываем контекст чего-либо
     // например из orm или базы данных
-    prisma: createPrismaClient(),
+    prisma,
     stop: async () => {
-      await Promise.resolve(0)
+      await prisma.$disconnect()
     },
   }
 }

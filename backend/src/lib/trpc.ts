@@ -7,12 +7,16 @@ import { ExpressRequest } from '../utils/types'
 import { logger } from './logger'
 
 
-const getCreateTrpcContext = (appContext: AppContext) => {
-  return ({ req }: trpcExpress.CreateExpressContextOptions) => ({
+export const getTrpcContext = ({ appContext, req }: { appContext: AppContext; req: ExpressRequest }) => ({
     ...appContext,
-    me: (req as ExpressRequest).user || null,
-  })
+    me: req.user || null,
+})
+
+const getCreateTrpcContext = (appContext: AppContext) => {
+  return ({ req }: trpcExpress.CreateExpressContextOptions) =>
+     getTrpcContext({ appContext, req: req as ExpressRequest})
 }
+
 type TrpcContext = Awaited<ReturnType<typeof getCreateTrpcContext>>
 
 
