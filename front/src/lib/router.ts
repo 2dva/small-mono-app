@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import NotFound from '../views/NotFound.vue'
 import ChangePassword from '../views/auth/ChangePassword.vue'
 import EditProfile from '../views/auth/EditProfile.vue'
+import Profile from '../views/auth/Profile.vue'
+import ShowProfile from '../views/auth/ShowProfile.vue'
 import SignIn from '../views/auth/SignIn.vue'
 import SignOut from '../views/auth/SignOut.vue'
 import SignUp from '../views/auth/SignUp.vue'
@@ -26,8 +28,6 @@ import {
   getTreeRoute,
   getViewPostRoute,
 } from './routes'
-import Profile from '../views/auth/Profile.vue'
-import ShowProfile from '../views/auth/ShowProfile.vue'
 
 const routes = [
   { path: getHomeRoute.definition, name: 'home', component: HomeView },

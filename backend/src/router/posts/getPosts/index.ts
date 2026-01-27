@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { omit } from '@small-mono-app/shared/src/omit'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zGetPostsTrpcInput } from './input'
 
@@ -53,7 +53,7 @@ export const getPostsTrpcRoute = trpcLoggedProcedure.input(zGetPostsTrpcInput).q
   const nextCursor = nextPost?.serialNumber
   const rawPostsExceptNext = rawPosts.slice(0, input.limit)
   const postsExceptNext = rawPostsExceptNext.map((post) => ({
-    ..._.omit(post, ['_count']),
+    ...omit(post, ['_count']),
     likesCount: post._count.postLikes,
   }))
   return { posts: postsExceptNext, nextCursor }

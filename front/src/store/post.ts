@@ -1,3 +1,4 @@
+import { pick } from '@small-mono-app/shared/src/pick'
 import _ from 'lodash'
 import { defineStore } from 'pinia'
 
@@ -27,7 +28,7 @@ export const usePosts = defineStore('posts', {
     }) as RootState,
   getters: {
     getAllPosts(state) {
-      return [...state.allPosts].reverse().map((post) => _.pick(post, ['nick', 'name', 'description']))
+      return [...state.allPosts].reverse().map((post) => pick(post, ['nick', 'name', 'description']))
     },
   },
   actions: {

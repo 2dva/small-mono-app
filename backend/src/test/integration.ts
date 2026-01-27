@@ -1,9 +1,9 @@
-// import { omit } from '@small-mono-app/shared/src/omit'
+import { omit } from '@small-mono-app/shared/src/omit'
 import _ from 'lodash'
 import { createAppContext } from '../lib/ctx'
 import { env } from '../lib/env'
 import { getTrpcContext } from '../lib/trpc'
-import { PostModel as Post, UserModel as User } from '../prisma/models'
+import { Post, User } from '../prisma/client'
 import { trpcRouter } from '../router'
 import { deepMap } from '../utils/deepMap'
 import { getPasswordHash } from '../utils/getPasswordHash'
@@ -51,7 +51,7 @@ export const createUser = async ({ user = {}, number = 1 }: { user?: Partial<Use
       nick: `user${number}`,
       email: `user${number}@example.com`,
       password: getPasswordHash(user.password || '1234'),
-      ..._.omit(user, ['password']),
+      ...omit(user, ['password']),
     },
   })
 }

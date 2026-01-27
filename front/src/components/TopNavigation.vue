@@ -21,9 +21,9 @@
 import { TabsInst } from 'naive-ui'
 import { inject, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import LogoBlog from '../assets/images/logo-blogger.svg?component'
 import { me } from '../lib/injectionKeys'
 import { useNotAuthStore } from '../store/notAuthRouteTracker'
-import LogoBlog from '../assets/images/logo-blogger.svg?component'
 
 const router = useRouter()
 const valueRef = ref('home')

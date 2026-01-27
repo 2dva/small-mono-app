@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { canEditPost } from '@small-mono-app/backend/src/utils/can'
-import { pick } from 'lodash'
+import { pick } from '@small-mono-app/shared/src/pick'
 import type { FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { computed, inject, onMounted, ref } from 'vue'

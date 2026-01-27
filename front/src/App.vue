@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
+import { throttle } from 'lodash'
 import { provide, ref, watch } from 'vue'
 import LogPanel from './components/LogPanel.vue'
+import TopNavigation from './components/TopNavigation.vue'
 import { me } from './lib/injectionKeys'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
 import { useTRPC } from './lib/useTrpc'
-import TopNavigation from './components/TopNavigation.vue'
-import { throttle } from 'lodash'
 
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
 const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
