@@ -39,6 +39,8 @@ export const createTrpcClient = (app: App) => {
   return trpc
 }
 
+export type TrpcClient = ReturnType<typeof createTRPCVueQueryClient<TrpcRouter>>
+
 export function useTRPC() {
-  return inject('trpc') as ReturnType<typeof createTRPCVueQueryClient<TrpcRouter>>
+  return inject('trpc') as TrpcClient
 }

@@ -23,6 +23,7 @@
     "@small-mono-app/shared": "workspace:*",
     "@trpc/server": "^11.7.2",
     "better-sqlite3": "^12.5.0",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
     "cron": "^4.4.0",
     "debug": "^4.4.3",

@@ -15,6 +15,7 @@ import { updateProfileTrpcRoute } from './auth/updateProfile'
 import { changePasswordTrpcRoute } from './auth/changePassword'
 import { setPostLikeTrpcRoute } from './posts/setPostLike'
 import { blockPostTrpcRoute } from './posts/blockPost'
+import { prepareCloudinaryUploadTrpcRoute } from './upload/prepareCloudinaryUpload'
 
 console.log(`Initializing TRPC`)
 
@@ -34,6 +35,7 @@ export const trpcRouter = createTrcpRouter({
   blockPost: blockPostTrpcRoute,
   setPostLike: setPostLikeTrpcRoute,
   onLogAdd: logSubscriptionTrpcRoute,
+  prepareCloudinaryUpload: prepareCloudinaryUploadTrpcRoute,
 })
 
 export type TrpcRouter = typeof trpcRouter

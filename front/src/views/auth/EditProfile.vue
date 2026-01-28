@@ -10,6 +10,16 @@
       <n-form-item path="name" label="Name">
         <n-input v-model:value="modelRef.name" @keydown.enter.prevent />
       </n-form-item>
+      <n-form-item path="avatar" label="Avatar">
+        <upload-to-cloudinery
+          label="Avatar"
+          name="avatar"
+          type="avatar"
+          preset="big"
+          :value="modelRef.avatar"
+          @avatar-ready="handleAvatarReady"
+        />
+      </n-form-item>
     </template>
   </form-wrapper>
 </template>
@@ -23,10 +33,12 @@ import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getShowProfileRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
+import UploadToCloudinery from '../../components/UploadToCloudinery.vue'
 
 interface ModelType {
   nickname: string | null
   name: string | null
+  avatar: string | null
 }
 
 const { myData, setMyData } = inject(me)!
@@ -40,6 +52,7 @@ if (myData.value === null) {
 const modelRef = ref<ModelType>({
   nickname: myData.value?.nick!,
   name: myData.value?.name || null,
+  avatar: myData.value?.avatar || null,
 })
 
 const trpc = useTRPC()
@@ -71,11 +84,16 @@ const rules: FormRules = {
   ],
 }
 
+function handleAvatarReady(publicId: string | null) {
+  modelRef.value.avatar = publicId
+}
+
 async function onSubmit() {
   try {
     const updatedMe = await updateProfile.mutateAsync({
       nick: modelRef.value.nickname as string,
       name: modelRef.value.name as string,
+      avatar: modelRef.value.avatar as string,
     })
     message.success('Successful!')
     setMyData(updatedMe)

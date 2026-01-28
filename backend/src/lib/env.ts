@@ -1,4 +1,4 @@
-import { zEnvHost, zEnvNonemptyTrimmed } from '@small-mono-app/shared/src/zod'
+import { zEnvHost, zEnvNonemptyTrimmed, zEnvNonemptyTrimmedRequiredOnNotLocal } from '@small-mono-app/shared/src/zod'
 import * as dotenv from 'dotenv'
 import { existsSync } from 'fs'
 import path from 'path'
@@ -45,6 +45,9 @@ const zEnv = z.object({
       (val) => process.env.HOST_ENV === 'local' || process.env.NODE_ENV !== 'production' || (!!val && val.length > 0),
       'Required on not local host on production'
     ),
+  CLOUDINARY_API_KEY: zEnvNonemptyTrimmedRequiredOnNotLocal,
+  CLOUDINARY_API_SECRET: zEnvNonemptyTrimmedRequiredOnNotLocal,
+  CLOUDINARY_CLOUD_NAME: zEnvNonemptyTrimmed,
 })
 
 export const env = zEnv.parse(process.env)

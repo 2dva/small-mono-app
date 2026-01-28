@@ -20,7 +20,13 @@
         {{ post.title }}
       </template>
       <template v-slot:default>
-        <div class="author">Author: {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}</div>
+        <div class="author">
+          <img class="avatar" alt="" :src="getAvatarUrl(post.author.avatar, 'small')" />
+          <div class="name">
+            Author: <br />
+            {{ post.author.nick }}{{ post.author.name ? ` (${post.author.name})` : '' }}
+          </div>
+        </div>
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
         <div class="likes">
@@ -56,6 +62,7 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
+import { getAvatarUrl } from '@small-mono-app/shared/src/cloudinary'
 
 const { myData } = inject(me)!
 const route = useRoute()

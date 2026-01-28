@@ -13,6 +13,7 @@ export const getPostTrpcRoute = trpcLoggedProcedure.input(z.object({ nick: z.str
           id: true,
           nick: true,
           name: true,
+          avatar: true,
         },
       },
       postLikes: {
