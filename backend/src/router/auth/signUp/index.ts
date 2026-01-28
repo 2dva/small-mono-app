@@ -28,5 +28,5 @@ export const signUpTrpcRoute = trpcLoggedProcedure.input(zSignUpTrpcInput).mutat
   })
   const token = signJWT(user.id)
   console.log(`SignUp:signUpTrpcRoute:end`)
-  return { token }
+  return { token, userId: user.id }
 })
