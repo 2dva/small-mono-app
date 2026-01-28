@@ -30,18 +30,19 @@ enum UserRole {
 }
 
 model Post {
-  serialNumber Int        @id @default(autoincrement())
-  id           String     @unique @default(uuid())
-  nick         String     @unique
+  serialNumber Int         @id @default(autoincrement())
+  id           String      @unique @default(uuid())
+  nick         String      @unique
   title        String
   description  String
   content      String
-  published    Boolean    @default(false)
-  createdAt    DateTime   @default(now())
+  published    Boolean     @default(false)
+  createdAt    DateTime    @default(now())
   blockedAt    DateTime?
-  author       User       @relation(fields: [authorId], references: [id])
+  author       User        @relation(fields: [authorId], references: [id])
   authorId     String
   postLikes    PostLike[]
+  postImages   PostImage[]
 }
 
 model PostLike {
@@ -53,4 +54,12 @@ model PostLike {
   userId    String
 
   @@unique([postId, userId])
+}
+
+model PostImage {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  image     String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
 }
