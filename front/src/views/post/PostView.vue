@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import { canBlockPost, canEditPost } from '@small-mono-app/backend/src/utils/can'
+import { getAvatarUrl } from '@small-mono-app/shared/src/cloudinary'
 import { computed, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Segment from '../../components/Segment.vue'
@@ -62,7 +63,6 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
-import { getAvatarUrl } from '@small-mono-app/shared/src/cloudinary'
 
 const { myData } = inject(me)!
 const route = useRoute()

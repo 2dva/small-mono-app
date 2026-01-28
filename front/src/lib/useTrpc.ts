@@ -1,10 +1,10 @@
+import { env } from './env'
 import { createTRPCVueQueryClient } from '@falcondev-oss/trpc-vue-query'
 import type { TrpcRouter } from '@small-mono-app/backend/src/router'
 import { useQueryClient } from '@tanstack/vue-query'
 import { httpBatchLink, httpSubscriptionLink, loggerLink, splitLink } from '@trpc/client'
 import Cookies from 'js-cookie'
 import { App, inject } from 'vue'
-import { env } from './env'
 
 export const createTrpcClient = (app: App) => {
   const queryClient = app.runWithContext(useQueryClient)

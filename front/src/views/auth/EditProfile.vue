@@ -29,11 +29,11 @@ import type { FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { inject, ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
+import UploadToCloudinery from '../../components/UploadToCloudinery.vue'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getShowProfileRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
-import UploadToCloudinery from '../../components/UploadToCloudinery.vue'
 
 interface ModelType {
   nickname: string | null

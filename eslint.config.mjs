@@ -1,23 +1,23 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import tslint from '@typescript-eslint/eslint-plugin'; // Сам плагин
-import tslintParser from '@typescript-eslint/parser'; // Парсер для TS
-import { defineConfig, globalIgnores } from "eslint/config";
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
+import tslint from '@typescript-eslint/eslint-plugin' // Сам плагин
+import tslintParser from '@typescript-eslint/parser' // Парсер для TS
+import { defineConfig, globalIgnores } from 'eslint/config'
 import love from 'eslint-config-love'
-import pluginImport from 'eslint-plugin-import';
-import pluginJest from 'eslint-plugin-jest'; 
-import node from "eslint-plugin-node";
-import globals from 'globals';
+import pluginImport from 'eslint-plugin-import'
+import pluginJest from 'eslint-plugin-jest'
+import node from 'eslint-plugin-node'
+import globals from 'globals'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+  baseDirectory: __dirname,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
+})
 
 export default defineConfig([
   globalIgnores(['**/node_modules', '**/dist', '**/*.config.js']),
@@ -59,6 +59,11 @@ export default defineConfig([
       'import/order': [
         'error',
         {
+          groups: ['builtin', 'external', 'parent', 'sibling', 'index'],
+          pathGroups: [
+            { pattern: '{.,..}/**/env', group: 'builtin', position: 'before' },
+            { pattern: '{.,..}/**/test/integration', group: 'builtin', position: 'before' },
+          ],
           alphabetize: {
             order: 'asc',
             caseInsensitive: false,

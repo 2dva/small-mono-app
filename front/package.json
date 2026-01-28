@@ -9,7 +9,7 @@
     "lint": "eslint ./src --ext .ts,.vue",
     "lint-fix": "eslint ./src --ext .ts,.vue --fix",
     "stylelint": "stylelint \"./src/**/*.{css,vue}\"",
-    "test": "jest",
+    "test": "dotenv -e .env.test -e .env jest",
     "preview": "vite preview",
     "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{js,ts,tsx,json,yml,css,scss}' '!**/{node_modules,dist}/**/*'"
   },
