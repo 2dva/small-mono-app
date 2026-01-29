@@ -22,6 +22,14 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
+        <uploads-to-cloudinery
+          label="Images"
+          name="images"
+          type="image"
+          preset="preview"
+          :values="[]"
+          @upload-ready="handleUploadReady"
+ />
       </template>
     </form-wrapper>
   </div>
@@ -40,12 +48,14 @@ import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
+import UploadsToCloudinery from '../../components/UploadsToCloudinery.vue'
 
 interface ModelType {
   title: string | null
   nick: string | null
   description: string | null
   content: string | null
+  images: string[],
 }
 
 const { myData } = inject(me)!
@@ -61,6 +71,7 @@ const modelRef = ref<ModelType>({
   nick: null,
   description: null,
   content: null,
+  images: [],
 })
 const trpc = useTRPC()
 const getPostResult = trpc.getPost.useQuery(ref({ nick }), {
@@ -111,6 +122,13 @@ const rules: FormRules = {
   ],
 }
 
+function handleUploadReady(publicId: string) {
+  // console.log(`handleUploadReady:`, publicId);
+  console.log(`modelRef.value`, modelRef.value, modelRef.value.images);
+    
+  modelRef.value.images.push(publicId)
+}
+
 async function onSubmit() {
   try {
     await updatePost.mutateAsync({
@@ -119,6 +137,7 @@ async function onSubmit() {
       nick: modelRef.value.nick as string,
       description: modelRef.value.description as string,
       content: modelRef.value.content as string,
+      images: modelRef.value.images,
     })
     message.success('Successful!')
     router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
@@ -152,7 +171,8 @@ onMounted(async () => {
     console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post)
     post.value = getPostResult.data.value?.post
     id = post.value.id
-    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
+    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content', 'images'])
+    modelRef.value.images = [] // TODO: take from request
   }
 })
 

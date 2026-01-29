@@ -1,15 +1,18 @@
 <template>
   <div :class="{ field: true, disabled: isSubmitting }">
-    <div v-if="!!previewUrl && !isLoading" class="preview-wrap">
-      <img class="preview-img" alt="" :src="previewUrl" />
+    <div class="previews">
+      <div v-for="previewUrl in previewUrls" :key="previewUrl + '_key'" class="preview-wrap">
+        <img class="preview-img" alt="" :src="previewUrl" />
+        <n-button  @click="handleRemoveAva" class="delete-button" strong secondary circle size="tiny" type="error">
+          <template #icon> ❌ </template>
+        </n-button>
+      </div>
     </div>
+
     <div class="buttons">
-      <n-upload action="" accept="image/*" :show-file-list="false" :custom-request="handleUploadAva">
+      <n-upload action="" :multiple="true" accept="image/*" :show-file-list="false" :custom-request="handleUploadAva">
         <n-button>Upload</n-button>
       </n-upload>
-      <n-button v-if="!!previewUrl && !isLoading" type="warning" @click="handleRemoveAva">
-        Remove
-      </n-button>
     </div>
     <n-alert v-if="error !== null" title="Error" type="error">
       {{ error }}
@@ -31,63 +34,65 @@ import { useTRPC } from '../lib/useTrpc'
 let isLoading = ref(false)
 let isSubmitting = ref(false)
 let error = ref<string | null>(null)
-let previewUrl = ref<string | null>(null)
+let previewUrls = ref<string[]>([])
 
 interface Props {
-  value: string | null
+  values: string[]
   label: string
   name: string
   type: CloudinaryUploadTypeName
-  preset: CloudinaryUploadPresetName<'avatar'> //!!! quick fix, should be correct common type
+  preset: CloudinaryUploadPresetName<'image'> //!!! quick fix, should be correct common type
 }
 
 const props = defineProps<Props>()
 
-if (props.value) {
-  previewUrl.value = getCloudinaryUploadUrl(props.value, props.type, props.preset)
+for (let value in props.values) {
+  previewUrls.value.push(getCloudinaryUploadUrl(value, props.type, props.preset))
 }
 
 const emit = defineEmits<{
-  (e: 'avatarReady', publicId: string | null): void
+  (e: 'uploadReady', publicId: string): void
 }>()
 
 const message = useMessage()
 const trpc = useTRPC()
 const { uploadToCloudinary } = useUploadToCloudinary(props.type, trpc)
 
-function handleUploadAva({
-  file,
-  data,
-}: UploadCustomRequestOptions) {
+function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
+  isLoading.value = true
   error.value = null
-  const formData = new FormData()
-  if (data) {
-    Object.keys(data).forEach((key) => {
-      formData.append(key, data[key as keyof UploadCustomRequestOptions['data']])
-    })
-  }
-  formData.append(file.name, file.file as File)
-
+  onFinish() // this will stop repeating callback for uploaded file
+  
   uploadToCloudinary(file.file as File)
     .then(({ publicId }) => {
-      previewUrl.value = getCloudinaryUploadUrl(publicId, props.type, props.preset)
-      emit('avatarReady', publicId)
+      console.log(`uploadToCloudinary:`, publicId)
+
+      previewUrls.value.push(getCloudinaryUploadUrl(publicId, props.type, props.preset))
+      emit('uploadReady', publicId)
     })
     .catch((err) => {
       message.error(err.message)
       error.value = err.message
     })
+    .finally(() => {
+      isLoading.value = false
+    })
 }
 
-function handleRemoveAva(){
-  previewUrl.value = null
-  emit('avatarReady', null)
+function handleRemoveAva() {
+  //TODO: implement
+  // previewUrl.value = null
+  // emit('avatarReady', null)
 }
 </script>
 
 <style scoped>
 .field {
   margin-bottom: 10px;
+}
+
+.previews {
+  display: flex;
 }
 
 .preview-wrap {
@@ -103,6 +108,7 @@ function handleRemoveAva(){
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 5px;
 }
 
 .preview-img {
@@ -115,5 +121,11 @@ function handleRemoveAva(){
 }
 .buttons > div {
   margin-right: 5px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 </style>
