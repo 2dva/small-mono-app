@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui'
 import { ref } from 'vue'
-import { getUploadedImagePreviewUrl, ImageTypes, useUploadToCloudinary } from '../lib/imageUpload'
+import { getUploadedImagePreviewUrl, ImageTypes, useUploadToServer } from '../lib/imageUpload'
 import { useTRPC } from '../lib/useTrpc'
 
 let isLoading = ref(false)
@@ -45,7 +45,7 @@ const emit = defineEmits<{
 
 const message = useMessage()
 const trpc = useTRPC()
-const { uploadToCloudinary } = useUploadToCloudinary(props.type, trpc)
+const { uploadToCloudinary } = useUploadToServer(props.type, trpc)
 
 function handleUploadAva({
   file,

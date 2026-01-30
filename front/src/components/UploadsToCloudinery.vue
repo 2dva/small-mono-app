@@ -4,9 +4,11 @@
       <div class="previews">
         <div v-for="publicId in publicIds" :key="publicIds + '_key'" class="preview-wrap">
           <img class="preview-img" alt="" :src="getUploadedImagePreviewUrl(publicId, props.type)" />
-          <n-button @click="() => handleRemoveAva(publicId)" class="delete-button" strong secondary circle size="tiny"
-            type="error">
-            <template #icon> ❌ </template>
+          <n-button @click="() => handleRemoveAva(publicId)" class="delete-button"  secondary circle size="tiny"
+            >
+            <template #icon>
+              <n-icon :size="22" :component="CloseCircleSharp" />
+            </template>
           </n-button>
         </div>
       </div>
@@ -27,8 +29,9 @@
 <script setup lang="ts">
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui'
 import { ref } from 'vue'
-import { getUploadedImagePreviewUrl, ImageTypes, useUploadToCloudinary } from '../lib/imageUpload'
+import { getUploadedImagePreviewUrl, ImageTypes, useUploadToServer } from '../lib/imageUpload'
 import { useTRPC } from '../lib/useTrpc'
+import { CloseCircleSharp } from '@vicons/ionicons5'
 
 let isLoading = ref(false)
 let error = ref<string | null>(null)
@@ -49,7 +52,7 @@ const emit = defineEmits<{
 
 const message = useMessage()
 const trpc = useTRPC()
-const { uploadToCloudinary } = useUploadToCloudinary(props.type, trpc)
+const { uploadToCloudinary } = useUploadToServer(props.type, trpc)
 
 let activeUploads = 0
 

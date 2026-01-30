@@ -17,7 +17,7 @@ export function getUploadedImagePreviewUrl(publicId: string, imageType: ImageTyp
   return getCloudinaryUploadUrl(publicId, type, preset)
 }
 
-export const useUploadToCloudinary = (imageType: ImageTypes, trpc: TrpcClient) => {
+export const useUploadToServer = (imageType: ImageTypes, trpc: TrpcClient) => {
   const type: CloudinaryUploadTypeName = imageType === ImageTypes.Avatar ? 'avatar' : 'image'
   const prepareCloudinaryUpload = trpc.prepareCloudinaryUpload.useMutation()
 

@@ -29,11 +29,12 @@
         </div>
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
-        <p v-if="publicIds?.length"><b>Images:</b></p>
-        <div class="previews">
-          <div v-for="publicId in publicIds" :key="publicIds + '_key'" class="preview-wrap">
-            <img class="preview-img" alt="" :src="getCloudinaryUploadUrl(publicId, 'image', 'preview')" />
-          </div>
+        <p v-if="publicIds?.length"><b>Images ({{ publicIds?.length }}):</b></p>
+        <div v-if="publicIds?.length" class="previews">
+          <n-carousel class="carousel" draggable trigger="hover" dot-type="line" :space-between="20" >
+            <n-image v-for="publicId in publicIds" :key="publicIds + '_key'" class="carousel-img" alt=""
+              :src="getCloudinaryUploadUrl(publicId, 'image', 'preview')" :img-props="{style: 'margin: 0 auto;'}"/>
+          </n-carousel>
         </div>
         <div class="likes">
           Likes: {{ post.likesCount }}
@@ -41,13 +42,8 @@
             <PostLikeButton :post="post"></PostLikeButton>
           </div>
         </div>
-        <n-button
-          class="bottom-btn"
-          v-if="canEditPost(myData, post)"
-          round
-          type="primary"
-          @click="handleEditButtonClick"
-        >
+        <n-button class="bottom-btn" v-if="canEditPost(myData, post)" round type="primary"
+          @click="handleEditButtonClick">
           Edit post
         </n-button>
         <n-button class="bottom-btn" v-if="canBlockPost(myData)" round type="warning" @click="handleBlockButtonClick">
@@ -143,25 +139,18 @@ function handleEditButtonClick() {
 
 .previews {
   display: flex;
+  max-width: 500px;
+  max-height: 500px;
 }
 
-.preview-wrap {
-  position: relative;
-  box-sizing: content-box;
-  width: 100px;
-  height: 100px;
-  padding: 10px;
-  border: 1px solid gray;
-  border-radius: 3px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 5px;
+.carousel {
+  width: 300px;
+  height: 300px;
+  background-color: rgb(237, 237, 237);
 }
 
-.preview-img {
-  max-width: 100%;
-  max-height: 100%;
-}
+.carousel-img {
+  width: 100%;
+  height: 100%;
+} 
 </style>
