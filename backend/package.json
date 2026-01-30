@@ -14,7 +14,8 @@
     "types": "tsc --noEmit --project ./tsconfig.json",
     "lint": "eslint --ext .ts ./src",
     "lint-fix": "eslint ./src --ext .ts --fix",
-    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'"
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{ts,tsx,js,json,yml,scss}' '!**/{node_modules,dist}/**/*'",
+    "prepare": "pnpm pgc && ts-patch install -s"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.2.0",
