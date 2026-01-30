@@ -3,7 +3,7 @@ import { canEditPost } from '../../../utils/can'
 import { zUpdatePostTrpcInput } from './input'
 
 export const updatePostTrpcRoute = trpcLoggedProcedure.input(zUpdatePostTrpcInput).mutation(async ({ ctx, input }) => {
-  const { postId, ...postINput } = input
+  const { postId, ...postInput } = input
   if (!ctx.me) {
     throw Error('UNAUTHORIZED')
   }
@@ -36,7 +36,7 @@ export const updatePostTrpcRoute = trpcLoggedProcedure.input(zUpdatePostTrpcInpu
     where: {
       id: postId,
     },
-    data: { ...postINput },
+    data: { ...postInput },
   })
 
   console.log(`BACK:TRPC:updatePost:SUCCESS`)

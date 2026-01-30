@@ -3,7 +3,7 @@
     <div class="previews">
       <div v-for="previewUrl in previewUrls" :key="previewUrl + '_key'" class="preview-wrap">
         <img class="preview-img" alt="" :src="previewUrl" />
-        <n-button  @click="handleRemoveAva" class="delete-button" strong secondary circle size="tiny" type="error">
+        <n-button  @click="() => handleRemoveAva(previewUrl)" class="delete-button" strong secondary circle size="tiny" type="error">
           <template #icon> ❌ </template>
         </n-button>
       </div>
@@ -51,7 +51,7 @@ for (let value in props.values) {
 }
 
 const emit = defineEmits<{
-  (e: 'uploadReady', publicId: string): void
+  (e: 'uploadReady', publicIds: string[]): void
 }>()
 
 const message = useMessage()
@@ -68,7 +68,7 @@ function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
       console.log(`uploadToCloudinary:`, publicId)
 
       previewUrls.value.push(getCloudinaryUploadUrl(publicId, props.type, props.preset))
-      emit('uploadReady', publicId)
+      emit('uploadReady', [...previewUrls.value])
     })
     .catch((err) => {
       message.error(err.message)
@@ -79,10 +79,12 @@ function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
     })
 }
 
-function handleRemoveAva() {
+function handleRemoveAva(previewUrl: string) {
+  previewUrls.value = previewUrls.value.filter((el) => el !== previewUrl)
   //TODO: implement
   // previewUrl.value = null
-  // emit('avatarReady', null)
+  // emit('uploadReady', null)
+  emit('uploadReady', [...previewUrls.value])
 }
 </script>
 

@@ -27,7 +27,7 @@
           name="images"
           type="image"
           preset="preview"
-          :values="[]"
+          :values="postImages"
           @upload-ready="handleUploadReady"
  />
       </template>
@@ -55,7 +55,7 @@ interface ModelType {
   nick: string | null
   description: string | null
   content: string | null
-  images: string[],
+  images: string | null,
 }
 
 const { myData } = inject(me)!
@@ -71,13 +71,17 @@ const modelRef = ref<ModelType>({
   nick: null,
   description: null,
   content: null,
-  images: [],
+  images: null,
 })
 const trpc = useTRPC()
 const getPostResult = trpc.getPost.useQuery(ref({ nick }), {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
+})
+
+const postImages = computed(() => {
+  return modelRef.value.images ? modelRef.value.images.split(',') : []
 })
 
 const updatePost = trpc.updatePost.useMutation()
@@ -122,11 +126,9 @@ const rules: FormRules = {
   ],
 }
 
-function handleUploadReady(publicId: string) {
-  // console.log(`handleUploadReady:`, publicId);
-  console.log(`modelRef.value`, modelRef.value, modelRef.value.images);
-    
-  modelRef.value.images.push(publicId)
+function handleUploadReady(publicIds: string[]) {
+  console.log(`handleUploadReady:`, publicIds);
+  modelRef.value.images = publicIds.length ? publicIds.join(',') : ''
 }
 
 async function onSubmit() {
@@ -137,7 +139,7 @@ async function onSubmit() {
       nick: modelRef.value.nick as string,
       description: modelRef.value.description as string,
       content: modelRef.value.content as string,
-      images: modelRef.value.images,
+      images: modelRef.value.images as string,
     })
     message.success('Successful!')
     router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
@@ -172,7 +174,7 @@ onMounted(async () => {
     post.value = getPostResult.data.value?.post
     id = post.value.id
     modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content', 'images'])
-    modelRef.value.images = [] // TODO: take from request
+    // modelRef.value.images =  // TODO: take from request
   }
 })
 
