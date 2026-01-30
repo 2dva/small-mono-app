@@ -8,7 +8,7 @@ export const updatePostTrpcRoute = trpcLoggedProcedure.input(zUpdatePostTrpcInpu
     throw Error('UNAUTHORIZED')
   }
 
-  console.log(`BACK:TRPC:updatePost:postId=${postId}`)
+  console.log(`BACK:TRPC:updatePost:postId=${postId} images=`, input.images)
 
   const post = await ctx.prisma.post.findUnique({
     where: {

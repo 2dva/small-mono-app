@@ -29,6 +29,12 @@
         </div>
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
+        <p v-if="publicIds?.length"><b>Images:</b></p>
+        <div class="previews">
+          <div v-for="publicId in publicIds" :key="publicIds + '_key'" class="preview-wrap">
+            <img class="preview-img" alt="" :src="getCloudinaryUploadUrl(publicId, 'image', 'preview')" />
+          </div>
+        </div>
         <div class="likes">
           Likes: {{ post.likesCount }}
           <div v-if="myData">
@@ -62,7 +68,7 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
-import { getAvatarUrl } from '@small-mono-app/shared/src/cloudinary'
+import { getAvatarUrl, getCloudinaryUploadUrl } from '@small-mono-app/shared/src/cloudinary'
 
 const { myData } = inject(me)!
 const route = useRoute()
@@ -74,7 +80,10 @@ const { data, refetch, isPending, isError, error } = trpc.getPost.useQuery(param
   retry: 1,
 })
 
+const publicIds = ref<string[]>([])
+
 const post = computed(() => {
+  publicIds.value = data.value?.post?.images ? data.value.post.images.split(',') : []
   return data.value?.post
 })
 const blockPost = trpc.blockPost.useMutation()
@@ -130,5 +139,29 @@ function handleEditButtonClick() {
 
 .bottom-btn {
   margin-right: 10px;
+}
+
+.previews {
+  display: flex;
+}
+
+.preview-wrap {
+  position: relative;
+  box-sizing: content-box;
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>

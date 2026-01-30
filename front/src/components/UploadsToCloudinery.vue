@@ -1,9 +1,9 @@
 <template>
   <div :class="{ field: true, disabled: isSubmitting }">
     <div class="previews">
-      <div v-for="previewUrl in previewUrls" :key="previewUrl + '_key'" class="preview-wrap">
-        <img class="preview-img" alt="" :src="previewUrl" />
-        <n-button  @click="() => handleRemoveAva(previewUrl)" class="delete-button" strong secondary circle size="tiny" type="error">
+      <div v-for="publicId in publicIds" :key="publicIds + '_key'" class="preview-wrap">
+        <img class="preview-img" alt="" :src="getCloudinaryUploadUrl(publicId, props.type, props.preset)" />
+        <n-button  @click="() => handleRemoveAva(publicId)" class="delete-button" strong secondary circle size="tiny" type="error">
           <template #icon> ❌ </template>
         </n-button>
       </div>
@@ -34,7 +34,6 @@ import { useTRPC } from '../lib/useTrpc'
 let isLoading = ref(false)
 let isSubmitting = ref(false)
 let error = ref<string | null>(null)
-let previewUrls = ref<string[]>([])
 
 interface Props {
   values: string[]
@@ -46,9 +45,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-for (let value in props.values) {
-  previewUrls.value.push(getCloudinaryUploadUrl(value, props.type, props.preset))
-}
+let publicIds = ref<string[]>([...props.values])
 
 const emit = defineEmits<{
   (e: 'uploadReady', publicIds: string[]): void
@@ -67,8 +64,8 @@ function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
     .then(({ publicId }) => {
       console.log(`uploadToCloudinary:`, publicId)
 
-      previewUrls.value.push(getCloudinaryUploadUrl(publicId, props.type, props.preset))
-      emit('uploadReady', [...previewUrls.value])
+      publicIds.value.push(publicId)
+      emit('uploadReady', [...publicIds.value])
     })
     .catch((err) => {
       message.error(err.message)
@@ -79,12 +76,9 @@ function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
     })
 }
 
-function handleRemoveAva(previewUrl: string) {
-  previewUrls.value = previewUrls.value.filter((el) => el !== previewUrl)
-  //TODO: implement
-  // previewUrl.value = null
-  // emit('uploadReady', null)
-  emit('uploadReady', [...previewUrls.value])
+function handleRemoveAva(publicId: string) {
+  publicIds.value = publicIds.value.filter((el) => el !== publicId)
+  emit('uploadReady', [...publicIds.value])
 }
 </script>
 

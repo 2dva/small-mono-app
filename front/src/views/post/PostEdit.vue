@@ -22,14 +22,8 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
-        <uploads-to-cloudinery
-          label="Images"
-          name="images"
-          type="image"
-          preset="preview"
-          :values="postImages"
-          @upload-ready="handleUploadReady"
- />
+       <uploads-to-cloudinery label="Images" name="images" type="image" preset="preview" :values="postImages"
+          @upload-ready="handleUploadReady" />
       </template>
     </form-wrapper>
   </div>
@@ -55,7 +49,7 @@ interface ModelType {
   nick: string | null
   description: string | null
   content: string | null
-  images: string | null,
+  images: string | null
 }
 
 const { myData } = inject(me)!
@@ -127,7 +121,6 @@ const rules: FormRules = {
 }
 
 function handleUploadReady(publicIds: string[]) {
-  console.log(`handleUploadReady:`, publicIds);
   modelRef.value.images = publicIds.length ? publicIds.join(',') : ''
 }
 
@@ -174,7 +167,6 @@ onMounted(async () => {
     post.value = getPostResult.data.value?.post
     id = post.value.id
     modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content', 'images'])
-    // modelRef.value.images =  // TODO: take from request
   }
 })
 
