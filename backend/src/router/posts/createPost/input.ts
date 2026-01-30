@@ -6,5 +6,5 @@ export const zCreatePostTrpcInput = z.object({
   nick: zNickRequired,
   description: zStringRequired,
   content: z.string().min(50),
-  images: zStringRequired,
+  images: zStringOptional,
 })

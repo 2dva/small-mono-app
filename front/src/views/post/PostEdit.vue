@@ -22,7 +22,7 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
-       <uploads-to-cloudinery label="Images" name="images" type="image" preset="preview" :values="postImages"
+       <uploads-to-cloudinery label="Images" :type="ImageTypes.Image" :values="postImages"
           @upload-ready="handleUploadReady" />
       </template>
     </form-wrapper>
@@ -43,6 +43,7 @@ import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
 import UploadsToCloudinery from '../../components/UploadsToCloudinery.vue'
+import { ImageTypes } from '../../lib/imageUpload'
 
 interface ModelType {
   title: string | null

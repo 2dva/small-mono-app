@@ -17,7 +17,7 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
-        <uploads-to-cloudinery label="Images" name="images" type="image" preset="preview" :values="postImages"
+        <uploads-to-cloudinery label="Images" :type="ImageTypes.Avatar" :values="postImages"
           @upload-ready="handleUploadReady" />
       </template>
     </form-wrapper>
@@ -35,6 +35,7 @@ import { getAllPostsRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
 import UploadsToCloudinery from '../../components/UploadsToCloudinery.vue'
+import { ImageTypes } from '../../lib/imageUpload'
 
 interface ModelType {
   title: string | null
@@ -114,7 +115,7 @@ async function onSubmit() {
       nick: modelRef.value.nick as string,
       description: modelRef.value.description as string,
       content: modelRef.value.content as string,
-      images: modelRef.value.images as string,
+      images: modelRef.value.images || '' as string,
     })
     message.success('Successful!')
     router.push({ path: getAllPostsRoute() })
