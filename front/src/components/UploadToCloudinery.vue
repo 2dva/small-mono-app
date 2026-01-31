@@ -1,8 +1,5 @@
 <template>
-  <div :class="{ field: true, disabled: isSubmitting }">
-    <n-space v-if="isLoading" justify="center">
-      <n-spin size="medium" />
-    </n-space>
+  <n-form-item :label="label">
     <div v-if="!!previewUrl && !isLoading" class="preview-wrap">
       <img class="preview-img" alt="" :src="previewUrl" />
     </div>
@@ -17,37 +14,29 @@
     <n-alert v-if="error !== null" title="Error" type="error">
       {{ error }}
     </n-alert>
-  </div>
+  </n-form-item>
 </template>
 
 <script setup lang="ts">
-import {
-  getCloudinaryUploadUrl,
-  type CloudinaryUploadPresetName,
-  type CloudinaryUploadTypeName,
-} from '@small-mono-app/shared/src/cloudinary'
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui'
 import { ref } from 'vue'
-import { useUploadToCloudinary } from '../lib/imageUpload'
+import { getUploadedImagePreviewUrl, ImageTypes, useUploadToServer } from '../lib/imageUpload'
 import { useTRPC } from '../lib/useTrpc'
 
 let isLoading = ref(false)
-let isSubmitting = ref(false)
 let error = ref<string | null>(null)
 let previewUrl = ref<string | null>(null)
 
 interface Props {
   value: string | null
   label: string
-  name: string
-  type: CloudinaryUploadTypeName
-  preset: CloudinaryUploadPresetName<'avatar'> //!!! quick fix, should be correct common type
+  type: ImageTypes
 }
 
 const props = defineProps<Props>()
 
 if (props.value) {
-  previewUrl.value = getCloudinaryUploadUrl(props.value, props.type, props.preset)
+  previewUrl.value = getUploadedImagePreviewUrl(props.value, props.type)
 }
 
 const emit = defineEmits<{
@@ -56,7 +45,7 @@ const emit = defineEmits<{
 
 const message = useMessage()
 const trpc = useTRPC()
-const { uploadToCloudinary } = useUploadToCloudinary(props.type, trpc)
+const { uploadToCloudinary } = useUploadToServer(props.type, trpc)
 
 function handleUploadAva({
   file,
@@ -74,7 +63,7 @@ function handleUploadAva({
 
   uploadToCloudinary(file.file as File)
     .then(({ publicId }) => {
-      previewUrl.value = getCloudinaryUploadUrl(publicId, props.type, props.preset)
+      previewUrl.value = getUploadedImagePreviewUrl(publicId, props.type)
       emit('avatarReady', publicId)
     })
     .catch((err) => {
@@ -85,7 +74,7 @@ function handleUploadAva({
     })
 }
 
-function handleRemoveAva(){
+function handleRemoveAva() {
   previewUrl.value = null
   emit('avatarReady', null)
 }
@@ -119,7 +108,8 @@ function handleRemoveAva(){
 .buttons {
   display: flex;
 }
-.buttons > div {
+
+.buttons>div {
   margin-right: 5px;
 }
 </style>

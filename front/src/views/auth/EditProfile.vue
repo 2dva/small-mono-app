@@ -10,16 +10,8 @@
       <n-form-item path="name" label="Name">
         <n-input v-model:value="modelRef.name" @keydown.enter.prevent />
       </n-form-item>
-      <n-form-item path="avatar" label="Avatar">
-        <upload-to-cloudinery
-          label="Avatar"
-          name="avatar"
-          type="avatar"
-          preset="big"
-          :value="modelRef.avatar"
-          @avatar-ready="handleAvatarReady"
-        />
-      </n-form-item>
+      <upload-image-files label="Avatar" :type="ImageTypes.Avatar" :values="postImages"
+        @upload-ready="handleUploadReady" />
     </template>
   </form-wrapper>
 </template>
@@ -27,9 +19,10 @@
 <script setup lang="ts">
 import type { FormItemRule, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
-import UploadToCloudinery from '../../components/UploadToCloudinery.vue'
+import UploadImageFiles from '../../components/UploadImageFiles.vue'
+import { ImageTypes } from '../../lib/imageUpload'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getShowProfileRoute } from '../../lib/routes'
@@ -53,6 +46,10 @@ const modelRef = ref<ModelType>({
   nickname: myData.value?.nick!,
   name: myData.value?.name || null,
   avatar: myData.value?.avatar || null,
+})
+
+const postImages = computed(() => {
+  return modelRef.value.avatar ? [modelRef.value.avatar] : []
 })
 
 const trpc = useTRPC()
@@ -84,9 +81,12 @@ const rules: FormRules = {
   ],
 }
 
-function handleAvatarReady(publicId: string | null) {
-  modelRef.value.avatar = publicId
+function handleUploadReady(publicIds: string[]) {
+  console.log(`handleUploadReady ${publicIds}`, publicIds);
+  
+  modelRef.value.avatar = publicIds.length ? publicIds[0] : ''
 }
+
 
 async function onSubmit() {
   try {

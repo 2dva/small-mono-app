@@ -29,19 +29,21 @@
         </div>
         <div class="createdAt">Created: {{ new Date(post.createdAt).toLocaleDateString('ru-RU') }}</div>
         <div class="text">{{ post.content }}</div>
+        <p v-if="publicIds?.length"><b>Images ({{ publicIds?.length }}):</b></p>
+        <div v-if="publicIds?.length" class="previews">
+          <n-carousel class="carousel" draggable trigger="hover" dot-type="line" :space-between="20" >
+            <n-image v-for="publicId in publicIds" :key="publicIds + '_key'" class="carousel-img" alt=""
+              :src="getUploadedImagePreviewUrl(publicId, ImageTypes.Image)" :img-props="{style: 'margin: 0 auto;'}"/>
+          </n-carousel>
+        </div>
         <div class="likes">
           Likes: {{ post.likesCount }}
           <div v-if="myData">
             <PostLikeButton :post="post"></PostLikeButton>
           </div>
         </div>
-        <n-button
-          class="bottom-btn"
-          v-if="canEditPost(myData, post)"
-          round
-          type="primary"
-          @click="handleEditButtonClick"
-        >
+        <n-button class="bottom-btn" v-if="canEditPost(myData, post)" round type="primary"
+          @click="handleEditButtonClick">
           Edit post
         </n-button>
         <n-button class="bottom-btn" v-if="canBlockPost(myData)" round type="warning" @click="handleBlockButtonClick">
@@ -63,6 +65,7 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
+import { getUploadedImagePreviewUrl, ImageTypes } from '../../lib/imageUpload'
 
 const { myData } = inject(me)!
 const route = useRoute()
@@ -74,7 +77,10 @@ const { data, refetch, isPending, isError, error } = trpc.getPost.useQuery(param
   retry: 1,
 })
 
+const publicIds = ref<string[]>([])
+
 const post = computed(() => {
+  publicIds.value = data.value?.post?.images ? data.value.post.images.split(',') : []
   return data.value?.post
 })
 const blockPost = trpc.blockPost.useMutation()
@@ -131,4 +137,21 @@ function handleEditButtonClick() {
 .bottom-btn {
   margin-right: 10px;
 }
+
+.previews {
+  display: flex;
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.carousel {
+  width: 300px;
+  height: 300px;
+  background-color: rgb(237, 237, 237);
+}
+
+.carousel-img {
+  width: 100%;
+  height: 100%;
+} 
 </style>

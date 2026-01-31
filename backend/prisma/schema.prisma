@@ -36,6 +36,7 @@ model Post {
   title        String
   description  String
   content      String
+  images       String?
   published    Boolean    @default(false)
   createdAt    DateTime   @default(now())
   blockedAt    DateTime?

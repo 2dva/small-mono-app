@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "PostImage" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "image" TEXT NOT NULL,
+    "postId" TEXT NOT NULL,
+    CONSTRAINT "PostImage_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

@@ -22,6 +22,8 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
+       <upload-image-files label="Images" :type="ImageTypes.Image" :values="postImages"
+          @upload-ready="handleUploadReady" :multiple="true" />
       </template>
     </form-wrapper>
   </div>
@@ -35,6 +37,8 @@ import { useMessage } from 'naive-ui'
 import { computed, inject, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FormWrapper from '../../components/FormWrapper.vue'
+import UploadImageFiles from '../../components/UploadImageFiles.vue'
+import { ImageTypes } from '../../lib/imageUpload'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
@@ -46,6 +50,7 @@ interface ModelType {
   nick: string | null
   description: string | null
   content: string | null
+  images: string | null
 }
 
 const { myData } = inject(me)!
@@ -61,12 +66,17 @@ const modelRef = ref<ModelType>({
   nick: null,
   description: null,
   content: null,
+  images: null,
 })
 const trpc = useTRPC()
 const getPostResult = trpc.getPost.useQuery(ref({ nick }), {
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
+})
+
+const postImages = computed(() => {
+  return modelRef.value.images ? modelRef.value.images.split(',') : []
 })
 
 const updatePost = trpc.updatePost.useMutation()
@@ -111,6 +121,10 @@ const rules: FormRules = {
   ],
 }
 
+function handleUploadReady(publicIds: string[]) {
+  modelRef.value.images = publicIds.length ? publicIds.join(',') : ''
+}
+
 async function onSubmit() {
   try {
     await updatePost.mutateAsync({
@@ -119,6 +133,7 @@ async function onSubmit() {
       nick: modelRef.value.nick as string,
       description: modelRef.value.description as string,
       content: modelRef.value.content as string,
+      images: modelRef.value.images as string,
     })
     message.success('Successful!')
     router.push({ path: getViewPostRoute({ nick: modelRef.value.nick as string }) })
@@ -152,7 +167,7 @@ onMounted(async () => {
     console.log(`Posts:Edit:getResponse:`, getPostResult.data?.value?.post)
     post.value = getPostResult.data.value?.post
     id = post.value.id
-    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content'])
+    modelRef.value = pick(post.value, ['title', 'nick', 'description', 'content', 'images'])
   }
 })
 

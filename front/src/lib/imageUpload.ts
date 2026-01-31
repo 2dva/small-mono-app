@@ -1,8 +1,24 @@
-import { CloudinaryUploadTypeName } from '@small-mono-app/shared/src/cloudinary'
+import {
+  CloudinaryUploadPresetName,
+  CloudinaryUploadTypeName,
+  getCloudinaryUploadUrl,
+} from '@small-mono-app/shared/src/cloudinary'
 import { memoize } from 'lodash'
 import { TrpcClient } from './useTrpc'
 
-export const useUploadToCloudinary = (type: CloudinaryUploadTypeName, trpc: TrpcClient) => {
+export enum ImageTypes {
+  'Avatar',
+  'Image',
+}
+
+export function getUploadedImagePreviewUrl(publicId: string, imageType: ImageTypes) {
+  const type: CloudinaryUploadTypeName = imageType === ImageTypes.Avatar ? 'avatar' : 'image'
+  const preset: CloudinaryUploadPresetName<'avatar' & 'image'> = imageType === ImageTypes.Avatar ? 'small' : 'preview'
+  return getCloudinaryUploadUrl(publicId, type, preset)
+}
+
+export const useUploadToServer = (imageType: ImageTypes, trpc: TrpcClient) => {
+  const type: CloudinaryUploadTypeName = imageType === ImageTypes.Avatar ? 'avatar' : 'image'
   const prepareCloudinaryUpload = trpc.prepareCloudinaryUpload.useMutation()
 
   const getPreparedData = memoize(
