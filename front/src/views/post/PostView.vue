@@ -33,7 +33,7 @@
         <div v-if="publicIds?.length" class="previews">
           <n-carousel class="carousel" draggable trigger="hover" dot-type="line" :space-between="20" >
             <n-image v-for="publicId in publicIds" :key="publicIds + '_key'" class="carousel-img" alt=""
-              :src="getCloudinaryUploadUrl(publicId, 'image', 'preview')" :img-props="{style: 'margin: 0 auto;'}"/>
+              :src="getUploadedImagePreviewUrl(publicId, ImageTypes.Image)" :img-props="{style: 'margin: 0 auto;'}"/>
           </n-carousel>
         </div>
         <div class="likes">
@@ -65,6 +65,7 @@ import router from '../../lib/router'
 import { getAllPostsRoute, getEditPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import PostLikeButton from './PostLikeButton.vue'
+import { getUploadedImagePreviewUrl, ImageTypes } from '../../lib/imageUpload'
 
 const { myData } = inject(me)!
 const route = useRoute()
