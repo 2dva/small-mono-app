@@ -22,8 +22,8 @@
         <n-form-item path="content" label="Text">
           <n-input v-model:value="modelRef.content" placeholder="Textarea" type="textarea" />
         </n-form-item>
-       <uploads-to-cloudinery label="Images" :type="ImageTypes.Image" :values="postImages"
-          @upload-ready="handleUploadReady" />
+       <upload-image-files label="Images" :type="ImageTypes.Image" :values="postImages"
+          @upload-ready="handleUploadReady" :multiple="true" />
       </template>
     </form-wrapper>
   </div>
@@ -37,13 +37,13 @@ import { useMessage } from 'naive-ui'
 import { computed, inject, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FormWrapper from '../../components/FormWrapper.vue'
+import UploadImageFiles from '../../components/UploadImageFiles.vue'
+import { ImageTypes } from '../../lib/imageUpload'
 import { me } from '../../lib/injectionKeys'
 import router from '../../lib/router'
 import { getViewPostRoute } from '../../lib/routes'
 import { useTRPC } from '../../lib/useTrpc'
 import { CONTENT_MIN_LENGTH } from '../../store/post'
-import UploadsToCloudinery from '../../components/UploadsToCloudinery.vue'
-import { ImageTypes } from '../../lib/imageUpload'
 
 interface ModelType {
   title: string | null
