@@ -6,8 +6,8 @@
   "compilerOptions": {
     "plugins": [{ "transform": "typescript-transform-paths" }],
     "paths": {
-      "@small-mono-app/front/*": ["../front/*"]
-      //   "@small-mono-app/shared/*": ["../shared/*"]
+      "@small-mono-app/front/*": ["../front/*"],
+      "@small-mono-app/shared/*": ["../shared/*"]
     },
     "outDir": "./dist",
     "allowJs": true,

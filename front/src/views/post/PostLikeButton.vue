@@ -11,6 +11,7 @@ import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 import { Heart } from '@vicons/ionicons5'
 import { ref, watch } from 'vue'
 import { useTRPC } from '../../lib/useTrpc'
+import { mixpanelSetPostLike } from '../../lib/mixpanel'
 interface Props {
   post: NonNullable<TrpcRouterOutput['getPost']['post']>
 }
@@ -18,21 +19,6 @@ const props = defineProps<Props>()
 const isLikedPost = ref(false)
 const trpc = useTRPC()
 const setPostLike = trpc.setPostLike.useMutation({
-  // onMutate: ({ isLikedByMe }) => {
-  //   Тут нам надо переписать кеш с актуальным значением likesCount и isLikedByMe
-  //   const oldGetPostData = trpc.getPost.getData({ nick: post.value.nick })
-  //   if (oldGetPostData?.post) {
-  //     const newGetPostData = {
-  //       ...oldGetPostData,
-  //       post: {
-  //         ...oldGetPostData.post,
-  //         isLikedByMe,
-  //         likesCount: oldGetPostData.post.likesCount + (isLikedByMe ? 1 : -1),
-  //       },
-  //     }
-  //     trpc.getPost.setQueryData({ nick: post.value.nick }, newGetPostData)
-  //   }
-  // },
   onSuccess: () => {
     trpc.getPost.invalidate({ nick: props.post.nick })
   },
@@ -40,7 +26,13 @@ const setPostLike = trpc.setPostLike.useMutation({
 
 function handleLikeButtonClick() {
   isLikedPost.value = !isLikedPost.value
-  setPostLike.mutateAsync({ postId: props.post.id, isLikedByMe: isLikedPost.value })
+  setPostLike
+    .mutateAsync({ postId: props.post.id, isLikedByMe: isLikedPost.value })
+    .then(({ post: { isLikedByMe } }) => {
+      if (isLikedByMe) {
+        mixpanelSetPostLike(props.post)
+      }
+    })
 }
 
 isLikedPost.value = props.post.isLikedByMe

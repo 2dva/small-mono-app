@@ -6,5 +6,5 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts", "eslint.config.mjs"]
+  "include": ["vite.config.ts", "src/lib/parsePublicEnv.ts", "eslint.config.mjs"]
 }

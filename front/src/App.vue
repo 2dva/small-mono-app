@@ -7,6 +7,7 @@ import TopNavigation from './components/TopNavigation.vue'
 import { me } from './lib/injectionKeys'
 import { layoutScrollEvent } from './lib/scrollEventEmitter'
 import { useTRPC } from './lib/useTrpc'
+import { MixpanelUser } from './lib/mixpanel'
 
 const myData = ref<TrpcRouterOutput['getMe']['me']>(null)
 const setMyData = (data: TrpcRouterOutput['getMe']['me']) => {
@@ -22,12 +23,15 @@ const { data, isLoading, isFetching, isError, error } = trpc.getMe.useQuery(() =
 watch(data, () => {
   if (data.value?.me !== undefined) {
     myData.value = data.value.me
+    MixpanelUser(myData.value)
   }
 })
 
 const handleLoad = throttle(() => { layoutScrollEvent.emit() }, 200, { trailing: false })
 
 provide(me, { myData, setMyData })
+
+MixpanelUser(myData.value)
 </script>
 
 <template>

@@ -4,7 +4,7 @@
       <img class="preview-img" alt="" :src="previewUrl" />
     </div>
     <div class="buttons">
-      <n-upload action="" accept="image/*" :show-file-list="false" :custom-request="handleUploadAva">
+      <n-upload action="" accept="image/*" :disabled="isLoading" :show-file-list="false" :custom-request="handleUploadAva">
         <n-button>Upload</n-button>
       </n-upload>
       <n-button v-if="!!previewUrl && !isLoading" type="warning" @click="handleRemoveAva">
@@ -52,6 +52,7 @@ function handleUploadAva({
   data,
 }: UploadCustomRequestOptions) {
   error.value = null
+  isLoading.value = true
   const formData = new FormData()
   if (data) {
     Object.keys(data).forEach((key) => {
@@ -68,6 +69,8 @@ function handleUploadAva({
     .catch((err) => {
       message.error(err.message)
       error.value = err.message
+    }).finally(() => {
+      isLoading.value = false
     })
 }
 

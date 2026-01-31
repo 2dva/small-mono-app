@@ -10,15 +10,13 @@ const getSharedEnvVariable = (key: string) =>
   windowEnv[`VITE_${key}`] || windowEnv[key] || process.env[`VITE_${key}`] || process.env[key]
 
 const sharedEnvRaw = {
-  // CLOUDINARY_CLOUD_NAME: getSharedEnvVariable('CLOUDINARY_CLOUD_NAME'),
-  // S3_URL: getSharedEnvVariable('S3_URL'),
+  CLOUDINARY_CLOUD_NAME: getSharedEnvVariable('CLOUDINARY_CLOUD_NAME'),
   WEBAPP_URL: getSharedEnvVariable('WEBAPP_URL'),
 }
 
 const zEnv = z.object({
   WEBAPP_URL: zEnvNonemptyTrimmed,
-  // CLOUDINARY_CLOUD_NAME: zEnvNonemptyTrimmed,
-  // S3_URL: zEnvNonemptyTrimmed,
+  CLOUDINARY_CLOUD_NAME: zEnvNonemptyTrimmed,
 })
 
 export const sharedEnv = zEnv.parse(sharedEnvRaw)

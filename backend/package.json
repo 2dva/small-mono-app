@@ -7,7 +7,7 @@
     "build-ts": "rimraf ./dist && tsc --build ./tsconfig.build.json",
     "build": "pnpm build-ts",
     "test": "jest --runInBand",
-    "start": "cross-env NODE_ENV=production node ./dist/index.js",
+    "start": "cross-env NODE_ENV=production node ./dist/backend/src/index.js",
     "pmd": "prisma migrate dev",
     "pmt": "dotenv -e ./.env.test prisma migrate deploy",
     "pgc": "prisma generate",

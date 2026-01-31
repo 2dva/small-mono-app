@@ -1,8 +1,6 @@
-// import { sharedEnv } from './env'
+import { sharedEnv } from './env'
 
-// const cloudinaryUrl = `https://res.cloudinary.com/${sharedEnv.CLOUDINARY_CLOUD_NAME}/image/upload`
-const cloudinaryUrl = `https://res.cloudinary.com/${process.env.VITE_CLOUDINARY_CLOUD_NAME
-   || process.env.CLOUDINARY_CLOUD_NAME}/image/upload`
+const cloudinaryUrl = `https://res.cloudinary.com/${sharedEnv.CLOUDINARY_CLOUD_NAME}/image/upload`
 
 const DEFAULT_AVATAR_ID = 'v1769543954/avatars/avatar-placeholder.png'
 

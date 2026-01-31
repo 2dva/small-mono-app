@@ -1,3 +1,4 @@
+import { env } from './env'
 import { omit } from '@small-mono-app/shared/src/omit'
 import debug from 'debug'
 import _ from 'lodash'
@@ -8,7 +9,6 @@ import { MESSAGE } from 'triple-beam'
 import winston from 'winston'
 import * as yaml from 'yaml'
 import { deepMap } from '../utils/deepMap'
-import { env } from './env'
 
 const winstonLogger = winston.createLogger({
   level: 'debug',

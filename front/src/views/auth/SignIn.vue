@@ -25,6 +25,7 @@ import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
 import { useTRPC } from '../../lib/useTrpc'
 import { useNotAuthStore } from '../../store/notAuthRouteTracker'
+import { mixpanelIdentify, mixpanelTrackSignIn } from '../../lib/mixpanel'
 
 interface ModelType {
   nickname: string | null
@@ -69,10 +70,12 @@ function handlePasswordInput() {
 
 async function onSubmit() {
   try {
-    const { token } = await signIn.mutateAsync({
+    const { token, userId } = await signIn.mutateAsync({
       nick: modelRef.value.nickname as string,
       password: modelRef.value.password as string,
     })
+    mixpanelIdentify(userId)
+    mixpanelTrackSignIn()
     Cookies.set('token', token, { expires: 99999 })
     trpc.getMe.invalidate()
     message.success('Successful!')
