@@ -1,6 +1,7 @@
 import z from "zod"
 import { processTree } from "../../../lib/tree"
 import { trpcLoggedProcedure } from "../../../lib/trpc"
+import { logger } from "../../../lib/logger"
 
 
 export const getTreeTrpcRoute = trpcLoggedProcedure
@@ -11,6 +12,6 @@ export const getTreeTrpcRoute = trpcLoggedProcedure
     const { input } = req
     let res = ''
     res = processTree(input.stringTree)
-    console.log(`BACK:TRPC:getTree:Processed tree: ${input.stringTree}`)
+    logger.info('back:trpc', `getTree:Processed tree: ${input.stringTree}`)
     return { tree: res }
   })

@@ -1,3 +1,4 @@
+import { logger } from '../../../lib/logger'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zBlockPostTrpcInput } from './input'
 
@@ -24,6 +25,6 @@ export const blockPostTrpcRoute = trpcLoggedProcedure.input(zBlockPostTrpcInput)
     },
   })
 
-  console.log(`BACK:TRPC:blockPost:SUCCESS`)
+  logger.info('back:trpc', `blockPost:SUCCESS`)
   return true
 })

@@ -9,7 +9,6 @@ export const logSubscriptionTrpcRoute = trpcLoggedProcedure.subscription(async f
     //  cancels the event emitter when the request is aborted
     signal: opts.signal,
   })) {
-    // console.log(`TRPC Server: `, data)
     const post = JSON.stringify(data) // as Post;
     yield post
   }

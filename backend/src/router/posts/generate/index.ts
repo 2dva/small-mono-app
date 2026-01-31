@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { randomBytes } from 'crypto'
+import { logger } from '../../../lib/logger'
 
 const DEFAULT_POSTS_NUMBER = 3
 let counter = 0
@@ -14,7 +15,7 @@ async function generatePost(ctx: any) {
     content: _.times(10, (j: number) => `<p>Text Paragraph ${j} of post ${counter}...</p>`).join(''),
     authorId: ctx.me.id
   }
-  console.log(`BACK:TRPC:posts: generating post ${newPost}`)
+  logger.info('back:trpc', `posts: generating post ${newPost}`)
 
   await ctx.prisma.post.create({
     data: newPost,

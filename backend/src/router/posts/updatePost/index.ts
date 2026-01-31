@@ -1,3 +1,4 @@
+import { logger } from '../../../lib/logger'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { canEditPost } from '../../../utils/can'
 import { zUpdatePostTrpcInput } from './input'
@@ -8,7 +9,7 @@ export const updatePostTrpcRoute = trpcLoggedProcedure.input(zUpdatePostTrpcInpu
     throw Error('UNAUTHORIZED')
   }
 
-  console.log(`BACK:TRPC:updatePost:postId=${postId} images=`, input.images)
+  logger.info('back:trpc', `updatePost:postId=${postId} images=` + input.images)
 
   const post = await ctx.prisma.post.findUnique({
     where: {
@@ -39,6 +40,6 @@ export const updatePostTrpcRoute = trpcLoggedProcedure.input(zUpdatePostTrpcInpu
     data: { ...postInput },
   })
 
-  console.log(`BACK:TRPC:updatePost:SUCCESS`)
+  logger.info('back:trpc', `updatePost:SUCCESS`)
   return true
 })

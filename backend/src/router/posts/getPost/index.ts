@@ -1,10 +1,11 @@
 import { omit } from '@small-mono-app/shared/src/omit'
 import z from 'zod'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
+import { logger } from '../../../lib/logger'
 
 export const getPostTrpcRoute = trpcLoggedProcedure.input(z.object({ nick: z.string() })).query(async (req) => {
   const { ctx, input } = req
-  console.log(`BACK:TRPC:getPost:byId: ${input.nick}`)
+  logger.info('back:trpc', `getPost:byId: ${input.nick}`)
   const rawPost = await ctx.prisma.post.findUnique({
     where: { nick: input.nick },
     include: {
@@ -43,6 +44,6 @@ export const getPostTrpcRoute = trpcLoggedProcedure.input(z.object({ nick: z.str
   const isLikedByMe = !!rawPost?.postLikes.length
   const likesCount = rawPost?._count.postLikes || 0
   const post = rawPost && { ...omit(rawPost, ['postLikes', '_count']), isLikedByMe, likesCount }
-  console.log(`BACK:TRPC:getPost:post: ${rawPost}`)
+  logger.info('back:trpc', `getPost:post: ${rawPost}`)
   return { post }
 })

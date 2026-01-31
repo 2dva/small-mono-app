@@ -13,22 +13,18 @@ const whenEnabled = <T>(fn: T): T => {
 }
 
 export const mixpanelIdentify = whenEnabled((userId: string) => {
-  console.log(`mixpanel: identify ${userId}`)
   mixpanel.identify(userId)
 })
 
 export const mixpanelAlias = whenEnabled((userId: string) => {
-  console.log(`mixpanel: alias ${userId}`)
   mixpanel.alias(userId)
 })
 
 export const mixpanelReset = whenEnabled(() => {
-  console.log(`mixpanel: reset`)
   mixpanel.reset()
 })
 
 export const mixpanelPeopleSet = whenEnabled((me: NonNullable<TrpcRouterOutput['getMe']['me']>) => {
-  console.log(`mixpanel: people set ${me.email}`)
   mixpanel.people.set({
     $email: me.email,
     nick: me.nick,
@@ -36,18 +32,14 @@ export const mixpanelPeopleSet = whenEnabled((me: NonNullable<TrpcRouterOutput['
 })
 
 export const mixpanelTrackSignUp = whenEnabled(() => {
-  console.log(`mixpanel: sign up`)
-
   mixpanel.track('Sign Up')
 })
 
 export const mixpanelTrackSignIn = whenEnabled(() => {
-  console.log(`mixpanel: sign in`)
   mixpanel.track('Sign In')
 })
 
 export const mixpanelSetPostLike = whenEnabled((post: TrpcRouterOutput['setPostLike']['post']) => {
-  console.log(`mixpanel: like ${post.id}`)
   mixpanel.track('Like', { postId: post.id })
 })
 

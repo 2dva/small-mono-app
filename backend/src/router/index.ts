@@ -1,23 +1,24 @@
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
+import { logger } from '../lib/logger'
 import { createTrcpRouter } from '../lib/trpc'
-import { logSubscriptionTrpcRoute } from './logSubscription'
-import { signUpTrpcRoute } from './auth/signUp'
-import { signInTrpcRoute } from './auth/signIn'
+import { changePasswordTrpcRoute } from './auth/changePassword'
 import { getMeTrpcRoute } from './auth/getMe'
-import { getTreeTrpcRoute } from './tree/getTree'
-import { getSudggestsTrpcRoute } from './tree/getSuggests'
-import { getPostsTrpcRoute } from './posts/getPosts'
+import { signInTrpcRoute } from './auth/signIn'
+import { signUpTrpcRoute } from './auth/signUp'
+import { updateProfileTrpcRoute } from './auth/updateProfile'
+import { logSubscriptionTrpcRoute } from './logSubscription'
+import { blockPostTrpcRoute } from './posts/blockPost'
+import { createPostTrpcRoute } from './posts/createPost'
 import { generatePostsTrpcRoute } from './posts/generate'
 import { getPostTrpcRoute } from './posts/getPost'
-import { createPostTrpcRoute } from './posts/createPost'
-import { updatePostTrpcRoute } from './posts/updatePost'
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
-import { updateProfileTrpcRoute } from './auth/updateProfile'
-import { changePasswordTrpcRoute } from './auth/changePassword'
+import { getPostsTrpcRoute } from './posts/getPosts'
 import { setPostLikeTrpcRoute } from './posts/setPostLike'
-import { blockPostTrpcRoute } from './posts/blockPost'
+import { updatePostTrpcRoute } from './posts/updatePost'
+import { getSudggestsTrpcRoute } from './tree/getSuggests'
+import { getTreeTrpcRoute } from './tree/getTree'
 import { prepareCloudinaryUploadTrpcRoute } from './upload/prepareCloudinaryUpload'
 
-console.log(`Initializing TRPC`)
+logger.info('back:trpc', `Initializing TRPC`)
 
 export const trpcRouter = createTrcpRouter({
   getMe: getMeTrpcRoute,

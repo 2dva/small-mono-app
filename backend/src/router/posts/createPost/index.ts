@@ -1,3 +1,4 @@
+import { logger } from '../../../lib/logger'
 import { trpcLoggedProcedure } from '../../../lib/trpc'
 import { zCreatePostTrpcInput } from './input'
 
@@ -5,7 +6,7 @@ export const createPostTrpcRoute = trpcLoggedProcedure.input(zCreatePostTrpcInpu
   if (!ctx.me) {
     throw Error('UNAUTHORIZED')
   }
-  console.log(`BACK:TRPC:createPost:start`)
+  logger.info('back:trpc', `createPost:start`)
   const exPost = await ctx.prisma.post.findUnique({
     where: {
       nick: input.nick,
@@ -17,6 +18,6 @@ export const createPostTrpcRoute = trpcLoggedProcedure.input(zCreatePostTrpcInpu
   await ctx.prisma.post.create({
     data: { ...input, authorId: ctx.me.id },
   })
-  console.log(`BACK:TRPC:createPost:SUCCESS`)
+  logger.info('back:trpc', `createPost:SUCCESS`)
   return true
 })

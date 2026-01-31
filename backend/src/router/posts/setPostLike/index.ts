@@ -7,7 +7,7 @@ export const setPostLikeTrpcRoute = trpcLoggedProcedure.input(zSetPostLikeTrpcIn
     throw Error('UNAUTHORIZED')
   }
   const { postId, isLikedByMe } = input
-  logger.info('TRPC', `BACK:TRPC:likePost:start`)
+  logger.info('back:trpc', `likePost:start`)
   const post = await ctx.prisma.post.findUnique({
     where: {
       id: postId,
@@ -45,7 +45,7 @@ export const setPostLikeTrpcRoute = trpcLoggedProcedure.input(zSetPostLikeTrpcIn
       postId
     }
   })
-  console.log(`BACK:TRPC:likePost:SUCCESS`)
+  logger.info('back:trpc', `likePost:SUCCESS`)
   return {
     post: {
       id: post.id,
