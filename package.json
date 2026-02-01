@@ -12,7 +12,8 @@
     "lint": "concurrently 'pnpm b lint' 'pnpm f lint'",
     "lint-fix": "eslint ./src --ext .ts,.vue --fix",
     "stylelint": "stylelint \"./src/**/*.{css,vue}\"",
-    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{js,ts,tsx,json,yml,css,scss}' '!**/{node_modules,dist}/**/*'"
+    "prettify": "prettier --loglevel warn --cache --write '{src/**/*,*}.{js,ts,tsx,json,yml,css,scss}' '!**/{node_modules,dist}/**/*'",
+    "prepare": "test -f ./backend/data/dev.db || cp ./backend/data/dev.db.example ./backend/data/dev.db"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
