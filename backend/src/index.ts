@@ -10,20 +10,22 @@ import { presetDB } from './scripts/presetDB'
 import { applyCron } from './lib/cron'
 import { logger } from './lib/logger'
 import debug from 'debug'
+import { applyServeWebApp } from './lib/serveWebApp'
 
 captureLogs()
 
 void (async () => {
   let ctx: AppContext | null = null
   try {
-    // not quite sure this line is required, commented yet
-    // debug.enable(env.DEBUG)
+    // uncommented to see error messages
+    debug.enable(env.DEBUG!)
     ctx = createAppContext()
     await presetDB(ctx)
     const expressApp = express()
     expressApp.use(cors())
     applyPassportToExpressApp(expressApp, ctx)
     applyTrpcToExpressApp(expressApp, ctx, trpcRouter)
+    await applyServeWebApp(expressApp)
     applyCron(ctx)
 
     expressApp.use((error: unknown, req: express.Request, res: express.Response, next: express.NextFunction) => {

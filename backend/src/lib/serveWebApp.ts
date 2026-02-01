@@ -1,8 +1,8 @@
-import { parsePublicEnv } from '@small-mono-app/front/src/lib/parsePublicEnv'
-import express, { type Express } from 'express'
+import { env } from './env'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { env } from './env'
+import { parsePublicEnv } from '@small-mono-app/front/src/lib/parsePublicEnv'
+import express, { type Express } from 'express'
 import { logger } from './logger'
 
 const checkFileExists = async (filePath: string) => {
@@ -40,7 +40,7 @@ export const applyServeWebApp = async (expressApp: Express) => {
   const htmlSourceWithEnv = htmlSource.replace('{ replaceMeWithPublicEnv: true }', JSON.stringify(publicEnv, null, 2))
 
   expressApp.use(express.static(webappDistDir, { index: false }))
-  expressApp.get('/*', (req, res) => {
+  expressApp.get('/', (req, res) => {
     res.send(htmlSourceWithEnv)
   })
 }
