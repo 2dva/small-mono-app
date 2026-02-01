@@ -31,9 +31,9 @@
         <div class="text">{{ post.content }}</div>
         <p v-if="publicIds?.length"><b>Images ({{ publicIds?.length }}):</b></p>
         <div v-if="publicIds?.length" class="previews">
-          <n-carousel class="carousel" draggable trigger="hover" dot-type="line" :space-between="20" >
+          <n-carousel class="carousel" draggable trigger="hover" dot-type="line" :space-between="20">
             <n-image v-for="publicId in publicIds" :key="publicIds + '_key'" class="carousel-img" alt=""
-              :src="getUploadedImagePreviewUrl(publicId, ImageTypes.Image)" :img-props="{style: 'margin: 0 auto;'}"/>
+              :src="getUploadedImagePreviewUrl(publicId, ImageTypes.Image)" :img-props="{ style: 'margin: 0 auto;' }" />
           </n-carousel>
         </div>
         <div class="likes">
@@ -46,9 +46,15 @@
           @click="handleEditButtonClick">
           Edit post
         </n-button>
-        <n-button class="bottom-btn" v-if="canBlockPost(myData)" round type="warning" @click="handleBlockButtonClick">
-          Block post
-        </n-button>
+        <n-popconfirm v-if="canBlockPost(myData)" positive-text="Yes, block" negative-text="Cancel"
+          @positive-click="handleBlockButtonClick" :positive-button-props="{ type: 'error'}">
+          <template #trigger>
+            <n-button class="bottom-btn" round type="warning">
+              Block post
+            </n-button>
+          </template>
+          Are you sure you want to block this post?
+        </n-popconfirm>
       </template>
     </Segment>
   </div>
@@ -86,6 +92,7 @@ const post = computed(() => {
 const blockPost = trpc.blockPost.useMutation()
 
 async function handleBlockButtonClick() {
+
   await blockPost.mutateAsync({ postId: post.value?.id! })
   refetch()
 }
@@ -153,5 +160,5 @@ function handleEditButtonClick() {
 .carousel-img {
   width: 100%;
   height: 100%;
-} 
+}
 </style>

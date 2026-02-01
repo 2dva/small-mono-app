@@ -30,6 +30,7 @@ import {
   NAutoComplete,
   NLayoutContent,
   NLog,
+  NPopconfirm,
 } from 'naive-ui'
 
 export const createNaiveBundle = () => create({
@@ -64,5 +65,6 @@ export const createNaiveBundle = () => create({
     NResult,
     NAutoComplete,
     NLog,
+    NPopconfirm,
   ],
 })
