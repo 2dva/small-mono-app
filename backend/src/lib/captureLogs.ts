@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
 
 const EMIT_DUMMY_EVENTS = false
-const ENABLED = false
+const CAPTURE_ALL_LOGS_ENABLED = false
 
 export const ee = new EventEmitter()
 
@@ -16,7 +16,7 @@ export const captureLogs = () => {
       };
   }
 
-  if (!ENABLED) return
+  if (!CAPTURE_ALL_LOGS_ENABLED) return
 
   // hook up standard output
   hook_stream(process.stdout, function(params) {
@@ -24,7 +24,6 @@ export const captureLogs = () => {
       old_write(JSON.stringify(params));
       return true
   });
-
 }
 
 if (EMIT_DUMMY_EVENTS) {

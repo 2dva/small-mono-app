@@ -9,6 +9,7 @@ import { MESSAGE } from 'triple-beam'
 import winston from 'winston'
 import * as yaml from 'yaml'
 import { deepMap } from '../utils/deepMap'
+import { ee } from './captureLogs'
 
 const winstonLogger = winston.createLogger({
   level: 'debug',
@@ -87,6 +88,7 @@ export const logger = {
     if (!debug.enabled(`sma:${logType}`)) {
       return
     }
+    ee.emit('log', `${logType}: ${message}`)
     winstonLogger.info(message, { logType, ...prettifyMeta(meta) })
   },
   error: (logType: string, error: any, meta?: LoggerMetaData) => {
@@ -99,6 +101,7 @@ export const logger = {
     if (!debug.enabled(`sma:${logType}`)) {
       return
     }
+    ee.emit('log', `${logType}: ${error}`)
     const serializedError = serializeError(error)
     winstonLogger.error(serializedError.message || 'Unknown error', {
       logType,
