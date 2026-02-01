@@ -1,17 +1,17 @@
-import './style.css'
 import { VueQueryPlugin } from '@tanstack/vue-query'
-import naive from 'naive-ui'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
+import { createNaiveBundle } from './lib/naive'
 import router from './lib/router'
 import { createTrpcClient } from './lib/useTrpc'
+import './style.css'
 
 const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
-app.use(naive)
+app.use(createNaiveBundle())
 app.use(VueQueryPlugin)
 app.use({
   install(app) {

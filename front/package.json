@@ -35,6 +35,7 @@
     "@types/lodash": "^4.17.21",
     "@types/mixpanel-browser": "^2.66.0",
     "naive-ui": "^2.43.2",
+    "rollup-plugin-visualizer": "^6.0.5",
     "stylelint": "^16.26.1",
     "stylelint-config-recommended-vue": "^1.6.1",
     "stylelint-config-standard": "^39.0.1",
