@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
         : visualizer({
             filename: './dist/bundle-stats.html',
             gzipSize: true,
-            brotliSize: true,
+            sourcemap: true,
           }),
     ],
 
@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'assets',
       minify: true,
       sourcemap: true,
-      chunkSizeWarningLimit: 900,
+      chunkSizeWarningLimit: 990,
       // Optional: Inline assets are handled better if CSS code splitting is disabled.
       // cssCodeSplit: false,
       // Optional: Set asset inline limit very high to ensure everything is inlined.

@@ -23,9 +23,9 @@ import { useMessage } from 'naive-ui'
 import { ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
+import { tracker } from '../../lib/tracker/controller'
 import { useTRPC } from '../../lib/useTrpc'
 import { useNotAuthStore } from '../../store/notAuthRouteTracker'
-import { mixpanelIdentify, mixpanelTrackSignIn } from '../../lib/mixpanel'
 
 interface ModelType {
   nickname: string | null
@@ -74,8 +74,8 @@ async function onSubmit() {
       nick: modelRef.value.nickname as string,
       password: modelRef.value.password as string,
     })
-    mixpanelIdentify(userId)
-    mixpanelTrackSignIn()
+    tracker.identify(userId)
+    tracker.signIn()
     Cookies.set('token', token, { expires: 99999 })
     trpc.getMe.invalidate()
     message.success('Successful!')

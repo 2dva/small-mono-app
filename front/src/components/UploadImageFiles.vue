@@ -30,11 +30,11 @@
 </template>
 
 <script setup lang="ts">
+import { CloseCircleSharp } from '@vicons/ionicons5'
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui'
 import { ref } from 'vue'
 import { getUploadedImagePreviewUrl, ImageTypes, useUploadToServer } from '../lib/imageUpload'
 import { useTRPC } from '../lib/useTrpc'
-import { CloseCircleSharp } from '@vicons/ionicons5'
 
 let isLoading = ref(false)
 let error = ref<string | null>(null)
@@ -86,7 +86,7 @@ function handleUploadAva({ file, onFinish }: UploadCustomRequestOptions) {
 }
 
 function handleRemoveAva(publicId?: string) {
-  publicIds.value = publicIds.value.filter((el) => !!publicId ? el !== publicId : false)
+  publicIds.value = publicIds.value.filter((el) => publicId ? el !== publicId : false)
   emit('uploadReady', [...publicIds.value])
 }
 </script>
