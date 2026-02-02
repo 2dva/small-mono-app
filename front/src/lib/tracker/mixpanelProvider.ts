@@ -2,19 +2,9 @@ import { env } from '../env'
 import mixpanel from 'mixpanel-browser'
 import { registerTrackerProvider, type TrackerProfileData, TrackerProvider } from './provider'
 
-const MIXPANEL_ENABLED = false
+const MIXPANEL_ENABLED = true
 
 export const mixpanelProvider: TrackerProvider = {
-  isEnabled: () => {
-    return !!(MIXPANEL_ENABLED && env.VITE_MIXPANEL_API_KEY)
-  },
-
-  init: () => {
-    if (env.VITE_MIXPANEL_API_KEY) {
-      mixpanel.init(env.VITE_MIXPANEL_API_KEY)
-    }
-  },
-
   setMyProfile(data: TrackerProfileData | null) {
     if (data !== null) {
       mixpanel.people.set({
@@ -43,6 +33,7 @@ export const mixpanelProvider: TrackerProvider = {
   },
 }
 
-if (mixpanelProvider.isEnabled()) {
+if (MIXPANEL_ENABLED && env.VITE_MIXPANEL_API_KEY) {
+  mixpanel.init(env.VITE_MIXPANEL_API_KEY)
   registerTrackerProvider(mixpanelProvider)
 }

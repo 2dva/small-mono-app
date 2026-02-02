@@ -1,22 +1,16 @@
-import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
-
-export interface TrackerProvider {
-  isEnabled(): boolean
-  init(): void
+export type TrackerProvider = {
   identify(s: string): void
   alias(s: string): void
   reset(): void
-  track(data: any): void
+  track(n: string, data?: any): void
   setMyProfile(s: TrackerProfileData | null): void
 }
 
 export enum TrackerProviderEvents {
-  'init',
   'identify',
   'alias',
   'reset',
   'track',
-  'setMyProfile',
 }
 
 export type TrackerProfileData = {
@@ -30,8 +24,8 @@ export const registerTrackerProvider = (provider: TrackerProvider) => {
   trackerProvider = provider
 }
 
-export const setMyProfileData = (me: TrpcRouterOutput['getMe']['me']) => {
-  trackerProvider?.setMyProfile(me as TrackerProfileData | null)
+export const setMyProfileData = (me: TrackerProfileData | null) => {
+  trackerProvider?.setMyProfile(me)
 }
 
 export const invokeTrackerProviderEvent = (
@@ -41,10 +35,16 @@ export const invokeTrackerProviderEvent = (
 ) => {
   switch (trackerEvent) {
     case TrackerProviderEvents.identify:
-      trackerProvider?.identify(data)
+      trackerProvider?.identify(idOrEventName)
       break
-    case TrackerProviderEvents.setMyProfile:
-      trackerProvider?.setMyProfile(data)
+    case TrackerProviderEvents.alias:
+      trackerProvider?.alias(idOrEventName)
+      break
+    case TrackerProviderEvents.reset:
+      trackerProvider?.reset()
+      break
+    case TrackerProviderEvents.track:
+      trackerProvider?.track(idOrEventName, data)
       break
   }
 }

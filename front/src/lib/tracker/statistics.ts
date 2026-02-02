@@ -1,13 +1,13 @@
 import type { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
-import { invokeTrackerProviderEvent, setMyProfileData, TrackerProviderEvents } from './provider'
+import { invokeTrackerProviderEvent, setMyProfileData, TrackerProfileData, TrackerProviderEvents } from './provider'
 
 const invokeTrackerEvent = (eventName: TrackerProviderEvents, idOrEventName?: string, data?: any) => {
-  invokeTrackerProviderEvent(eventName, data)
+  invokeTrackerProviderEvent(eventName, idOrEventName, data)
 }
 
 export const tracker = {
   setMyProfile: (me: TrpcRouterOutput['getMe']['me']) => {
-    setMyProfileData(me)
+    setMyProfileData(me as TrackerProfileData | null)
   },
   identify: (userId: string) => {
     invokeTrackerEvent(TrackerProviderEvents.identify, userId)
