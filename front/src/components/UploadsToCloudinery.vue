@@ -27,11 +27,11 @@
 </template>
 
 <script setup lang="ts">
+import { CloseCircleSharp } from '@vicons/ionicons5'
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui'
 import { ref } from 'vue'
 import { getUploadedImagePreviewUrl, ImageTypes, useUploadToServer } from '../lib/imageUpload'
 import { useTRPC } from '../lib/useTrpc'
-import { CloseCircleSharp } from '@vicons/ionicons5'
 
 let isLoading = ref(false)
 let error = ref<string | null>(null)

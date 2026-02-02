@@ -1,4 +1,13 @@
-export type TrackerProvider = {
+import { env } from '../env'
+
+const MIXPANEL_PROVIDER_ENABLED = true
+
+export interface TrackerProfileData {
+  email: string
+  [key: string]: any
+}
+
+export interface TrackerProvider {
   identify(s: string): void
   alias(s: string): void
   reset(): void
@@ -11,11 +20,6 @@ export enum TrackerProviderEvents {
   'alias',
   'reset',
   'track',
-}
-
-export type TrackerProfileData = {
-  email: string
-  [key: string]: any
 }
 
 let trackerProvider: TrackerProvider | null = null
@@ -47,4 +51,14 @@ export const invokeTrackerProviderEvent = (
       trackerProvider?.track(idOrEventName, data)
       break
   }
+}
+
+if (MIXPANEL_PROVIDER_ENABLED && env.VITE_MIXPANEL_API_KEY) {
+  import('./mixpanelProvider')
+    .then(({ mixpanelProvider }) => {
+      registerTrackerProvider(mixpanelProvider)
+    })
+    .catch((error) => {
+      console.error('Module loading failed:', error)
+    })
 }

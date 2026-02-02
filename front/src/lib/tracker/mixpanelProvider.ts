@@ -1,8 +1,6 @@
 import { env } from '../env'
 import mixpanel from 'mixpanel-browser'
-import { registerTrackerProvider, type TrackerProfileData, TrackerProvider } from './provider'
-
-const MIXPANEL_ENABLED = true
+import { type TrackerProfileData, type TrackerProvider } from './provider'
 
 export const mixpanelProvider: TrackerProvider = {
   setMyProfile(data: TrackerProfileData | null) {
@@ -33,7 +31,6 @@ export const mixpanelProvider: TrackerProvider = {
   },
 }
 
-if (MIXPANEL_ENABLED && env.VITE_MIXPANEL_API_KEY) {
+if (env.VITE_MIXPANEL_API_KEY) {
   mixpanel.init(env.VITE_MIXPANEL_API_KEY)
-  registerTrackerProvider(mixpanelProvider)
 }

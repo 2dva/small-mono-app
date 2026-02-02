@@ -10,8 +10,8 @@
 import { TrpcRouterOutput } from '@small-mono-app/backend/src/router'
 import { Heart } from '@vicons/ionicons5'
 import { ref, watch } from 'vue'
+import { tracker } from '../../lib/tracker/controller'
 import { useTRPC } from '../../lib/useTrpc'
-import { mixpanelSetPostLike } from '../../lib/mixpanel'
 interface Props {
   post: NonNullable<TrpcRouterOutput['getPost']['post']>
 }
@@ -30,7 +30,8 @@ function handleLikeButtonClick() {
     .mutateAsync({ postId: props.post.id, isLikedByMe: isLikedPost.value })
     .then(({ post: { isLikedByMe } }) => {
       if (isLikedByMe) {
-        mixpanelSetPostLike(props.post)
+        tracker.likePost(props.post)
+
       }
     })
 }

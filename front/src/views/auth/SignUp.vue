@@ -35,8 +35,8 @@ import { ref } from 'vue'
 import FormWrapper from '../../components/FormWrapper.vue'
 import router from '../../lib/router'
 import { getAllPostsRoute } from '../../lib/routes'
+import { tracker } from '../../lib/tracker/controller'
 import { useTRPC } from '../../lib/useTrpc'
-import { mixpanelAlias, mixpanelTrackSignUp } from '../../lib/mixpanel'
 
 interface ModelType {
   nickname: string | null
@@ -135,8 +135,8 @@ async function onSubmit() {
       email: modelRef.value.email as string,
       password: modelRef.value.password as string,
     })
-    mixpanelAlias(userId)
-    mixpanelTrackSignUp()
+    tracker.identifyAlias(userId)
+    tracker.signUp()
     Cookies.set('token', token, { expires: 99999 })
     trpc.getMe.invalidate()
     message.success('Successful!')
